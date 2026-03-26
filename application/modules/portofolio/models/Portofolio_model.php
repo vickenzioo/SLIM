@@ -8,57 +8,57 @@ class Portofolio_model extends CI_Model {
         'category'      => 'c.category_name',
         'app_name'      => 'a.application_name',
         'short_name'    => 'a.short_name',
-        'module'        => 'm.module_name',
+        'module'        => 'a.module', 
         'db_name'       => 'dbm.database_name',
         'os_name'       => 'os.operating_software_name',
-        'service'       => 's.service_name', 
-        'app_type'      => 'a.application_type',
+        'app_type'      => 'at.app_type_name',
         'description'   => 'a.apps_description',
         'live_year'     => 'a.live_year',
         'decom_year'    => 'a.decommission_year',
         'resilience'    => 'r.resilience_category', 
         'dr_avail'      => 'r.dr',                  
         'ha'            => 'r.ha',                  
-        'flash_copy'    => 'a.flash_copy',
-        'eod'           => 'a.end_of_day',
         'network'       => 'n.network_name',
-        'deployment'    => 'd.deployment_model',
-        'deployment_info' => 'deployment_info',
-        'op_hour'       => 'oh.start_time',
-        'op_day'        => 'od.start_day',
-        'principle'     => 'a.principle_name',
-        'principle_sol' => 'a.principle_solution_name',
-        'it_group'      => 'a.it_group_name',
-        'it_division'   => 'a.it_division_name',
-        'directorate'   => 'a.owner_directorate',
-        'sub_directorate'=> 'a.owner_subdirectorate',
-        'owner_title'   => 'a.owner_title',
-        'nik_head'      => 'a.nik_owner_head',
-        'nik_owner'     => 'a.nik_owner',
-        'nik_dept'      => 'a.nik_it_department'
+        'deployment'    => "CONCAT_WS(' - ', d.deployment_model, dp.deployment_provider_name, ds.deployment_site_name)",
+        'op_hour'       => "CONCAT(oh.start_time, ' - ', oh.end_time)",
+        'op_day'        => "CONCAT(od.start_day, ' - ', od.end_day)",
+        'solution_vendor' => 'a.solution_vendor',
+        'services_vendor' => 'a.services_vendor',
+        'lob_directorate' => 'a.lob_directorate',
+        'lob_subdirectorate' => 'a.lob_subdirectorate',
+        'lob_group'       => 'a.lob_group',
+        'lob_group_head'  => 'a.lob_group_head',
+        'it_subdirectorate' => 'a.it_subdirectorate',
+        'it_department_head'=> 'a.it_department_head',
+        'it_support_group'=> 'a.it_support_group',
+        'it_group_head'   => 'a.it_group_head',
+        'it_support_divison'=> 'a.it_support_divison',
+        'it_division_head'=> 'a.it_division_head',
+        
+        // MAPPING KOLOM TAMBAHAN MASTER (KECUALI TRACKING)
+        'app_version'   => 'a.application_version',
+        'dev_language'  => 'a.development_language',
+        'app_developer' => 'a.application_developer',
+        'web_server'    => 'a.supporting_web_server',
+        'app_server'    => 'a.supporting_application_server',
+        'sup_others'    => 'a.supporting_others',
+        'src_code'      => 'a.source_code_owned',
+        'url'           => 'a.Url'
     ];
 
     // --- 2. CORE JOIN (PUSAT RELASI) ---
     private function _only_joins() {
         $this->db->from('tbl_portofolio_apps_master a');
-        $this->db->join('tbl_apps_infra j', 'a.apps_id = j.apps_id', 'left');
-        $this->db->join('tbl_portofolio_infra_master i', 'j.infra_id = i.infra_id', 'left');
+        $this->db->join('tbl_apps_category c', 'a.category_id = c.category_id', 'left');
+        $this->db->join('tbl_apps_network n', 'a.network_id = n.network_id', 'left');
+        $this->db->join('tbl_app_type at', 'a.app_type_id = at.app_type_id', 'left');
         
-        // Perbaikan Join ke service
-        $this->db->join('tbl_service s', 'i.service_id = s.service_id', 'left'); 
+        $this->db->join('tbl_apps_deployment d', 'a.deployment_id = d.deployment_id', 'left');
+        $this->db->join('tbl_apps_deployment_model dp', 'a.deployment_provider_id = dp.deployment_provider_id', 'left');
+        $this->db->join('tbl_apps_deployment_site ds', 'a.deployment_site_id = ds.deployment_site_id', 'left');
         
-        /**
-         * PERBAIKAN:
-         * module_id sekarang ada di tbl_portofolio_infra_master (i), 
-         * bukan di tbl_service (s).
-         */
-        $this->db->join('tbl_module m', 'i.module_id = m.module_id', 'left'); 
-        
-        $this->db->join('tbl_apps_category c', 'c.category_id = a.category_id', 'left');
-        $this->db->join('tbl_apps_network n', 'n.network_id = a.network_id', 'left');
-        $this->db->join('tbl_apps_deployment d', 'd.deployment_id = a.deployment_id', 'left');
-        $this->db->join('tbl_apps_operational_hour oh', 'oh.operational_hour_id = a.operational_hour_id', 'left');
-        $this->db->join('tbl_apps_operational_day od', 'od.operational_day_id = a.operational_day_id', 'left');
+        $this->db->join('tbl_apps_operational_hour oh', 'a.operational_hour_id = oh.operational_hour_id', 'left');
+        $this->db->join('tbl_apps_operational_day od', 'a.operational_day_id = od.operational_day_id', 'left');
         $this->db->join('tbl_apps_database adb', 'a.apps_id = adb.apps_id', 'left');
         $this->db->join('tbl_database_master dbm', 'adb.database_id = dbm.database_id', 'left');
         $this->db->join('tbl_apps_operating_software aos', 'a.apps_id = aos.apps_id', 'left');
@@ -70,17 +70,15 @@ class Portofolio_model extends CI_Model {
     private function _query_joins() {
         $this->db->select('
             a.*, 
-            m.module_name,
-            s.service_name, 
             c.category_name,
             n.network_name,
+            at.app_type_name as application_type,
             r.resilience_category AS resilience,
             r.dr AS dr_availability,
             r.ha,
             GROUP_CONCAT(DISTINCT dbm.database_name SEPARATOR ", ") as database_names,
             GROUP_CONCAT(DISTINCT os.operating_software_name SEPARATOR ", ") as os_names,
-            d.deployment_model, d.deployment_provider, d.main_deployment_site,
-            CONCAT_WS(" - ", d.deployment_model, d.deployment_provider, d.main_deployment_site) AS deployment_info,
+            CONCAT_WS(" - ", d.deployment_model, dp.deployment_provider_name, ds.deployment_site_name) AS deployment_info,
             CONCAT(oh.start_time, " - ", oh.end_time) AS operational_hour,
             CONCAT(od.start_day, " - ", od.end_day) AS operational_day
         ');
@@ -91,30 +89,32 @@ class Portofolio_model extends CI_Model {
     // --- 4. FILTER LOGIC ---
     private function _apply_filters($filters) {
         if (!empty($filters) && is_array($filters)) {
-            $this->db->group_start(); 
+            $applied_any = false; 
             foreach ($filters as $key => $values) {
                 if (isset($this->_filter_map[$key]) && !empty($values) && is_array($values)) {
                     $valid_values = array_filter($values, function($v) { return $v !== ''; });
                     if(!empty($valid_values)) {
+                        if (!$applied_any) {
+                            $this->db->group_start();
+                            $applied_any = true;
+                        }
                         $col = $this->_filter_map[$key];
-                        $this->db->group_start(); 
+                        $this->db->group_start();
+                        $first = true;
                         foreach ($valid_values as $val) {
-                            $val = trim($val);
-                            if($key == 'deployment_info') {
-                                $this->db->or_group_start();
-                                $this->db->like('d.deployment_model', $val);
-                                $this->db->or_like('d.deployment_provider', $val);
-                                $this->db->or_like('d.main_deployment_site', $val);
-                                $this->db->group_end();
-                            } else {
-                                $this->db->or_where("TRIM($col)", $val); 
+                            $val_esc = $this->db->escape(trim($val));
+                            if($first){ 
+                                $this->db->where("TRIM($col) = $val_esc", NULL, FALSE); 
+                                $first = false; 
+                            } else { 
+                                $this->db->or_where("TRIM($col) = $val_esc", NULL, FALSE); 
                             }
                         }
-                        $this->db->group_end(); 
+                        $this->db->group_end();
                     }
                 }
             }
-            $this->db->group_end(); 
+            if ($applied_any) { $this->db->group_end(); }
         }
     }
 
@@ -172,8 +172,8 @@ class Portofolio_model extends CI_Model {
         $this->db->select("DISTINCT TRIM($column) as val", FALSE);
         $this->_only_joins(); 
         $this->_apply_filters($filters_to_apply);
-        $this->db->where("$column IS NOT NULL");
-        $this->db->where("TRIM($column) !=", ""); 
+        $this->db->where("$column IS NOT NULL", NULL, FALSE);
+        $this->db->where("TRIM($column) != ''", NULL, FALSE); 
         $this->db->group_by("val"); 
         $this->db->order_by("val", 'ASC');
         $query = $this->db->get();
@@ -186,26 +186,5 @@ class Portofolio_model extends CI_Model {
             }
         }
         return array_unique($results);
-    }
-    
-    // Helpers
-    public function get_infra_list() { 
-        $this->db->select('i.infra_id, s.service_name');
-        $this->db->from('tbl_portofolio_infra_master i');
-        $this->db->join('tbl_service s', 'i.service_id = s.service_id', 'left');
-        $this->db->order_by('s.service_name', 'ASC');
-        return $this->db->get()->result_array(); 
-    }
-
-    public function insert_app($data) { 
-        $this->db->insert('tbl_portofolio_apps_master', $data); 
-        return $this->db->insert_id(); 
-    }
-    public function insert_junction($apps_id, $infra_id) { 
-        return $this->db->insert('tbl_apps_infra', ['apps_id' => $apps_id, 'infra_id' => $infra_id]); 
-    }
-    public function check_duplicate_app($name) { 
-        $this->db->where('application_name', $name); 
-        return $this->db->get('tbl_portofolio_apps_master')->num_rows() > 0; 
     }
 }

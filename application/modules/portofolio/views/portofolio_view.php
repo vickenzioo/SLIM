@@ -55,104 +55,126 @@
                 <div class="card-header bg-white">
                     <div class="row align-items-center">
                         <div class="col-md-8">
-							
-							<button type="button" class="btn btn-export-custom btn-sm" onclick="confirmExport()">
-								<i class="fas fa-file-export mr-1"></i> Export
-							</button>
-                            <a href="<?= base_url('portofolio') ?>" class="btn btn-reset btn-sm ml-1"><i class="fas fa-sync"></i> Reset</a>
+                            <button type="button" class="btn btn-export-custom btn-sm" onclick="confirmExport()">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
                         </div>
                         <div class="col-md-4">
                             <div class="input-group">
-                                <input type="text" name="keyword" class="form-control" placeholder="Search Global..." value="<?= isset($keyword) ? $keyword : '' ?>">
+                                <input type="text" name="keyword" class="form-control" placeholder="Search..." value="<?= isset($keyword) ? $keyword : '' ?>">
                                 <div class="input-group-append">
-                                    <button class="btn btn-default"><i class="fas fa-search"></i></button>
+                                    <button class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <a href="<?= base_url('portofolio') ?>" class="btn btn-secondary d-flex align-items-center">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-body table-responsive">
-                    <table class="table table-striped table-bordered table-hover text-nowrap table-custom-fixed">
+                <div class="card-body">
+                    <div style="overflow-x: auto; width: 100%;">
+                    <table class="table table-striped table-bordered table-hover text-nowrap">
                         <thead>
                             <tr class="bg-info text-center">
-								<th>Action</th>
+                                <th>Action</th>
                                 
                                 <?php 
-									// Helper Render Header with Filter
-									function render_th($label, $key, $options, $selected) {
-										$isActive = isset($selected[$key]) && !empty($selected[$key]);
-										// Class ini mengatur warna jika filter sedang aktif
-										$iconClass = $isActive ? 'filter-active' : ''; 
-										
-										// Sorting options
-										if(!empty($options) && is_array($options)) {
-											$options = array_unique($options);
-											sort($options);
-										}
-										
-										echo '<th style="color: var(--text-dark); vertical-align: middle;">';
-										
-										// [WRAPPER UTAMA]: d-inline-flex membuat kotak ini hanya selebar isinya (Teks + Icon)
-										// align-items-center mensejajarkan teks dan icon secara vertikal
-										echo '<div class="d-inline-flex align-items-center">';
-										
-											// 1. Teks Label
-											echo '<span>' . $label . '</span>';
-											
-											// 2. Icon Wrapper
-											// - Tetap pakai class 'filter-icon-wrapper' agar dapat efek hover/warna lama.
-											// - Tambah 'ml-2' untuk jarak spasi.
-											// - STYLE INLINE PENTING: 'position: static' membatalkan 'absolute' yang bikin dia lari ke pojok.
-											// - 'transform: none' mencegah icon loncat vertikal karena style lama.
-											echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
-											
-												echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
-												
-												// Dropdown Menu
-												echo '<div class="dropdown-menu dropdown-menu-right custom-filter-dropdown" onclick="event.stopPropagation()">';
-													
-													// Search
-													echo '<div class="filter-header">';
-													echo '<input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)">';
-													echo '</div>';
-													
-													// List
-													echo '<div class="filter-body">';
-													if(!empty($options)) {
-														foreach($options as $opt) {
-															if(trim($opt) === '') continue;
-															$checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
-															echo '<label class="filter-item">';
-															echo '<input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> ';
-															echo htmlspecialchars($opt);
-															echo '</label>';
-														}
-													} else {
-														echo '<div class="p-2 text-muted text-center small">No Options</div>';
-													}
-													echo '</div>';
-													
-													// Footer
-													echo '<div class="filter-footer">';
-													echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
-													echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
-													echo '</div>';
-													
-												echo '</div>'; // End Dropdown
-											echo '</div>'; // End Btn Group
+                                    function render_th($label, $key, $options, $selected) {
+                                        $isActive = isset($selected[$key]) && !empty($selected[$key]);
+                                        $iconClass = $isActive ? 'filter-active' : ''; 
+                                        
+                                        if(!empty($options) && is_array($options)) {
+                                            $options = array_unique($options);
+                                            sort($options);
+                                        }
+                                        
+                                        echo '<th style="color: var(--text-dark); vertical-align: middle;">';
+                                        echo '<div class="d-inline-flex align-items-center">';
+                                            echo '<span>' . $label . '</span>';
+                                            echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
+                                                echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
+                                                
+                                                echo '<div class="dropdown-menu dropdown-menu-right custom-filter-dropdown" onclick="event.stopPropagation()">';
+                                                    
+                                                    echo '<div class="filter-header">';
+                                                    echo '<input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)">';
+                                                    echo '</div>';
+                                                    
+                                                    echo '<div class="filter-body">';
+                                                    if(!empty($options)) {
+                                                        foreach($options as $opt) {
+                                                            if(trim($opt) === '') continue;
+                                                            $checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
+                                                            echo '<label class="filter-item">';
+                                                            echo '<input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> ';
+                                                            echo htmlspecialchars($opt);
+                                                            echo '</label>';
+                                                        }
+                                                    } else {
+                                                        echo '<div class="p-2 text-muted text-center small">No Options</div>';
+                                                    }
+                                                    echo '</div>';
+                                                    
+                                                    echo '<div class="filter-footer">';
+                                                    echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
+                                                    echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
+                                                    echo '</div>';
+                                                    
+                                                echo '</div>'; 
+                                            echo '</div>'; 
 
-										echo '</div>'; // End Flex
-										echo '</th>';
-									}
-								?>
+                                        echo '</div>'; 
+                                        echo '</th>';
+                                    }
+                                    
+                                    $opt_category = isset($opt_category) ? $opt_category : [];
+                                    $opt_app_name = isset($opt_app_name) ? $opt_app_name : [];
+                                    $opt_short_name = isset($opt_short_name) ? $opt_short_name : [];
+                                    $opt_module = isset($opt_module) ? $opt_module : [];
+                                    $opt_db_name = isset($opt_db_name) ? $opt_db_name : [];
+                                    $opt_os_name = isset($opt_os_name) ? $opt_os_name : [];
+                                    $opt_app_type = isset($opt_app_type) ? $opt_app_type : [];
+                                    $opt_live_year = isset($opt_live_year) ? $opt_live_year : [];
+                                    $opt_decom_year = isset($opt_decom_year) ? $opt_decom_year : [];
+                                    $opt_resilience = isset($opt_resilience) ? $opt_resilience : [];
+                                    $opt_network = isset($opt_network) ? $opt_network : [];
+                                    $opt_deploy = isset($opt_deploy) ? $opt_deploy : [];
+                                    $opt_op_hour = isset($opt_op_hour) ? $opt_op_hour : [];
+                                    $opt_op_day = isset($opt_op_day) ? $opt_op_day : [];
+                                    $opt_solution_vendor = isset($opt_solution_vendor) ? $opt_solution_vendor : [];
+                                    $opt_services_vendor = isset($opt_services_vendor) ? $opt_services_vendor : [];
+                                    
+                                    $opt_lob_directorate = isset($opt_lob_directorate) ? $opt_lob_directorate : [];
+                                    $opt_lob_subdirectorate = isset($opt_lob_subdirectorate) ? $opt_lob_subdirectorate : [];
+                                    $opt_lob_group = isset($opt_lob_group) ? $opt_lob_group : [];
+                                    $opt_lob_group_head = isset($opt_lob_group_head) ? $opt_lob_group_head : [];
+                                    $opt_it_subdirectorate = isset($opt_it_subdirectorate) ? $opt_it_subdirectorate : [];
+                                    $opt_it_department_head = isset($opt_it_department_head) ? $opt_it_department_head : [];
+                                    $opt_it_support_group = isset($opt_it_support_group) ? $opt_it_support_group : [];
+                                    $opt_it_group_head = isset($opt_it_group_head) ? $opt_it_group_head : [];
+                                    $opt_it_support_divison = isset($opt_it_support_divison) ? $opt_it_support_divison : [];
+                                    $opt_it_division_head = isset($opt_it_division_head) ? $opt_it_division_head : [];
+
+                                    $opt_app_version = isset($opt_app_version) ? $opt_app_version : [];
+                                    $opt_dev_lang = isset($opt_dev_lang) ? $opt_dev_lang : [];
+                                    $opt_app_dev = isset($opt_app_dev) ? $opt_app_dev : [];
+                                    $opt_web_server = isset($opt_web_server) ? $opt_web_server : [];
+                                    $opt_app_server = isset($opt_app_server) ? $opt_app_server : [];
+                                    $opt_sup_others = isset($opt_sup_others) ? $opt_sup_others : [];
+                                    $opt_src_code = isset($opt_src_code) ? $opt_src_code : [];
+                                    $opt_url = isset($opt_url) ? $opt_url : [];
+                                ?>
 
                                 <?= render_th('Category', 'category', $opt_category, $selected_filters) ?>
                                 <?= render_th('Application Name', 'app_name', $opt_app_name, $selected_filters) ?>
                                 <?= render_th('Short Name', 'short_name', $opt_short_name, $selected_filters) ?>
                                 <?= render_th('Module', 'module', $opt_module, $selected_filters) ?>
-								<?= render_th('Database', 'db_name', $opt_db_name, $selected_filters) ?>
-								<?= render_th('Operating Software', 'os_name', $opt_os_name, $selected_filters) ?>
+                                <?= render_th('Database', 'db_name', $opt_db_name, $selected_filters) ?>
+                                <?= render_th('Operating Software', 'os_name', $opt_os_name, $selected_filters) ?>
                                 <?= render_th('Application Type', 'app_type', $opt_app_type, $selected_filters) ?>
                                 <th>Description</th> 
                                 
@@ -161,49 +183,59 @@
                                 <?= render_th('Resilience', 'resilience', $opt_resilience, $selected_filters) ?>
                                 <?= render_th('DR Availability', 'dr_avail', $opt_yn, $selected_filters) ?>
                                 <?= render_th('HA', 'ha', $opt_yn, $selected_filters) ?>
-                                <?= render_th('Flash Copy', 'flash_copy', $opt_yn, $selected_filters) ?>
-                                <?= render_th('End of Day', 'eod', $opt_yn, $selected_filters) ?>
                                 
                                 <?= render_th('Network', 'network', $opt_network, $selected_filters) ?>
                                 <?= render_th('Deployment', 'deployment', $opt_deploy, $selected_filters) ?>
                                 <?= render_th('Operational Hour', 'op_hour', $opt_op_hour, $selected_filters) ?>
                                 <?= render_th('Operational Day', 'op_day', $opt_op_day, $selected_filters) ?>
                                 
-                                <?= render_th('Principle', 'principle', $opt_principle, $selected_filters) ?>
-                                <?= render_th('Principle Solution', 'principle_sol', $opt_principle_sol, $selected_filters) ?>
+                                <?= render_th('Solution Vendor', 'solution_vendor', $opt_solution_vendor, $selected_filters) ?>
+                                <?= render_th('Services Vendor', 'services_vendor', $opt_services_vendor, $selected_filters) ?>
                                 
-                                <?= render_th('IT Group', 'it_group', $opt_it_group, $selected_filters) ?>
-                                <?= render_th('IT Division', 'it_division', $opt_it_div, $selected_filters) ?>
-                                <?= render_th('Directorate', 'directorate', $opt_directorate, $selected_filters) ?>
-                                <?= render_th('Sub-Directorate', 'sub_directorate', $opt_sub_dir, $selected_filters) ?>
-                                <?= render_th('Owner Title', 'owner_title', $opt_owner_title, $selected_filters) ?>
-                                <?= render_th('Head Owner', 'nik_head', $opt_nik_head, $selected_filters) ?>
-                                <?= render_th('Owner', 'nik_owner', $opt_nik_owner, $selected_filters) ?>
-                                <?= render_th('IT Department', 'nik_dept', $opt_nik_dept, $selected_filters) ?>
+                                <?= render_th('LOB Directorate', 'lob_directorate', $opt_lob_directorate, $selected_filters) ?>
+                                <?= render_th('LOB Sub-Directorate', 'lob_subdirectorate', $opt_lob_subdirectorate, $selected_filters) ?>
+                                <?= render_th('LOB Group', 'lob_group', $opt_lob_group, $selected_filters) ?>
+                                <?= render_th('LOB Group Head', 'lob_group_head', $opt_lob_group_head, $selected_filters) ?>
+                                
+                                <?= render_th('IT Sub-Directorate', 'it_subdirectorate', $opt_it_subdirectorate, $selected_filters) ?>
+                                <?= render_th('IT Dept Head', 'it_department_head', $opt_it_department_head, $selected_filters) ?>
+                                <?= render_th('IT Support Group', 'it_support_group', $opt_it_support_group, $selected_filters) ?>
+                                <?= render_th('IT Group Head', 'it_group_head', $opt_it_group_head, $selected_filters) ?>
+                                <?= render_th('IT Support Division', 'it_support_divison', $opt_it_support_divison, $selected_filters) ?>
+                                <?= render_th('IT Division Head', 'it_division_head', $opt_it_division_head, $selected_filters) ?>
+
+                                <?= render_th('App Version', 'app_version', $opt_app_version, $selected_filters) ?>
+                                <?= render_th('Dev Language', 'dev_language', $opt_dev_lang, $selected_filters) ?>
+                                <?= render_th('App Developer', 'app_developer', $opt_app_dev, $selected_filters) ?>
+                                <?= render_th('Supporting Web Server', 'web_server', $opt_web_server, $selected_filters) ?>
+                                <?= render_th('Supporting App Server', 'app_server', $opt_app_server, $selected_filters) ?>
+                                <?= render_th('Supporting Others', 'sup_others', $opt_sup_others, $selected_filters) ?>
+                                <?= render_th('Source Code Owned', 'src_code', $opt_src_code, $selected_filters) ?>
+                                <?= render_th('URL', 'url', $opt_url, $selected_filters) ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if(!empty($list)): $no=$this->input->get('per_page')+1; foreach($list as $row): ?>
                             <tr>
                                 <td class="text-center align-middle">
-									<div class="dropdown">
-										<button class="btn btn-sm btn-secondary dropdown-toggle btn-operation" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<i class="fas fa-cog mr-2"></i> Operation
-										</button>
-										
-										<div class="dropdown-menu dropdown-menu-right shadow dropdown-operation-menu">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-secondary dropdown-toggle btn-operation" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-cog mr-2"></i> Operation
+                                        </button>
+                                        
+                                        <div class="dropdown-menu dropdown-menu-right shadow dropdown-operation-menu">
                                             <button class="dropdown-item" type="button" onclick="window.location.href='<?= base_url('portofolio/audit/'.$row['apps_id']) ?>'">
                                                 <i class="fas fa-clipboard-list fa-fw text-primary mr-2"></i> Audit Trail
-                                            </button>       
+                                            </button>        
                                         </div>
-									</div>
-								</td>
-								<td><?= $row['category_name'] ?></td>
+                                    </div>
+                                </td>
+                                <td><?= $row['category_name'] ?></td>
                                 <td><?= $row['application_name'] ?></td>
                                 <td><?= $row['short_name'] ?></td>
-                                <td><?= $row['module_name'] ?></td>
-								<td><?= str_replace(',', ',<br>', $row['database_names']) ?></td>
-								<td><?= str_replace(',', ',<br>', $row['os_names']) ?></td>
+                                <td><?= $row['module'] ?></td>
+                                <td><?= str_replace(',', ',<br>', $row['database_names']) ?></td>
+                                <td><?= str_replace(',', ',<br>', $row['os_names']) ?></td>
                                 <td><?= $row['application_type'] ?></td>
                                 <td title="<?= $row['apps_description'] ?>"><?= substr($row['apps_description'],0,20) ?></td>
                                 <td class="text-center"><?= $row['live_year'] ?></td>
@@ -211,25 +243,46 @@
                                 <td class="text-center"><?= $row['resilience'] ?></td>
                                 <td class="text-center"><?= $row['dr_availability'] ?></td>
                                 <td class="text-center"><?= $row['ha'] ?></td>
-                                <td class="text-center"><?= $row['flash_copy'] ?></td>
-                                <td class="text-center"><?= $row['end_of_day'] ?></td>
                                 <td><?= $row['network_name'] ?></td>
                                 <td><?= $row['deployment_info'] ?></td>
                                 <td><?= $row['operational_hour'] ?></td>
                                 <td><?= $row['operational_day'] ?></td>
-                                <td><?= $row['principle_name'] ?></td>
-                                <td><?= $row['principle_solution_name'] ?></td>
-                                <td><?= $row['it_group_name'] ?></td>
-                                <td><?= $row['it_division_name'] ?></td>
-                                <td><?= $row['owner_directorate'] ?></td>
-                                <td><?= $row['owner_subdirectorate'] ?></td>
-                                <td><?= $row['owner_title'] ?></td>
-                                <td><?= $row['nik_owner_head'] ?></td>
-                                <td><?= $row['nik_owner'] ?></td>
-                                <td><?= $row['nik_it_department'] ?></td>
+                                <td><?= $row['solution_vendor'] ?></td>
+                                <td><?= $row['services_vendor'] ?></td>
+                                <td><?= $row['lob_directorate'] ?></td>
+                                <td><?= $row['lob_subdirectorate'] ?></td>
+                                <td><?= $row['lob_group'] ?></td>
+                                <td><?= $row['lob_group_head'] ?></td>
+                                <td><?= $row['it_subdirectorate'] ?></td>
+                                <td><?= $row['it_department_head'] ?></td>
+                                <td><?= $row['it_support_group'] ?></td>
+                                <td><?= $row['it_group_head'] ?></td>
+                                <td><?= $row['it_support_divison'] ?></td>
+                                <td><?= $row['it_division_head'] ?></td>
+                                
+                                <td><?= $row['application_version'] ?></td>
+                                <td><?= $row['development_language'] ?></td>
+                                <td><?= $row['application_developer'] ?></td>
+                                <td><?= $row['supporting_web_server'] ?></td>
+                                <td><?= $row['supporting_application_server'] ?></td>
+                                <td><?= $row['supporting_others'] ?></td>
+                                <td><?= $row['source_code_owned'] ?></td>
+                                <td>
+									<?php if (!empty($row['Url']) && $row['Url'] !== '-'): ?>
+										<?php 
+											// Memastikan URL memiliki http:// atau https:// agar link tidak error
+											$valid_url = (strpos($row['Url'], 'http') === 0) ? $row['Url'] : 'http://' . $row['Url']; 
+										?>
+										<a href="<?= $valid_url ?>" target="_blank" style="color: black; text-decoration: underline;">
+											<?= $row['Url'] ?>
+										</a>
+									<?php else: ?>
+										-
+									<?php endif; ?>
+								</td>
                             </tr>
                             <?php endforeach; else: ?>
-                                <tr><td colspan="40" class="text-center">No Data Found</td></tr>
+                                <tr><td colspan="45" class="text-center">No Data Found</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -245,12 +298,12 @@
             </div>
         </div>
       </div>
+      </div>
     </section>
   </div>
   
   <?php $this->load->view('layout/footer'); ?>
 </div>
-
 
 <?php $this->load->view('layout/foot_links'); ?>
 
@@ -270,7 +323,6 @@
     }
 
     function applyFilter(key) {
-        // No Loading Spinner here
         $('.filter-applied-' + key).remove();
         var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
         var container = document.getElementById('activeFiltersContainer');
@@ -286,7 +338,7 @@
     }
 
     function clearFilter(key) {
-        $('#loadingOverlay').css('display', 'flex'); // Show loading on clear (optional)
+        $('#loadingOverlay').css('display', 'flex'); 
         var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
         checkboxes.forEach(cb => cb.checked = false);
         $('.filter-applied-' + key).remove();
@@ -331,9 +383,6 @@
         $('#loadingOverlay').fadeOut();
     });
     
-    function showAddModal() { $('#modalForm').modal('show'); }
-    
-     // Flashdata Success
     <?php if($this->session->flashdata('success')): ?>
         Swal.fire({
             icon: 'success',
@@ -346,7 +395,6 @@
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
 
-    // 2. Flashdata Error (Jika ada duplikat nama database) -> INI YANG DITAMBAHKAN
     <?php if($this->session->flashdata('error')): ?>
         Swal.fire({
             icon: 'error',
@@ -354,19 +402,15 @@
             text: '<?= $this->session->flashdata('error') ?>',
             confirmButtonText: 'OK',
             buttonsStyling: false,
-            // Tombol warna merah
             customClass: { confirmButton: 'btn btn-danger px-4' } 
         });
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
     
-    // --- 1. Script Dark Mode (Versi Universal) ---
     const toggleBtn = document.getElementById('darkModeBtn');
     const body = document.body;
-    // Cek dulu apakah tombol ada (untuk menghindari error di halaman tanpa navbar)
     const icon = toggleBtn ? toggleBtn.querySelector('i') : null;
 
-    // Fungsi ganti icon
     function updateIcon(isDark) {
         if (!icon) return;
         if (isDark) {
@@ -378,7 +422,6 @@
         }
     }
 
-    // Cek status saat load
     if (localStorage.getItem('theme') === 'dark') {
         if(!body.classList.contains('dark-mode')){
             body.classList.add('dark-mode');
@@ -386,15 +429,11 @@
         updateIcon(true);
     }
 
-    // Event Listener Klik
     if(toggleBtn) {
         toggleBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
             body.classList.toggle('dark-mode');
             const isDark = body.classList.contains('dark-mode');
-            
-            // Simpan & Update Icon
             if (isDark) {
                 localStorage.setItem('theme', 'dark');
                 updateIcon(true);
@@ -402,18 +441,12 @@
                 localStorage.setItem('theme', 'light');
                 updateIcon(false);
             }
-
-            // --- PERUBAHAN PENTING DISINI ---
-            // Cek dulu: Apakah fungsi updateChartTheme SUDAH DIBUAT di halaman ini?
-            // Jika halaman ini punya grafik (Portofolio), maka jalankan.
-            // Jika halaman ini tidak punya grafik (Database), maka LEWATI agar tidak error.
             if (typeof updateChartTheme === 'function') {
                 updateChartTheme(isDark);
             }
         });
     }
     
-    // --- Script Logout ---
     const logoutBtn = document.getElementById('logoutLink');
     const overlay = document.getElementById('loadingOverlay');
 

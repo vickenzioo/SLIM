@@ -33,20 +33,21 @@ class Audit extends CI_Controller {
         $config['page_query_string'] = TRUE;
         $config['query_string_segment'] = 'per_page';
         $config['reuse_query_string'] = TRUE;
+        $config['num_links'] = 5;
 
-        // --- STYLE BOOTSTRAP 4 ---
+        // Pagination Style
         $config['full_tag_open']    = '<ul class="pagination pagination-sm m-0 float-right">';
         $config['full_tag_close']   = '</ul>';
-        $config['first_link']       = 'First';
+        $config['first_link']       = '&laquo; First';
         $config['first_tag_open']   = '<li class="page-item">';
         $config['first_tag_close']  = '</li>';
-        $config['last_link']        = 'Last';
+        $config['last_link']        = 'Last &raquo;';
         $config['last_tag_open']    = '<li class="page-item">';
         $config['last_tag_close']   = '</li>';
-        $config['next_link']        = '&raquo;';
+        $config['next_link']        = '&rsaquo;';
         $config['next_tag_open']    = '<li class="page-item">';
         $config['next_tag_close']   = '</li>';
-        $config['prev_link']        = '&laquo;';
+        $config['next_link']        = '&rsaquo;';
         $config['prev_tag_open']    = '<li class="page-item">';
         $config['prev_tag_close']   = '</li>';
         $config['cur_tag_open']     = '<li class="page-item active"><a class="page-link" href="#">';
@@ -55,7 +56,6 @@ class Audit extends CI_Controller {
         $config['num_tag_close']    = '</li>';
         $config['attributes']       = array('class' => 'page-link');
 
-        // 4. Inisialisasi Config
         $this->pagination->initialize($config);
 
         // 5. Ambil Data Sesuai Halaman
@@ -64,15 +64,16 @@ class Audit extends CI_Controller {
 
         $data['keyword'] = $keyword;
 
-        // 6. Persiapkan data untuk View
-        // SINKRONISASI MODEL: Berikan $type agar target_name muncul (Provider Name / Product Name)
+
         $data['target_name'] = $this->Audit_model->get_target_name($id, $type);
         
-        // Tentukan URL kembali secara dinamis berdasarkan tabel
         if ($type == 'tbl_network_provider') {
             $data['back_url'] = 'network_provider';
             $data['menu_label'] = 'Network Provider';
-        } elseif ($type == 'tbl_network_product') {
+        } elseif ($type == 'tbl_apps_type') {
+            $data['back_url'] = 'application_type';
+            $data['menu_label'] = 'Application Type';
+        }elseif ($type == 'tbl_network_product') {
             $data['back_url'] = 'network_product';
             $data['menu_label'] = 'Network Product';
         } elseif ($type == 'tbl_apps_network') { 
@@ -85,15 +86,14 @@ class Audit extends CI_Controller {
             $data['back_url'] = 'database';
             $data['menu_label'] = 'Database';
         } elseif ($type == 'tbl_apps_operational_day' || $type == 'operational_day') {
-            // PERBAIKAN: Set back_url dan menu_label agar breadcrumb muncul benar
             $data['back_url'] = 'operational_day';
             $data['menu_label'] = 'Operational Day';
         } else {
             $data['back_url'] = 'deployment';
             $data['menu_label'] = 'Deployment';
-        } // Penutup bracket yang tadi hilang ada di sini
+        } 
 
-        // Sekarang variabel di bawah ini akan terbaca dengan benar
+
         $data['export_url'] = base_url('audit/audit_export/'.$id . ($keyword ? '?keyword='.$keyword : '') . ($type ? '&type='.$type : ''));
 
         $data['pagination'] = $this->pagination->create_links(); 
@@ -102,7 +102,6 @@ class Audit extends CI_Controller {
         $this->load->view('audit/audit_view', $data);
     }
     
-    // Fungsi export yang dipanggil dari halaman Audit Trail
     public function audit_export($id) {
         $keyword = $this->input->get('keyword');
         $type = $this->input->get('type');
@@ -110,11 +109,11 @@ class Audit extends CI_Controller {
         // Mengambil nama target
         $target = $this->Audit_model->get_target_name($id, $type);
         
-        // SINKRONISASI: Kirim kedua variabel agar aman di view mana pun
         $data['target_name'] = $target; 
         $data['audit_target'] = $target; 
         
-        $data['audit_logs'] = $this->Audit_model->get_audit_logs($id, $keyword);
+        // PERBAIKAN: Tambahkan parameter $type agar hasil ekspor konsisten dengan tabel yang sedang dilihat
+        $data['audit_logs'] = $this->Audit_model->get_audit_logs($id, $keyword, $type);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Audit_Trail_".date('Y-m-d').".xls");
@@ -124,14 +123,8 @@ class Audit extends CI_Controller {
         $this->load->view('audit/audit_export', $data);
     }
 
-    // Fungsi export umum (jika digunakan dari modul lain)
-    // Fungsi export umum (jika digunakan dari modul lain)
     public function export_excel($table_name, $foreign_id) {
         $data['audit_logs'] = $this->Audit_model->get_logs($table_name, $foreign_id);
-    
-        // UBAH BARIS INI: 
-        // Menggunakan get_target_name yang sudah ada di model Anda 
-        // daripada get_target_name_global yang menyebabkan error undefined method.
         $data['audit_target'] = $this->Audit_model->get_target_name($foreign_id, $table_name);
 
         header("Content-type: application/vnd-ms-excel");

@@ -15,7 +15,7 @@ class Portofolio extends CI_Controller {
         $this->load->library('pagination');
         
         $keyword = $this->security->xss_clean($this->input->get('keyword'));
-        $filters = $this->input->get('filter'); // Array Filter dari View
+        $filters = $this->input->get('filter'); 
 
         // Pagination
         $config['base_url'] = base_url('portofolio/index');
@@ -34,16 +34,15 @@ class Portofolio extends CI_Controller {
         $config['reuse_query_string'] = TRUE; 
         $config['num_links'] = 5;
 
-
          // Pagination Style
         $config['full_tag_open']    = '<ul class="pagination pagination-sm m-0 float-right">';
         $config['full_tag_close']   = '</ul>';
         $config['first_link']       = FALSE; 
         $config['last_link']        = FALSE;
-        $config['next_link']        = '&rsaquo;'; // Simbol >
+        $config['next_link']        = '&rsaquo;'; 
         $config['next_tag_open']    = '<li class="page-item">';
         $config['next_tag_close']   = '</li>';
-        $config['prev_link']        = '&lsaquo;'; // Simbol <
+        $config['prev_link']        = '&lsaquo;'; 
         $config['prev_tag_open']    = '<li class="page-item">';
         $config['prev_tag_close']   = '</li>';
         $config['cur_tag_open']     = '<li class="page-item active"><a class="page-link" href="#">';
@@ -55,38 +54,49 @@ class Portofolio extends CI_Controller {
         $this->pagination->initialize($config);
 
         $data['list'] = $this->Portofolio_model->get_paginated($config['per_page'], $this->input->get('per_page'), $keyword, $filters);
-        $data['infra_options'] = $this->Portofolio_model->get_infra_list();
         
         // --- LOAD DYNAMIC FILTER OPTIONS ---
         $m = $this->Portofolio_model;
         
-        $data['opt_category']    = $m->get_dynamic_options('category', $filters);
-        $data['opt_app_name']    = $m->get_dynamic_options('app_name', $filters);
-        $data['opt_short_name']  = $m->get_dynamic_options('short_name', $filters);
-        $data['opt_module']      = $m->get_dynamic_options('module', $filters);
-        $data['opt_db_name']     = $m->get_dynamic_options('db_name', $filters);
-        $data['opt_os_name']     = $m->get_dynamic_options('os_name', $filters);
-        $data['opt_service']     = $m->get_dynamic_options('service', $filters);
-        $data['opt_app_type']    = $m->get_dynamic_options('app_type', $filters);
-        $data['opt_live_year']   = $m->get_dynamic_options('live_year', $filters);
-        $data['opt_decom_year']  = $m->get_dynamic_options('decom_year', $filters);
-        $data['opt_resilience']  = $m->get_dynamic_options('resilience', $filters);
-        $data['opt_network']     = $m->get_dynamic_options('network', $filters);
-        $data['opt_deploy']      = $m->get_dynamic_options('deployment', $filters);
-        $data['opt_op_hour']     = $m->get_dynamic_options('op_hour', $filters);
-        $data['opt_op_day']      = $m->get_dynamic_options('op_day', $filters);
-        $data['opt_principle']     = $m->get_dynamic_options('principle', $filters);
-        $data['opt_principle_sol'] = $m->get_dynamic_options('principle_sol', $filters);
-        $data['opt_it_group']    = $m->get_dynamic_options('it_group', $filters);
-        $data['opt_it_div']      = $m->get_dynamic_options('it_division', $filters);
-        $data['opt_directorate'] = $m->get_dynamic_options('directorate', $filters);
-        $data['opt_sub_dir']     = $m->get_dynamic_options('sub_directorate', $filters);
-        $data['opt_owner_title'] = $m->get_dynamic_options('owner_title', $filters);
-        $data['opt_nik_head']    = $m->get_dynamic_options('nik_head', $filters);
-        $data['opt_nik_owner']   = $m->get_dynamic_options('nik_owner', $filters);
-        $data['opt_nik_dept']    = $m->get_dynamic_options('nik_dept', $filters);
+        $data['opt_category']       = $m->get_dynamic_options('category', $filters);
+        $data['opt_app_name']       = $m->get_dynamic_options('app_name', $filters);
+        $data['opt_short_name']     = $m->get_dynamic_options('short_name', $filters);
+        $data['opt_module']         = $m->get_dynamic_options('module', $filters);
+        $data['opt_db_name']        = $m->get_dynamic_options('db_name', $filters);
+        $data['opt_os_name']        = $m->get_dynamic_options('os_name', $filters);
+        $data['opt_app_type']       = $m->get_dynamic_options('app_type', $filters);
+        $data['opt_live_year']      = $m->get_dynamic_options('live_year', $filters);
+        $data['opt_decom_year']     = $m->get_dynamic_options('decom_year', $filters);
+        $data['opt_resilience']     = $m->get_dynamic_options('resilience', $filters);
+        $data['opt_network']        = $m->get_dynamic_options('network', $filters);
+        $data['opt_deploy']         = $m->get_dynamic_options('deployment', $filters);
+        $data['opt_op_hour']        = $m->get_dynamic_options('op_hour', $filters);
+        $data['opt_op_day']         = $m->get_dynamic_options('op_day', $filters);
         
-        $data['opt_yn'] = ['Y', 'N']; // Statis
+        $data['opt_solution_vendor']= $m->get_dynamic_options('solution_vendor', $filters); 
+        $data['opt_services_vendor']= $m->get_dynamic_options('services_vendor', $filters); 
+        
+        $data['opt_lob_directorate']    = $m->get_dynamic_options('lob_directorate', $filters);
+        $data['opt_lob_subdirectorate'] = $m->get_dynamic_options('lob_subdirectorate', $filters);
+        $data['opt_lob_group']          = $m->get_dynamic_options('lob_group', $filters);
+        $data['opt_lob_group_head']     = $m->get_dynamic_options('lob_group_head', $filters);
+        $data['opt_it_subdirectorate']  = $m->get_dynamic_options('it_subdirectorate', $filters);
+        $data['opt_it_department_head'] = $m->get_dynamic_options('it_department_head', $filters);
+        $data['opt_it_support_group']   = $m->get_dynamic_options('it_support_group', $filters);
+        $data['opt_it_group_head']      = $m->get_dynamic_options('it_group_head', $filters);
+        $data['opt_it_support_divison'] = $m->get_dynamic_options('it_support_divison', $filters);
+        $data['opt_it_division_head']   = $m->get_dynamic_options('it_division_head', $filters);
+        
+        $data['opt_app_version']    = $m->get_dynamic_options('app_version', $filters);
+        $data['opt_dev_lang']       = $m->get_dynamic_options('dev_language', $filters);
+        $data['opt_app_dev']        = $m->get_dynamic_options('app_developer', $filters);
+        $data['opt_web_server']     = $m->get_dynamic_options('web_server', $filters);
+        $data['opt_app_server']     = $m->get_dynamic_options('app_server', $filters);
+        $data['opt_sup_others']     = $m->get_dynamic_options('sup_others', $filters);
+        $data['opt_src_code']       = $m->get_dynamic_options('src_code', $filters);
+        $data['opt_url']            = $m->get_dynamic_options('url', $filters);
+
+        $data['opt_yn'] = ['Y', 'N']; 
 
         $data['keyword'] = $keyword;
         $data['selected_filters'] = $filters; 

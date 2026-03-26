@@ -1,15 +1,21 @@
 <?php
     $role_id = (int) $this->session->userdata('role_id');
-    $uri     = $this->uri->segment(1);
+    $raw_uri = $this->uri->segment(1);
+    $uri     = !empty($raw_uri) ? strtolower($raw_uri) : 'home';
 
     // Grouping Menu Active State
-    $apps_group  = ['operational_hour', 'operational_day'];
-    $infra_group = ['module', 'service', 'database', 'network','network_product', 'network_provider', 'category', 'operating_software', 'deployment', 'server'];
-    $admin_group = ['holiday', 'user_role', 'history'];
+    // Semua menu yang berada di bawah "Apps Master" digabung ke sini
+    $apps_group  = [
+        'application_type', 'database', 'operating_software', 
+        'operational_day', 'operational_hour', 'network',
+        'network_product', 'network_provider', 'category', 
+        'deployment', 'deployment_model', 'deployment_site'
+    ];
+    $admin_group = ['user_role', 'history'];
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="<?= ($role_id === 1) ? base_url('portofolio') : base_url('home') ?>" class="brand-link">
+    <a href="<?= base_url('home') ?>" class="brand-link" onclick="sessionStorage.removeItem('portfolioTableScrollLeft');">
        <svg width="120" height="40" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="textGradientSide" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -34,101 +40,104 @@
             <?php if ($role_id === 1): ?>
 
                 <li class="nav-item">
-                  <a href="<?= base_url('portofolio') ?>" class="nav-link <?= ($uri == '' || $uri == 'portofolio' || $uri == 'portofolio_form') ? 'active' : '' ?>">
-                    <i class="nav-icon fas fa-briefcase"></i>
-                    <p>Portofolio</p>
+                  <a href="<?= base_url('home') ?>" class="nav-link <?= ($uri == '' || $uri == 'home' || $uri == 'home_detail') ? 'active' : '' ?>" onclick="sessionStorage.removeItem('portfolioTableScrollLeft');">
+                    <i class="nav-icon fas fa-home"></i>
+                    <p>Home</p>
                   </a>
                 </li>
 
                 <li class="nav-item <?= (in_array($uri, $apps_group)) ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= (in_array($uri, $apps_group)) ? 'active' : '' ?>">
                       <i class="nav-icon fas fa-cubes"></i>
-                      <p>Apps<i class="right fas fa-angle-left"></i></p>
+                      <p>Apps <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="<?= base_url('operational_hour')?>" class="nav-link <?= ($uri == 'operational_hour') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Operational Hour</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('operational_day')?>" class="nav-link <?= ($uri == 'operational_day') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Operational Day</p>
-                        </a>
-                      </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('application_type')?>" class="nav-link <?= ($uri == 'application_type') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Application Type</p>
+                            </a>
+                          </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('category')?>" class="nav-link <?= ($uri == 'category') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Category</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('database') ?>" class="nav-link <?= ($uri == 'database') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Database</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('deployment')?>" class="nav-link <?= ($uri == 'deployment') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Deployment</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('deployment_model')?>" class="nav-link <?= ($uri == 'deployment_model') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Deployment Provider</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('deployment_site')?>" class="nav-link <?= ($uri == 'deployment_site') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Deployment Site</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('network')?>" class="nav-link <?= ($uri == 'network') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Network</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('network_product')?>" class="nav-link <?= ($uri == 'network_product') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Network Product</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('network_provider')?>" class="nav-link <?= ($uri == 'network_provider') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Network Provider</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('operating_software')?>" class="nav-link <?= ($uri == 'operating_software') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Operating Software</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('operational_hour')?>" class="nav-link <?= ($uri == 'operational_hour') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Operational Hour</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('operational_day')?>" class="nav-link <?= ($uri == 'operational_day') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Operational Day</p>
+                            </a>
+                        </li>  
                     </ul>
                 </li>
 
-                <li class="nav-item <?= (in_array($uri, $infra_group)) ? 'menu-open' : '' ?>">
-                    <a href="#" class="nav-link <?= (in_array($uri, $infra_group)) ? 'active' : '' ?>">
-                      <i class="nav-icon fas fa-server"></i>
-                      <p>Infra<i class="right fas fa-angle-left"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-					  <li class="nav-item">
-                        <a href="<?= base_url('module') ?>" class="nav-link <?= ($uri == 'module') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Module</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('service') ?>" class="nav-link <?= ($uri == 'service') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Service</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('database') ?>" class="nav-link <?= ($uri == 'database') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Database</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('network')?>" class="nav-link <?= ($uri == 'network') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Network</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('network_product')?>" class="nav-link <?= ($uri == 'network_product') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Network Product</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('network_provider')?>" class="nav-link <?= ($uri == 'network_provider') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Network Provider</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('category')?>" class="nav-link <?= ($uri == 'category') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Category</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('operating_software')?>" class="nav-link <?= ($uri == 'operating_software') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Operating Software</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('deployment')?>" class="nav-link <?= ($uri == 'deployment') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Deployment</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="<?= base_url('server')?>" class="nav-link <?= ($uri == 'server') ? 'active' : '' ?>">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Server</p>
-                        </a>
-                      </li>
-                    </ul>
-                </li>
               
                 <li class="nav-item <?= (in_array($uri, $admin_group)) ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= (in_array($uri, $admin_group)) ? 'active' : '' ?>">
@@ -136,12 +145,6 @@
                         <p>Administration<i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="<?= base_url('holiday') ?>" class="nav-link <?= ($uri == 'holiday') ? 'active' : '' ?>">
-                              <i class="far fa-circle nav-icon"></i>
-                              <p>List Holiday</p>
-                          </a>
-                        </li>
                         <li class="nav-item">
                             <a href="<?= base_url('user_role') ?>" class="nav-link <?= ($uri == 'user_role') ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
@@ -158,11 +161,9 @@
                 </li>
 
             <?php else: ?>
-
-                <li class="nav-header">MY WORKSPACE</li>
                 
                 <li class="nav-item">
-                  <a href="<?= base_url('home') ?>" class="nav-link <?= ($uri == '' || $uri == 'home' || $uri == 'home_detail') ? 'active' : '' ?>">
+                  <a href="<?= base_url('home') ?>" class="nav-link <?= ($uri == '' || $uri == 'home' || $uri == 'home_detail') ? 'active' : '' ?>" onclick="sessionStorage.removeItem('portfolioTableScrollLeft');">
                     <i class="nav-icon fas fa-home"></i>
                     <p>Home</p>
                   </a>

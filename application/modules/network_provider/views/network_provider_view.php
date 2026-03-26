@@ -259,66 +259,116 @@
   </div>
   
   <?php $this->load->view('layout/footer'); ?>
-</div>
 
-<div class="modal fade" id="modalForm" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%); color: var(--text-dark);">
-        <h5 class="modal-title" id="modalTitle">Add Provider</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <form action="<?= base_url('network_provider/save') ?>" method="post">
-          <div class="modal-body">
-            <input type="hidden" name="provider_id" id="provider_id">
-            
-            <div class="form-group">
-                <label>Provider Name</label>
-                <input type="text" name="provider_name" id="provider_name" class="form-control" required placeholder="Enter Network Provider Name">
+<div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--theme-yellow-primary); color: #000;">
+                <h5 class="modal-title" id="modalTitle" style="font-weight: 700;">Add Provider</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form action="<?= base_url('network_provider/save') ?>" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="provider_id" id="provider_id">
+                    
+                    <div class="form-group">
+                        <label for="provider_name">Provider Name</label>
+                        <input type="text" name="provider_name" id="provider_name" class="form-control" placeholder="Enter Network Provider Name" required>
+                    </div>
 
-            <div class="form-group">
-                <label>Connected Network</label>
-                <select class="form-control select2" name="network_id" id="network_id" style="width: 100%;">
-                    <?php if(!empty($network_options)): ?>
-                        <?php foreach($network_options as $net): ?>
-                            <option value="<?= $net['network_id'] ?>"><?= $net['network_name'] ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
+                    <div class="form-group">
+                        <label for="network_id">Connected Network</label>
+                        
+                        <div id="container_network_add" class="dropdown">
+                            <button class="btn btn-default border dropdown-toggle w-100 d-flex justify-content-between align-items-center" type="button" id="dropdownNetwork" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="labelNetwork" class="text-truncate">-- Select Connected Network --</span>
+                            </button>
+                            <div class="dropdown-menu w-100 p-2 keep-open" style="max-height: 200px; overflow-y: auto;">
+                                <?php if(!empty($network_options)): ?>
+                                    <?php foreach($network_options as $net): ?>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input net-checkbox" type="checkbox" 
+                                                   name="network_id[]" 
+                                                   value="<?= $net['network_id'] ?>" 
+                                                   id="net_<?= $net['network_id'] ?>" 
+                                                   data-label="<?= $net['network_name'] ?>">
+                                            <label class="form-check-label w-100" for="net_<?= $net['network_id'] ?>" style="cursor:pointer;">
+                                                <?= $net['network_name'] ?>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
 
-                 <div class="form-text text-end" style="font-size: 0.85rem;">
-                    <p style="text-align: right; font-size: 11px; color: #666; margin-top: 4px;">
-                      Note: pilih '-' jika network product tidak memiliki network name.
-                    </p>
+                        <select name="network_id_single" id="network_id_edit" class="form-control select2" required>
+                            <option value="">-- Select Connected Network --</option>
+                            <?php if(!empty($network_options)): ?>
+                                <?php foreach($network_options as $net): ?>
+                                    <option value="<?= $net['network_id'] ?>"><?= $net['network_name'] ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+
+                        <div class="form-text" style="font-size: 0.85rem;">
+                            <p style="text-align: right; font-size: 11px; color: #666; margin-top: 4px;">
+                                Note: pilih '-' jika network product tidak memiliki network name.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="reason_container" class="form-group" style="display:none;">
+                        <label for="reason">Reason</label>
+                        <textarea name="reason" id="reason" class="form-control" placeholder="Masukkan alasan perubahan..."></textarea>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group" id="reason_container" style="display: none;">
-                    <label>Reason</label>
-                    <textarea name="reason" id="reason" class="form-control" rows="2" placeholder="Masukkan alasan perubahan..."></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-save-custom">Save Changes</button>
-          </div>
-      </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-theme-gradient" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); border: none; color: #000; font-weight: 600;">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
-
 <?php $this->load->view('layout/foot_links'); ?>
+
+
 
 <script>
     $(document).ready(function() {
         $('.select2').select2({
-            theme: 'bootstrap4',
-            placeholder: "Select Connected Network", 
-            allowClear: true,
-            dropdownParent: $('#modalForm'),
-            minimumResultsForSearch: Infinity
+        theme: 'bootstrap4',
+        placeholder: "-- Select Connected Network --",
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#modalForm'),
+        minimumResultsForSearch: Infinity
+    });
+
+        // --- LOGIC DROPDOWN CHECKBOX NETWORK ---
+        // Update label tombol berdasarkan checkbox yang dicentang
+        $(document).on('change', '.net-checkbox', function() {
+            var selectedLabels = [];
+            $('.net-checkbox:checked').each(function() {
+                // Mengambil label dari atribut data-label
+                selectedLabels.push($(this).data('label'));
+            });
+
+            if (selectedLabels.length > 0) {
+                // Menggabungkan nama-nama network dengan koma
+                $('#labelNetwork').text(selectedLabels.join(', '));
+            } else {
+                $('#labelNetwork').text('-- Select Connected Network --');
+            }
         });
+
+        // Mencegah dropdown tertutup saat area checkbox diklik
+        $(document).on('click', '.keep-open', function (e) {
+            e.stopPropagation();
+        });
+
         $('#loadingOverlay').fadeOut();
     });
 
@@ -386,39 +436,43 @@
         })
     }
 
-    // --- STANDARD FUNCTIONS ---
     function clearForm() {
         $('#modalTitle').text('Add Provider');
         $('#provider_id').val('');
         $('#provider_name').val('');
-        $('#network_id').val(null).trigger('change');
+        
+        // Tampilkan checkbox (Add Mode), sembunyikan dropdown biasa
+        $('#container_network_add').show();
+        $('#network_id_edit').hide().prop('disabled', true); // Disable agar tidak terkirim saat ADD
+        
+        // Reset Checkbox
+        $('.net-checkbox').prop('checked', false);
+        $('#labelNetwork').text('-- Select Connected Network --');
+        
         $('#reason').val(''); 
         $('#reason_container').hide(); 
         $('#modalForm').modal('show'); 
     }
 
-    function editProvider(id, name) {      
+    function editProvider(id, name, network_id) {
         $('#modalTitle').text('Edit Provider');
         $('#provider_id').val(id);
         $('#provider_name').val(name);
         
-        // Load data relasi
-        $.ajax({
-            url: "<?= base_url('network_provider/get_related_networks/') ?>" + id,
-            type: "GET",
-            dataType: "JSON",
-            success: function(data) {
-                var selectedId = (data.length > 0) ? data[0] : null;
-                $('#network_id').val(selectedId).trigger('change');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Error fetching networks');
-            }
-        });
-        
-        $('#reason').val(''); 
-        $('#reason_container').show(); 
-        $('#modalForm').modal('show'); 
+        // Sembunyikan kontainer checkbox (untuk Add) dan tampilkan Select2 (untuk Edit)
+        $('#container_network_add').hide();
+        $('#network_id_edit').show();
+        $('#reason_container').show();
+        $('#reason').attr('required', true);
+
+        // Set value ke Select2 dan trigger refresh tampilan
+        if(network_id) {
+            $('#network_id_edit').val(network_id).trigger('change');
+        } else {
+            $('#network_id_edit').val('').trigger('change');
+        }
+
+        $('#modalForm').modal('show');
     }
 
     function confirmDelete(id) {

@@ -63,9 +63,7 @@ class Deployment extends CI_Controller {
         $data['deployments'] = $this->Deployment_model->get_deployments_paginated($config['per_page'], $start, $keyword, $filters);
         
         // Load Options
-        $data['opt_deployment_model']    = $this->Deployment_model->get_dynamic_options('deployment_model', $filters);
-        $data['opt_deployment_provider'] = $this->Deployment_model->get_dynamic_options('deployment_provider', $filters);
-        $data['opt_main_deployment_site']= $this->Deployment_model->get_dynamic_options('main_deployment_site', $filters);
+        $data['opt_deployment_model'] = $this->Deployment_model->get_dynamic_options('deployment_model', $filters);
 
         $data['keyword'] = $keyword;
         $data['selected_filters'] = $filters;
@@ -94,53 +92,77 @@ class Deployment extends CI_Controller {
     public function save() {
         $id = $this->security->xss_clean($this->input->post('deployment_id'));
         $name = trim($this->security->xss_clean($this->input->post('deployment_model')));
-        $provider = trim($this->security->xss_clean($this->input->post('deployment_provider')));
-        $site = trim($this->security->xss_clean($this->input->post('main_deployment_site')));
         $reason = $this->security->xss_clean($this->input->post('reason'));
         $username = $this->session->userdata('username');
         $userId = $this->session->userdata('user_id');
 
-        if ($this->Deployment_model->check_duplicate_deployment($name, $provider, $site, $id)) {
-            $this->session->set_flashdata('error', 'Data Deployment dengan Model, Provider, dan Site tersebut sudah ada!');
+        if ($this->Deployment_model->check_duplicate_deployment($name, $id)) {
+            $this->session->set_flashdata('error', 'Nama Deployment "'. $name .'" sudah ada! Gagal menyimpan.');
             redirect('deployment'); return; 
         }
-
+        
         if ($id) {
             if(empty($reason)){
                 $this->session->set_flashdata('error', 'Gagal update: Alasan wajib diisi!');
                 redirect('deployment'); return;
             }
+
+            // Mengikuti pola Database: Ambil langsung dari query row_array
             $oldData = $this->db->get_where('tbl_apps_deployment', ['deployment_id' => $id])->row_array();
-            
-            if (trim($oldData['deployment_model']) == $name && trim($oldData['deployment_provider']) == $provider && trim($oldData['main_deployment_site']) == $site) {
+            $oldName = trim($oldData['deployment_model']);
+
+            // Cek apakah ada perubahan nama
+            if ($oldName == $name) {
                 $this->session->set_flashdata('error', 'Gagal simpan: Tidak ada perubahan data.');
-                redirect('deployment'); return; 
+                redirect('deployment'); return;
             }
 
-            $data = [ 'deployment_model' => $name, 'deployment_provider' => $provider, 'main_deployment_site' => $site, 'modified_by' => $userId, 'modified_at' => date("Y-m-d H:i:s") ];
-            $this->Deployment_model->update_deployment($id, $data);
-
-            $fields = [
-                'deployment_model' => ['label' => 'Deployment Model', 'new' => $name],
-                'deployment_provider' => ['label' => 'Deployment Provider', 'new' => $provider],
-                'main_deployment_site' => ['label' => 'Main Deployment Site', 'new' => $site]
+            $update_data = [ 
+                'deployment_model' => $name, 
+                'modified_by' => $userId, 
+                'modified_at' => date("Y-m-d H:i:s") 
             ];
-            foreach ($fields as $field => $info) {
-                if ($oldData[$field] != $info['new']) {
-                    $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'EDIT', 'table_name' => 'tbl_apps_deployment', 'foreign_id' => $id, 'field_name' => $info['label'], 'old_value' => $oldData[$field], 'new_value' => $info['new'], 'reason' => $reason, 'timestamp' => date('Y-m-d H:i:s') ]);
-                }
-            }
-            $this->session->set_flashdata('success', 'Data deployment berhasil diperbarui');
-        } else {
-            $data = [ 'deployment_model' => $name, 'deployment_provider' => $provider, 'main_deployment_site' => $site, 'created_by' => $userId, 'created_at' => date("Y-m-d H:i:s") ];
-            $this->Deployment_model->insert_deployment($data);
-            $new_id = $this->db->insert_id(); 
             
-            $fields = [ 'Deployment Model' => $name, 'Deployment Provider' => $provider, 'Main Deployment Site' => $site ];
-            foreach ($fields as $label => $value) {
-                $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_apps_deployment', 'foreign_id' => $new_id, 'field_name' => $label, 'old_value' => '-', 'new_value' => $value, 'reason' => 'Initial Creation', 'timestamp' => date('Y-m-d H:i:s') ]);
-            }
-            $this->session->set_flashdata('success', 'Data deployment berhasil ditambahkan');
+            $this->Deployment_model->update_deployment($id, $update_data);
+
+            // Audit Log mengikuti format Database (field_name menggunakan snake_case agar konsisten)
+            $this->Audit_model->insert_log([ 
+                'username' => $username, 
+                'action' => 'EDIT', 
+                'table_name' => 'tbl_apps_deployment', 
+                'foreign_id' => $id, 
+                'field_name' => 'deployment_model', 
+                'old_value' => $oldName, 
+                'new_value' => $name, 
+                'reason' => $reason, 
+                'timestamp' => date('Y-m-d H:i:s') 
+            ]);
+
+            $this->session->set_flashdata('success', 'Data berhasil diperbarui');
+        } else {
+            $insert_data = [ 
+                'deployment_model' => $name, 
+                'created_by' => $userId, 
+                'created_at' => date("Y-m-d H:i:s"),
+                'status' => 1 
+            ];
+
+            $this->Deployment_model->insert_deployment($insert_data);
+            $new_id = $this->db->insert_id();
+
+            $this->Audit_model->insert_log([ 
+                'username' => $username, 
+                'action' => 'ADD', 
+                'table_name' => 'tbl_apps_deployment', 
+                'foreign_id' => $new_id, 
+                'field_name' => 'deployment_model', 
+                'old_value' => '-', 
+                'new_value' => $name, 
+                'reason' => 'Initial Creation', 
+                'timestamp' => date('Y-m-d H:i:s') 
+            ]);
+
+            $this->session->set_flashdata('success', 'Data berhasil ditambahkan');
         }
         redirect('deployment');
     }
@@ -164,7 +186,7 @@ class Deployment extends CI_Controller {
             }
 
             // Ambil info detail untuk pesan notifikasi (Model + Provider)
-            $nama_data = $old_data['deployment_model'] . ' (' . $old_data['deployment_provider'] . ')';
+            $nama_data = $old_data['deployment_model'];
 
             // Update status di tbl_apps_deployment (Pastikan method ini ada di Deployment_model)
             $update = $this->Deployment_model->update_status($id, $status);
@@ -203,7 +225,7 @@ class Deployment extends CI_Controller {
     public function audit($id) {
         $this->load->library('pagination');
 
-        $db_data = $this->Deployment_model->get_by_id($id); 
+        $db_data = $this->Deployment_model->get_by_id($id);
         if (!$db_data) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan.');
             redirect('deployment');
@@ -212,7 +234,7 @@ class Deployment extends CI_Controller {
         // [XSS CLEAN] Membersihkan keyword pencarian di halaman audit
         $keyword = $this->security->xss_clean($this->input->get('keyword'));
         
-        $table_name = 'tbl_apps_deployment';
+        $table_name = 'tbl_apps_deployment'; 
 
         $config['base_url'] = base_url('deployment/audit/' . $id);
         $config['total_rows'] = count($this->Audit_model->get_audit_logs($id, $keyword, $table_name));
@@ -234,16 +256,14 @@ class Deployment extends CI_Controller {
         $start = $this->input->get('per_page');
         $audit_logs = $this->Audit_model->get_audit_logs_paginated($id, $table_name, $config['per_page'], $start, $keyword);
 
+        $data['target_name'] = $db_data['deployment_model'];
         $data['keyword']     = $keyword;
-        // MENAMBAHKAN MENU LABEL AGAR BREADCRUMB MUNCUL
-        $data['menu_label']  = 'Deployment'; 
-        // MEMASTIKAN TARGET NAME MENGGUNAKAN VARIABEL $db_data YANG SUDAH ADA
-        $data['target_name'] = $db_data['deployment_model'] . ' (' . $db_data['deployment_provider'] . ')'; 
         $data['back_url']    = 'deployment';
-        $data['export_url']  = base_url('audit/export_excel/tbl_apps_deployment/' . $id); 
+        $data['menu_label']  = 'Deployment';
+        $data['export_url']  = base_url('audit/export_excel/tbl_apps_deployment/' . $id);
         $data['audit_data']  = $audit_logs;
         $data['pagination']  = $this->pagination->create_links();
-        $data['total_rows']  = $config['total_rows']; 
+        $data['total_rows']  = $config['total_rows'];
 
         $this->load->view('audit/audit_view', $data);
     }

@@ -6,8 +6,6 @@ class Deployment_model extends CI_Model {
     // 1. Mapping Filter
     protected $_filter_map = [
         'deployment_model'    => 'deployment_model',
-        'deployment_provider' => 'deployment_provider',
-        'main_deployment_site'=> 'main_deployment_site'
     ];
 
     // 2. Logic Filter Utama
@@ -36,8 +34,6 @@ class Deployment_model extends CI_Model {
         if($keyword) {
             $this->db->group_start();
             $this->db->like('deployment_model', $keyword);
-            $this->db->or_like('deployment_provider', $keyword);
-            $this->db->or_like('main_deployment_site', $keyword);
             $this->db->group_end();
         }
         $this->_apply_filters($filters);
@@ -49,13 +45,12 @@ class Deployment_model extends CI_Model {
         if($keyword) {
             $this->db->group_start();
             $this->db->like('deployment_model', $keyword);
-            $this->db->or_like('deployment_provider', $keyword);
-            $this->db->or_like('main_deployment_site', $keyword);
             $this->db->group_end();
         }
         
         $this->_apply_filters($filters);
-		$this->db->order_by('status', 'DESC'); 
+        $this->db->order_by('status', 'DESC'); 
+        // Ubah deployment_name menjadi deployment_model agar tidak Error 1054
         $this->db->order_by('deployment_model', 'ASC'); 
         
         if ($limit > 0) {
@@ -100,11 +95,11 @@ class Deployment_model extends CI_Model {
         if($keyword) {
             $this->db->group_start();
             $this->db->like('deployment_model', $keyword);
-            $this->db->or_like('deployment_provider', $keyword);
-            $this->db->or_like('main_deployment_site', $keyword);
             $this->db->group_end();
         }
         $this->_apply_filters($filters);
+        $this->db->order_by('status', 'DESC'); 
+        // Ubah deployment_name menjadi deployment_model agar tidak Error 1054
         $this->db->order_by('deployment_model', 'ASC');
         return $this->db->get('tbl_apps_deployment')->result_array();
     }
@@ -114,11 +109,9 @@ class Deployment_model extends CI_Model {
     public function update_deployment($id, $data) { $this->db->where('deployment_id', $id); return $this->db->update('tbl_apps_deployment', $data); }
     public function delete_deployment($id) { $this->db->where('deployment_id', $id); return $this->db->delete('tbl_apps_deployment'); }
     
-    public function check_duplicate_deployment($name, $provider, $site, $id = null) {
+    public function check_duplicate_deployment($name, $id = null) {
+        // Gunakan deployment_model sesuai struktur DB
         $this->db->where('deployment_model', $name);
-        $this->db->where('deployment_provider', $provider);
-        $this->db->where('main_deployment_site', $site);
-
         if($id) {
             $this->db->where('deployment_id !=', $id);
         }
@@ -128,12 +121,12 @@ class Deployment_model extends CI_Model {
     public function get_by_id($id) {
         return $this->db->get_where('tbl_apps_deployment', ['deployment_id' => $id])->row_array();
     }
-	
-	public function update_status($id, $status) {
+    
+    public function update_status($id, $status) {
         $this->db->where('deployment_id', $id);
         return $this->db->update('tbl_apps_deployment', ['status' => $status]);
     }
-	
+    
     public function get_audit_trail($id) {
         $this->db->where('table_name', 'tbl_apps_deployment'); 
         $this->db->where('foreign_id', $id);

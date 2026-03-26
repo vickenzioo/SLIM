@@ -229,21 +229,20 @@
                                             $bg = '#f8f9fa'; $color = '#6c757d'; 
                                             $role_name = strtoupper(trim($ur['role_name']));
 
-                                            // 1. Kelompok INPUTTER (Tosca/Greenish)
-                                            if(in_array($role_name, ['EA APPS INPUTTER', 'EA INFRA INPUTTER', 'BU INPUTTER'])) { 
-                                                $bg = 'rgba(0, 210, 211, 0.15)'; $color = '#008a8a'; 
-
-                                            // 2. Kelompok APPROVER (Purple)
-                                            } elseif(in_array($role_name, ['EA APPS APPROVER', 'EA INFRA APPROVER', 'BU APPROVER'])) { 
-                                                $bg = 'rgba(162, 155, 254, 0.2)'; $color = '#6c5ce7'; 
-
-                                            // 3. IT SLM (Yellow/Gold)
-                                            } elseif($role_name == 'IT SLM') { 
-                                                $bg = 'rgba(251, 197, 49, 0.15)'; $color = '#b88a00'; 
-
-                                            // 4. IT DEV (Emerald Green)
-                                            } elseif($role_name == 'IT DEV') { 
-                                                 $bg = 'rgba(72, 219, 251, 0.15)'; $color = '#0abde3'; 
+                                            // Penentuan warna spesifik untuk 3 Role Utama
+                                            switch ($role_name) {
+                                                case 'IT SLM':
+                                                    $bg = 'rgba(0, 210, 211, 0.15)'; $color = '#008a8a';
+                                                    break;
+                                                case 'EA':
+                                                    $bg = 'rgba(162, 155, 254, 0.2)'; $color = '#6c5ce7'; // Ungu Muda
+                                                    break;
+                                                case 'IT DEV':
+                                                    $bg = 'rgba(232, 67, 147, 0.15)'; $color = '#d63031'; 
+                                                    break;
+                                                default:
+                                                    $bg = '#f8f9fa'; $color = '#6c757d';
+                                                    break;
                                             }
                                         ?>
                                         <span class="badge px-3 py-2" style="background-color: <?= $bg ?>; color: <?= $color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px;">

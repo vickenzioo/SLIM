@@ -11,8 +11,15 @@ class Auth extends CI_Controller {
     }
 
     public function index() {
+        // Cek apakah sudah login
         if ($this->session->userdata('email')) {
-            redirect('portofolio');
+            $role_id = (int)$this->session->userdata('role_id');
+            // Jika Role 2 (EA) atau Role 3 (IT Dev), arahkan ke Home
+            if (in_array($role_id, [2, 3])) {
+                redirect('home');
+            } else {
+                redirect('portofolio');
+            }
         }
 
         // Ambil pesan error dari session lalu hapus
@@ -48,7 +55,7 @@ class Auth extends CI_Controller {
             $user = $this->Auth_model->get_user_by_email($email);
 
             if ($user) {
-                // [TAMBAHAN ATURAN 2]: Cek apakah user aktif atau tidak
+                // Cek apakah user aktif atau tidak
                 if ($user['status'] == 0) {
                     $this->session->set_userdata('message', '<div class="alert alert-warning text-center" role="alert">Akun Anda sudah Non-aktif. Silahkan hubungi Admin!</div>');
                     redirect('auth');
@@ -57,22 +64,39 @@ class Auth extends CI_Controller {
 
                 // Cek Password Biasa (Plain Text)
                 if ($password == $user['password']) {
+                    
+                    // Pastikan kita menyimpan role_id ke dalam session sejak awal login
+                    $role_id = isset($user['role_id']) ? (int)$user['role_id'] : 0;
+
                     $data = [
                         'user_id'  => $user['id'], 
                         'email'    => $user['email'],
                         'username' => $user['username'],
-                        'role'     => $user['role_name']
+                        'role'     => $user['role_name'],
+                        'role_id'  => $role_id // Tambahan penting untuk Gatekeeper
                     ];
                     
                     $this->session->set_userdata($data);
-                    redirect('portofolio'); 
+
+                    // Arahkan Halaman Berdasarkan Role ID
+                    if (in_array($role_id, [2, 3])) {
+                        redirect('home'); // EA Apps & IT Dev langsung ke Home
+                    } else {
+                        redirect('Home'); // IT SLM bebas ke Portofolio
+                    }
                     
                 } else {
-                    $this->session->set_userdata('message', '<div class="alert alert-danger text-center" role="alert">Password salah!</div>');
+                    $this->session->set_flashdata('old_email', $email);
+                    $this->session->set_flashdata('old_password', $password);
+                    
+                    $this->session->set_flashdata('error_password', 'Email atau password tidak valid');
                     redirect('auth');
                 }
             } else {
-                $this->session->set_userdata('message', '<div class="alert alert-danger text-center" role="alert">Email tidak terdaftar!</div>');
+                $this->session->set_flashdata('old_email', $this->input->post('email'));
+                $this->session->set_flashdata('old_password', $this->input->post('password'));
+
+                $this->session->set_flashdata('error_password', 'Email atau password tidak valid?');
                 redirect('auth');
             }
         }
@@ -81,7 +105,8 @@ class Auth extends CI_Controller {
     public function logout() {
         $this->session->unset_userdata('email');
         $this->session->unset_userdata('user_id');
-        $this->session->unset_userdata('username'); // Hapus session username juga
+        $this->session->unset_userdata('username');
+        $this->session->unset_userdata('role_id'); 
         $this->session->sess_destroy();
         
         $this->session->set_userdata('message', '<div class="alert alert-success text-center" role="alert">Anda telah logout!</div>');

@@ -90,147 +90,86 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr class="bg-info">
-                                <th class="text-center" style="width: 200px;">Action</th>
+                                <th class="text-center" style="width: 150px;">Action</th>
                                 <?php 
-									// Helper Render Header with Filter
-									function render_th($label, $key, $options, $selected) {
-										$isActive = isset($selected[$key]) && !empty($selected[$key]);
-										// Class ini mengatur warna jika filter sedang aktif
-										$iconClass = $isActive ? 'filter-active' : ''; 
-										
-										// Sorting options
-										if(!empty($options) && is_array($options)) {
-											$options = array_unique($options);
-											sort($options);
-										}
-										
-										echo '<th style="color: var(--text-dark); vertical-align: middle;">';
-										
-										// [WRAPPER UTAMA]: d-inline-flex membuat kotak ini hanya selebar isinya (Teks + Icon)
-										// align-items-center mensejajarkan teks dan icon secara vertikal
-										echo '<div class="d-inline-flex align-items-center">';
-										
-											// 1. Teks Label
-											echo '<span>' . $label . '</span>';
-											
-											// 2. Icon Wrapper
-											// - Tetap pakai class 'filter-icon-wrapper' agar dapat efek hover/warna lama.
-											// - Tambah 'ml-2' untuk jarak spasi.
-											// - STYLE INLINE PENTING: 'position: static' membatalkan 'absolute' yang bikin dia lari ke pojok.
-											// - 'transform: none' mencegah icon loncat vertikal karena style lama.
-											echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
-											
-												echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
-												
-												// Dropdown Menu
-												echo '<div class="dropdown-menu dropdown-menu-right custom-filter-dropdown" onclick="event.stopPropagation()">';
-													
-													// Search
-													echo '<div class="filter-header">';
-													echo '<input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)">';
-													echo '</div>';
-													
-													// List
-													echo '<div class="filter-body">';
-													if(!empty($options)) {
-														foreach($options as $opt) {
-															if(trim($opt) === '') continue;
-															$checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
-															echo '<label class="filter-item">';
-															echo '<input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> ';
-															echo htmlspecialchars($opt);
-															echo '</label>';
-														}
-													} else {
-														echo '<div class="p-2 text-muted text-center small">No Options</div>';
-													}
-													echo '</div>';
-													
-													// Footer
-													echo '<div class="filter-footer">';
-													echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
-													echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
-													echo '</div>';
-													
-												echo '</div>'; // End Dropdown
-											echo '</div>'; // End Btn Group
-
-										echo '</div>'; // End Flex
-										echo '</th>';
-									}
-								?>
-
-                                <?= render_th('Deployment Model', 'deployment_model', $opt_deployment_model, $selected_filters) ?>
-                                <?= render_th('Deployment Provider', 'deployment_provider', $opt_deployment_provider, $selected_filters) ?>
-                                <?= render_th('Main Deployment Site', 'main_deployment_site', $opt_main_deployment_site, $selected_filters) ?>
-								<th style="width: 200px; text-align: center;">Status</th>
-                                
+                                    // Helper Render Header (Tetap ada namun hanya memanggil 1 kolom filter)
+                                    function render_th($label, $key, $options, $selected) {
+                                        $isActive = isset($selected[$key]) && !empty($selected[$key]);
+                                        $iconClass = $isActive ? 'filter-active' : ''; 
+                                        if(!empty($options) && is_array($options)) {
+                                            $options = array_unique($options);
+                                            sort($options);
+                                        }
+                                        echo '<th style="color: var(--text-dark); vertical-align: middle;">';
+                                        echo '<div class="d-inline-flex align-items-center">';
+                                        echo '<span>' . $label . '</span>';
+                                        echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
+                                        echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
+                                        echo '<div class="dropdown-menu dropdown-menu-right custom-filter-dropdown" onclick="event.stopPropagation()">';
+                                        echo '<div class="filter-header"><input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)"></div>';
+                                        echo '<div class="filter-body">';
+                                        if(!empty($options)) {
+                                            foreach($options as $opt) {
+                                                if(trim($opt) === '') continue;
+                                                $checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
+                                                echo '<label class="filter-item"><input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> '.htmlspecialchars($opt).'</label>';
+                                            }
+                                        } else { echo '<div class="p-2 text-muted text-center small">No Options</div>'; }
+                                        echo '</div>';
+                                        echo '<div class="filter-footer">';
+                                        echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
+                                        echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
+                                        echo '</div></div></div></div></th>';
+                                    }
+                                ?>
+                                <?= render_th('Deployment Name', 'deployment_model', $opt_deployment_model, $selected_filters) ?>
+                                <th style="width: 200px; text-align: center;">Status</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             <?php if(!empty($deployments)): ?>
-                                <?php 
-                                    $start = $this->input->get('per_page');
-                                    $no = $start ? $start + 1 : 1; 
-                                ?>
                                 <?php foreach($deployments as $db): ?>
                                 <tr>
-									<td class="text-center align-middle">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle btn-operation" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-cog mr-2"></i> Operation
-                                        </button>
-                                        
-                                        <div class="dropdown-menu dropdown-menu-right shadow dropdown-operation-menu">
-                                            <button class="dropdown-item" type="button" onclick="window.location.href='<?= base_url('deployment/audit/'.$db['deployment_id']) ?>'">
-                                                <i class="fas fa-clipboard-list fa-fw text-primary mr-2"></i> Audit Trail
-                                            </button>
-
-                                            <?php if($db['status'] == 1): ?>
-                                                <button class="dropdown-item" type="button" onclick="editDep(<?= $db['deployment_id'] ?>, '<?= $db['deployment_model'] ?>', '<?= $db['deployment_provider'] ?>', '<?= $db['main_deployment_site'] ?>')">
-                                                    <i class="fas fa-edit fa-fw text-warning mr-2"></i> Edit Data
-                                                </button>
-                                            
-                                                <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $db['deployment_id'] ?>)">
-                                                    <i class="fas fa-power-off fa-fw text-danger mr-2"></i> Deactivate
-                                                </button>
-                                            <?php else: ?>
-                                                
-                                                <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $db['deployment_id'] ?>)">
-                                                    <i class="fas fa-undo-alt fa-fw text-success mr-2"></i> Activate
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </td>
-                                    <td class="align-middle"><?= $db['deployment_model'] ?></td>
-                                    <td class="align-middle"><?= $db['deployment_provider'] ?></td>
-                                    <td class="align-middle"><?= $db['main_deployment_site'] ?></td>
                                     <td class="text-center align-middle">
-                                    <?php 
-                                        if (isset($db['status']) && $db['status'] == 1) { 
-                                            // Hijau pudar (Soft Pastel Green)
-                                            $status_bg = '#e8f5e9';    
-                                            $status_color = '#2e7d32'; 
-                                            $status_label = 'Active';
-                                        } else { 
-                                            // Merah pudar (Soft Pastel Red)
-                                            $status_bg = '#ffebee';    
-                                            $status_color = '#c62828'; 
-                                            $status_label = 'Non Active';
-                                        }
-                                    ?>
-                                    <span class="badge px-3 py-2"
-                                        style="background-color: <?= $status_bg ?>; color: <?= $status_color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 700; min-width: 85px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                        <?= $status_label ?>
-                                    </span>
-                                </td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-secondary dropdown-toggle btn-operation" type="button" data-toggle="dropdown">
+                                                <i class="fas fa-cog mr-2"></i> Operation
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right shadow dropdown-operation-menu">
+                                                <button class="dropdown-item" type="button" onclick="window.location.href='<?= base_url('deployment/audit/'.$db['deployment_id']) ?>'">
+                                                    <i class="fas fa-clipboard-list fa-fw text-primary mr-2"></i> Audit Trail
+                                                </button>
+                                                <?php if($db['status'] == 1): ?>
+                                                    <button class="dropdown-item" type="button" onclick="editDep(<?= $db['deployment_id'] ?>, '<?= htmlspecialchars($db['deployment_model']) ?>')">
+                                                        <i class="fas fa-edit fa-fw text-warning mr-2"></i> Edit Data
+                                                    </button>
+                                                    <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $db['deployment_id'] ?>)">
+                                                        <i class="fas fa-power-off fa-fw text-danger mr-2"></i> Deactivate
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $db['deployment_id'] ?>)">
+                                                        <i class="fas fa-undo-alt fa-fw text-success mr-2"></i> Activate
+                                                    </button>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle"><?= $db['deployment_model'] ?></td>
+                                    <td class="text-center align-middle">
+                                        <?php 
+                                            $status_bg = ($db['status'] == 1) ? '#e8f5e9' : '#ffebee';
+                                            $status_color = ($db['status'] == 1) ? '#2e7d32' : '#c62828';
+                                            $status_label = ($db['status'] == 1) ? 'Active' : 'Non Active';
+                                        ?>
+                                        <span class="badge px-3 py-2" style="background-color: <?= $status_bg ?>; color: <?= $status_color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 700; min-width: 85px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <?= $status_label ?>
+                                        </span>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr>
-                                    <td colspan="5" class="text-center">No Data Found</td>
-                                </tr>
+                                <tr><td colspan="3" class="text-center">No Data Found</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -267,20 +206,12 @@
           <div class="modal-body">
             <input type="hidden" name="deployment_id" id="deployment_id">
             <div class="form-group">
-                <label>Deployment Model</label>
-                <input type="text" name="deployment_model" id="deployment_model" class="form-control" required placeholder="Enter Deployment Model">
-            </div>
-            <div class="form-group">
-                <label>Deployment Provider</label>
-                <input type="text" name="deployment_provider" id="deployment_provider" class="form-control" required placeholder="Enter Deployment Provider">
-            </div>
-            <div class="form-group">    
-                <label>Main Deployment Site</label>
-                <input type="text" name="main_deployment_site" id="main_deployment_site" class="form-control" required placeholder="Enter Main Deployment Site">
+                <label>Deployment Name</label>
+                <input type="text" name="deployment_model" id="deployment_model" class="form-control" required placeholder="Enter Deployment Name">
             </div>
             <div class="form-group" id="reason_container" style="display: none;">
-                    <label>Reason</label>
-                    <textarea name="reason" id="reason" class="form-control" rows="2" placeholder="Masukkan alasan..."></textarea>
+                <label>Reason</label>
+                <textarea name="reason" id="reason" class="form-control" rows="2" placeholder="Masukkan alasan..."></textarea>
             </div>
           </div>
           <div class="modal-footer">
@@ -363,20 +294,18 @@
     function clearForm() {
         $('#modalTitle').text('Add Deployment');
         $('#deployment_id').val('');
-        $('#deployment_model').val('');
-        $('#deployment_provider').val('');
-        $('#main_deployment_site').val('');
+        // Pastikan menggunakan ID 'deployment_model' sesuai dengan input di modal
+        $('#deployment_model').val(''); 
         $('#reason').val(''); 
         $('#reason_container').hide(); 
         $('#modalDeployment').modal('show'); 
     }
 
-    function editDep(id, name, provider, site) {
+    function editDep(id, name) {
         $('#modalTitle').text('Edit Deployment');
         $('#deployment_id').val(id);
-        $('#deployment_model').val(name);
-        $('#deployment_provider').val(provider);
-        $('#main_deployment_site').val(site);
+        // Pastikan menggunakan ID 'deployment_model' sesuai dengan input di modal
+        $('#deployment_model').val(name); 
         $('#reason').val(''); 
         $('#reason_container').show(); 
         $('#modalDeployment').modal('show'); 

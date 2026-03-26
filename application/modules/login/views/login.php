@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLIM | Login</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1864/1864497.png" type="image/png">   
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.17/dist/sweetalert2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/slim/login.css'); ?>">
+    <?php $this->load->view('layout/head_links'); ?>
 </head>
 <body>
 
@@ -61,25 +57,34 @@
                         <div class="login-subtitle">Selamat datang! Silahkan login untuk lanjut.</div>
                     </div>
 
-                    <?php if (isset($pesan_error) && $pesan_error): ?>
-                        <?= $pesan_error; ?>
-                    <?php endif; ?>
                     
                     <form action="<?= base_url('auth/process_login'); ?>" method="post">
                         
                         <div class="form-label-group text-left">
-                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Email" value="<?= set_value('email'); ?>">
+                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Email" 
+                                value="<?= $this->session->flashdata('old_email') ? $this->session->flashdata('old_email') : set_value('email'); ?>">
                             <label for="emailInput">Email</label>
                             <small class="text-danger"><?= form_error('email'); ?></small>
                         </div>
 
                         <div class="form-label-group text-left position-relative">
-                            <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Password">
+                            <input type="password" 
+                               class="form-control <?= (form_error('password') || $this->session->flashdata('error_password')) ? 'is-invalid' : ''; ?>" 
+                               id="passwordInput" name="password" placeholder="Password"
+                               value="<?= $this->session->flashdata('old_password'); ?>">
+                            
                             <label for="passwordInput">Password</label>
+                            
                             <button type="button" class="password-toggle-btn" id="togglePassword">
                                 <i class="fa-regular fa-eye" id="eyeIcon"></i>
                             </button>
-                            <small class="text-danger"><?= form_error('password'); ?></small>
+
+                            <div class="d-flex justify-content-end">
+                                <small class="text-danger font-weight-bold mt-2">
+                                    <?= form_error('password'); ?>
+                                    <?= $this->session->flashdata('error_password'); ?>
+                                </small>
+                            </div>
                         </div>
                         
                         <div class="mt-4">
@@ -115,8 +120,8 @@
         <div class="loading-text">Logging in...</div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url('assets/dist/js/slim/bootstrap.bundle.min.js') ?>"></script>
+    <script src="<?= base_url('assets/dist/js/slim/jquery-3.6.0.min.js') ?>"></script>
 
     <script>
         /* JavaScript tetap sama seperti aslinya */

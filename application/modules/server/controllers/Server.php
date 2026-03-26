@@ -132,6 +132,22 @@ class Server extends CI_Controller {
             'service_name'
         );
 
+        $data['opt_database'] = array_column(
+            $this->db->select('DISTINCT(dbm.database_name)')
+                ->from('tbl_apps_database ad')
+                ->join('tbl_database_master dbm', 'dbm.database_id = ad.database_id')
+                ->get()->result_array(), 
+            'database_name'
+        );
+
+        $data['opt_os'] = array_column(
+            $this->db->select('DISTINCT(osw.operating_software_name)')
+                ->from('tbl_apps_operating_software aos')
+                ->join('tbl_operating_software osw', 'osw.operating_software_id = aos.operating_software_id')
+                ->get()->result_array(), 
+            'operating_software_name'
+        );
+
         // 2. Opsi Server Type (Hanya yang digunakan di infra server)
         $data['opt_server_type'] = array_column(
             $this->db->select('DISTINCT(s.server_name)')

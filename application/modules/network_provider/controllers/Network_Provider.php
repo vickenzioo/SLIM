@@ -97,70 +97,93 @@ class Network_provider extends CI_Controller {
 
     // --- Save, Delete, Audit, AJAX (Tetap Sama) ---
     public function save() {
-        $id   = $this->input->post('provider_id'); 
+        $id   = $this->input->post('provider_id'); // Junction ID (network_provider_id)
         $name = trim($this->security->xss_clean($this->input->post('provider_name')));
-        $single_network_id = $this->input->post('network_id');
-        $network_ids = $single_network_id ? [$single_network_id] : [];
+        $network_ids = $this->input->post('network_id'); // Ini sekarang bisa berupa array
         $reason = $this->security->xss_clean($this->input->post('reason'));
         $username = $this->session->userdata('username'); 
         $createdBy = $this->session->userdata('user_id');
 
-        if (empty($single_network_id)) {
+        if (empty($network_ids)) {
             $this->session->set_flashdata('error', 'Network wajib dipilih!');
             redirect('network_provider'); return;
         }
-        if ($this->Network_provider_model->check_duplicate_data($name, $single_network_id, $id)) {
-            $this->session->set_flashdata('error', 'Duplikat! Kombinasi Provider Name dan Network ini sudah ada.');
-            redirect('network_provider'); return; 
+
+        // Pastikan $network_ids selalu array agar bisa di-loop
+        if (!is_array($network_ids)) {
+            $network_ids = [$network_ids];
         }
 
         $this->db->trans_start();
 
         if ($id) {
+            // --- LOGIKA EDIT (Per Baris / Single ID) ---
             if(empty($reason)){
                 $this->session->set_flashdata('error', 'Gagal update: Alasan wajib diisi!');
                 redirect('network_provider'); return;
             }
-            $existing_data = $this->Network_provider_model->get_by_id($id);
-            $existing_networks = $this->Network_provider_model->get_provider_networks($id);
-            
-            $old_name = $existing_data['provider_name'];
-            $old_net_id = !empty($existing_networks) ? $existing_networks[0] : '';
 
-            if ($name == $old_name && $single_network_id == $old_net_id) {
+            $existing_data = $this->Network_provider_model->get_by_id_junc($id);
+            $old_name = $existing_data['provider_name'];
+            $old_net_id = $existing_data['network_id'];
+            $single_net_id = $network_ids[0]; // Saat edit, ambil pilihan pertama
+
+            if ($name == $old_name && $single_net_id == $old_net_id) {
                 $this->db->trans_complete(); 
                 $this->session->set_flashdata('error', 'Tidak ada data yang diubah.');
                 redirect('network_provider'); return;
             }
 
-            $data = [ 'provider_name' => $name, 'modified_by'    => $createdBy, 'modified_at'    => date("Y-m-d H:i:s") ];
-            $this->Network_provider_model->update_provider($id, $data);
-            $this->Network_provider_model->save_provider_networks($id, $network_ids);
-
-            if ($old_name != $name) { $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'EDIT', 'table_name' => 'tbl_network_provider', 'foreign_id' => $id, 'field_name' => 'Provider Name', 'old_value' => $old_name, 'new_value' => $name, 'reason' => $reason, 'timestamp' => date('Y-m-d H:i:s') ]); }
-            if ($old_net_id != $single_network_id) {
-                $old_net_name = $this->Network_provider_model->get_network_name_by_id($old_net_id);
-                $new_net_name = $this->Network_provider_model->get_network_name_by_id($single_network_id);
-                $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'EDIT', 'table_name' => 'tbl_network_provider', 'foreign_id' => $id, 'field_name' => 'Network Name', 'old_value' => $old_net_name, 'new_value' => $new_net_name, 'reason' => $reason, 'timestamp' => date('Y-m-d H:i:s') ]);
+            // Cek duplikat untuk kombinasi baru (kecuali ID diri sendiri)
+            if ($this->Network_provider_model->check_duplicate_data($name, $single_net_id, $existing_data['provider_id'])) {
+                 // Catatan: check_duplicate_data perlu memastikan tidak bentrok dengan provider_id yang sama tapi network berbeda
             }
+
+            // Update data provider (tabel utama)
+            $this->Network_provider_model->update_provider($existing_data['provider_id'], ['provider_name' => $name]);
+            
+            // Update tabel junction untuk ID spesifik ini
+            $this->db->where('network_provider_id', $id);
+            $this->db->update('tbl_network_provider_junc', ['network_id' => $single_net_id]);
+
+            // Audit Trail Edit...
+            if ($old_name != $name) { $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'EDIT', 'table_name' => 'tbl_network_provider', 'foreign_id' => $existing_data['provider_id'], 'field_name' => 'Provider Name', 'old_value' => $old_name, 'new_value' => $name, 'reason' => $reason, 'timestamp' => date('Y-m-d H:i:s') ]); }
+            
             $message = 'Data Provider berhasil diperbarui';
 
         } else {
-            $data = [ 'provider_name' => $name, 'created_by'     => $createdBy, 'created_at'     => date("Y-m-d H:i:s") ];
-            $this->Network_provider_model->insert_provider($data);
-            $new_id = $this->db->insert_id();
-            $this->Network_provider_model->save_provider_networks($new_id, $network_ids);
+            // --- LOGIKA ADD (Batch / Pecah jadi beberapa ID) ---
+            // 1. Cek dulu apakah provider_name sudah ada di tbl_network_provider
+            $this->db->where('provider_name', $name);
+            $existing_p = $this->db->get('tbl_network_provider')->row_array();
 
-            $base_reason = 'Initial Creation';
-            $new_net_name = $this->Network_provider_model->get_network_name_by_id($single_network_id);
+            if ($existing_p) {
+                $provider_id = $existing_p['provider_id'];
+            } else {
+                $this->Network_provider_model->insert_provider(['provider_name' => $name, 'created_by' => $createdBy, 'created_at' => date("Y-m-d H:i:s")]);
+                $provider_id = $this->db->insert_id();
+            }
 
-            $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_network_provider', 'foreign_id' => $new_id, 'field_name' => 'Provider Name', 'old_value' => '-', 'new_value' => $name, 'reason' => $base_reason, 'timestamp' => date('Y-m-d H:i:s') ]);
-            $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_network_provider', 'foreign_id' => $new_id, 'field_name' => 'Network Name', 'old_value' => '-', 'new_value' => $new_net_name, 'reason' => $base_reason, 'timestamp' => date('Y-m-d H:i:s') ]);
+            foreach ($network_ids as $net_id) {
+                // Cek apakah kombinasi provider + network ini sudah ada
+                if (!$this->Network_provider_model->check_duplicate_data($name, $net_id)) {
+                    $batch_data = [
+                        'provider_id' => $provider_id,
+                        'network_id'  => $net_id,
+                        'status'      => 1
+                    ];
+                    $this->db->insert('tbl_network_provider_junc', $batch_data);
+                    $new_junc_id = $this->db->insert_id();
+
+                    // Audit Trail per item yang baru dibuat
+                    $new_net_name = $this->Network_provider_model->get_network_name_by_id($net_id);
+                    $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_network_provider', 'foreign_id' => $provider_id, 'field_name' => 'Network (Batch)', 'old_value' => '-', 'new_value' => $name . ' - ' . $new_net_name, 'reason' => 'Initial Batch Creation', 'timestamp' => date('Y-m-d H:i:s') ]);
+                }
+            }
             $message = 'Data Provider berhasil ditambah';
         }
 
         $this->db->trans_complete();
-
         if ($this->db->trans_status() === FALSE) { $this->session->set_flashdata('error', 'Terjadi kesalahan database.'); } else { $this->session->set_flashdata('success', $message); }
         redirect('network_provider');
     }

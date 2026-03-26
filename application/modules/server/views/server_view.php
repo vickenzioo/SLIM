@@ -70,7 +70,7 @@
           </div>
 
           <div class="card-body">
-            <div class="table-responsive">
+            <div style="overflow-x: auto; width: 100%;">
               <table class="table table-striped table-bordered table-hover text-nowrap table-custom-fixed mb-0">
                   <thead>
                     <tr class="bg-info text-center">
@@ -123,9 +123,11 @@
                         <?= render_th('Application Name', 'apps_name', $opt_apps_name, $selected_filters) ?>
                         <?= render_th('Module', 'module', $opt_module, $selected_filters) ?>
                         <?= render_th('Service Name', 'service_name', $opt_service_name, $selected_filters) ?>
+                        <?= render_th('Database', 'database', $opt_database, $selected_filters) ?>
+                        <?= render_th('Operating Software', 'operating_sw', $opt_os, $selected_filters) ?>
+                        <th style="color: var(--text-dark); vertical-align: middle;">Resilience</th>
                         <?= render_th('Server Type', 'server_type', $opt_server_type, $selected_filters) ?>
                                 
-                        <th style="color: var(--text-dark); vertical-align: middle;">DR</th>
                         <th style="color: var(--text-dark); vertical-align: middle;">Prod Web</th>
                         <th style="color: var(--text-dark); vertical-align: middle;">Prod Apps</th>
                         <th style="color: var(--text-dark); vertical-align: middle;">Prod DB</th>
@@ -161,8 +163,10 @@
                           <td><?= !empty($r['apps_name']) ? $r['apps_name'] : '-' ?></td>
                           <td><?= !empty($r['module']) ? $r['module'] : '-' ?></td>
                           <td><?= !empty($r['service_name']) ? $r['service_name'] : '-' ?></td>
-                          <td><?= !empty($r['server_type']) ? $r['server_type'] : '-' ?></td>
+                          <td><?= !empty($r['db_name']) ? $r['db_name'] : '-' ?></td>
+                          <td><?= !empty($r['os_name']) ? $r['os_name'] : '-' ?></td>
                           <td class="text-center"><?= !empty($r['dr']) ? $r['dr'] : '-' ?></td>
+                          <td><?= !empty($r['server_type']) ? $r['server_type'] : '-' ?></td>
                           <td class="text-center"><?= (int)$r['svr_web_prod'] ?></td>
                           <td class="text-center"><?= (int)$r['svr_apps_prod'] ?></td>
                           <td class="text-center"><?= (int)$r['svr_db_prod'] ?></td>
@@ -210,18 +214,25 @@
   });
 
   function applyFilter(key) {
-      const url = new URL(window.location.href);
-      // Bersihkan filter lama untuk key ini
-      url.searchParams.delete(`filter[${key}][]`);
+    const url = new URL(window.location.href);
     
-      // Ambil semua yang dicheck dalam dropdown tersebut
-      $(`.filter-checkbox[data-key="${key}"]:checked`).each(function() {
-          url.searchParams.append(`filter[${key}][]`, $(this).val());
-      });
+    // Ambil semua checkbox yang dicheck berdasarkan atribut data-key
+    const selectedValues = [];
+    $(`input[type="checkbox"][data-key="${key}"]:checked`).each(function() {
+        selectedValues.push($(this).val());
+    });
 
-      url.searchParams.delete('per_page'); // Reset ke halaman 1
-      window.location.href = url.toString();
-  }
+    // Hapus filter lama untuk key ini
+    url.searchParams.delete(`filter[${key}][]`);
+    
+    // Tambahkan kembali filter yang baru dipilih
+    selectedValues.forEach(val => {
+        url.searchParams.append(`filter[${key}][]`, val);
+    });
+
+    url.searchParams.delete('per_page'); // Reset ke halaman 1
+    window.location.href = url.toString();
+}
 
   function clearFilter(key) {
       const url = new URL(window.location.href);

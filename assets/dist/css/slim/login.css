@@ -268,6 +268,26 @@ body {
 }
 .password-toggle-btn:focus { outline: none; }
 
+/* --- Custom Validation Style --- */
+
+/* 1. Menghilangkan Icon Danger (tanda seru) di dalam field */
+.form-control.is-invalid {
+    background-image: none !important;
+    padding-right: 0.75rem !important; /* Kembalikan padding normal */
+}
+
+/* 2. Memastikan border menjadi merah saat salah */
+.form-control.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Menghilangkan shadow merah saat fokus jika diinginkan lebih clean */
+.form-control.is-invalid:focus {
+    box-shadow: none !important;
+    border-color: #dc3545 !important;
+}
+
 /* --- LOADING SPINNER --- */
 #loadingOverlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;

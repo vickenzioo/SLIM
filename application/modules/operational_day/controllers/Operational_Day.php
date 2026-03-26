@@ -91,7 +91,8 @@ class Operational_Day extends CI_Controller {
             'timestamp'  => date('Y-m-d H:i:s')
         ]);
 
-        // 2. Ambil semua data (tanpa limit)
+        $keyword = $this->security->xss_clean($this->input->get('keyword'));
+        $filters = $this->input->get('filter');
         $data['operational_days'] = $this->Operational_Day_model->get_all_operational_days();
 
         header("Content-type: application/vnd-ms-excel");
@@ -206,8 +207,9 @@ class Operational_Day extends CI_Controller {
     public function audit($id) {
         $this->load->library('pagination');
 
-        $db_data = $this->Operational_Day_model->get_by_id($id); 
-        if (!$db_data) {
+        // PERBAIKAN: Menggunakan $this->Operational_Day_model (sesuai dengan yang di-load di __construct)
+        $op_day_data = $this->Operational_Day_model->get_by_id($id);
+        if (!$op_day_data) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan.');
             redirect('operational_day');
         }
@@ -215,7 +217,8 @@ class Operational_Day extends CI_Controller {
         // [XSS CLEAN] Membersihkan keyword pencarian di halaman audit
         $keyword = $this->security->xss_clean($this->input->get('keyword'));
         
-        $table_name = 'tbl_apps_operational_day';
+        // Nama tabel audit untuk Operational Day
+        $table_name = 'tbl_apps_operational_day'; 
 
         $config['base_url'] = base_url('operational_day/audit/' . $id);
         $config['total_rows'] = count($this->Audit_model->get_audit_logs($id, $keyword, $table_name));
@@ -237,14 +240,17 @@ class Operational_Day extends CI_Controller {
         $start = $this->input->get('per_page');
         $audit_logs = $this->Audit_model->get_audit_logs_paginated($id, $table_name, $config['per_page'], $start, $keyword);
 
-        $data['target_name'] = $db_data['start_day'] . ' - ' . $db_data['end_day'];
+        // Target name disesuaikan agar menampilkan rentang hari (Start - End Day)
+        $data['target_name'] = isset($op_day_data['start_day']) ? $op_day_data['start_day'] . ' - ' . $op_day_data['end_day'] : 'Operational Day';
         $data['keyword']     = $keyword;
         $data['back_url']    = 'operational_day';
+        $data['menu_label']  = 'Operational Day';
         $data['export_url']  = base_url('audit/export_excel/tbl_apps_operational_day/' . $id);
         $data['audit_data']  = $audit_logs;
         $data['pagination']  = $this->pagination->create_links();
-        $data['total_rows']  = $config['total_rows']; 
+        $data['total_rows']  = $config['total_rows'];
 
         $this->load->view('audit/audit_view', $data);
     }
+
 }

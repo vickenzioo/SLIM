@@ -22,52 +22,63 @@ class Home extends CI_Controller {
 
     public function index() {
         $role_id = $this->session->userdata('role_id');
-        if ($role_id === 1) { 
-            redirect('portofolio'); 
-            return;
-        }
-
         $user_id = $this->session->userdata('user_id');
         $data['title'] = 'Home';
         $data['rid'] = $role_id;
         
+        // SECURITY: Membersihkan input pencarian dan filter dari XSS
         $keyword = $this->security->xss_clean($this->input->get('keyword'));
-        $filters = $this->input->get('filter');
+        $filters = $this->security->xss_clean($this->input->get('filter'));
 
         $m = $this->Home_model;
 
         // --- PENGAMBILAN DATA OPSI FILTER ---
+        $data['opt_app_status']      = $m->get_dynamic_options('app_status', $user_id, $role_id, $filters);
         $data['opt_status']          = $m->get_dynamic_options('status', $user_id, $role_id, $filters);
         $data['opt_category']        = $m->get_dynamic_options('category', $user_id, $role_id, $filters);
         $data['opt_app_name']        = $m->get_dynamic_options('app_name', $user_id, $role_id, $filters);
         $data['opt_short_name']      = $m->get_dynamic_options('short_name', $user_id, $role_id, $filters);
         $data['opt_module']          = $m->get_dynamic_options('module', $user_id, $role_id, $filters);
-        $data['opt_service_name']    = $m->get_dynamic_options('service_name', $user_id, $role_id, $filters); 
         $data['opt_db_name']         = $m->get_dynamic_options('db_name', $user_id, $role_id, $filters);
         $data['opt_os_name']         = $m->get_dynamic_options('os_name', $user_id, $role_id, $filters);
-        
         $data['opt_app_type']        = $m->get_dynamic_options('app_type', $user_id, $role_id, $filters);
+        $data['opt_server_name']     = $m->get_dynamic_options('server_name', $user_id, $role_id, $filters);
+        $data['opt_standard_cat']    = $m->get_dynamic_options('standard_category', $user_id, $role_id, $filters);
         $data['opt_live_year']       = $m->get_dynamic_options('live_year', $user_id, $role_id, $filters);
         $data['opt_decom_year']      = $m->get_dynamic_options('decom_year', $user_id, $role_id, $filters);
         $data['opt_resilience']      = $m->get_dynamic_options('resilience', $user_id, $role_id, $filters);
         $data['opt_network']         = $m->get_dynamic_options('network', $user_id, $role_id, $filters);
-        $data['opt_deploy']          = $m->get_dynamic_options('deployment', $user_id, $role_id, $filters);
+        
+        $data['opt_deploy_model']    = $m->get_dynamic_options('deployment_model', $user_id, $role_id, $filters);
+        $data['opt_deploy_provider'] = $m->get_dynamic_options('deployment_provider', $user_id, $role_id, $filters);
+        $data['opt_deploy_site']     = $m->get_dynamic_options('deployment_site', $user_id, $role_id, $filters);
+        
         $data['opt_op_hour']         = $m->get_dynamic_options('op_hour', $user_id, $role_id, $filters);
         $data['opt_op_day']          = $m->get_dynamic_options('op_day', $user_id, $role_id, $filters);
-        $data['opt_principle']       = $m->get_dynamic_options('principle', $user_id, $role_id, $filters);
-        $data['opt_principle_sol']   = $m->get_dynamic_options('principle_sol', $user_id, $role_id, $filters);
-        $data['opt_it_group']        = $m->get_dynamic_options('it_group', $user_id, $role_id, $filters);
-        $data['opt_it_div']          = $m->get_dynamic_options('it_division', $user_id, $role_id, $filters);
-        $data['opt_directorate']     = $m->get_dynamic_options('directorate', $user_id, $role_id, $filters);
-        $data['opt_sub_dir']         = $m->get_dynamic_options('sub_directorate', $user_id, $role_id, $filters);
-        $data['opt_owner_title']     = $m->get_dynamic_options('owner_title', $user_id, $role_id, $filters);
-        $data['opt_nik_head']        = $m->get_dynamic_options('nik_head', $user_id, $role_id, $filters);
-        $data['opt_nik_owner']       = $m->get_dynamic_options('nik_owner', $user_id, $role_id, $filters);
-        $data['opt_nik_dept']        = $m->get_dynamic_options('nik_dept', $user_id, $role_id, $filters);
+        $data['opt_solution_vendor'] = $m->get_dynamic_options('solution_vendor', $user_id, $role_id, $filters);
+        $data['opt_services_vendor'] = $m->get_dynamic_options('services_vendor', $user_id, $role_id, $filters);
+        $data['opt_lob_directorate'] = $m->get_dynamic_options('lob_directorate', $user_id, $role_id, $filters);
+        $data['opt_lob_subdirectorate'] = $m->get_dynamic_options('lob_subdirectorate', $user_id, $role_id, $filters);
+        $data['opt_lob_group']       = $m->get_dynamic_options('lob_group', $user_id, $role_id, $filters);
+        $data['opt_lob_group_head']  = $m->get_dynamic_options('lob_group_head', $user_id, $role_id, $filters);
+        $data['opt_lob_department_head'] = $m->get_dynamic_options('lob_department_head', $user_id, $role_id, $filters);
+        $data['opt_it_subdirectorate'] = $m->get_dynamic_options('it_subdirectorate', $user_id, $role_id, $filters);
+        $data['opt_it_department_head'] = $m->get_dynamic_options('it_department_head', $user_id, $role_id, $filters);
+        $data['opt_it_support_group'] = $m->get_dynamic_options('it_support_group', $user_id, $role_id, $filters);
+        $data['opt_it_group_head']   = $m->get_dynamic_options('it_group_head', $user_id, $role_id, $filters);
+        $data['opt_it_support_divison'] = $m->get_dynamic_options('it_support_divison', $user_id, $role_id, $filters);
+        $data['opt_it_division_head']= $m->get_dynamic_options('it_division_head', $user_id, $role_id, $filters);
+        
+        $data['opt_app_version']     = $m->get_dynamic_options('app_version', $user_id, $role_id, $filters);
+        $data['opt_dev_lang']        = $m->get_dynamic_options('dev_language', $user_id, $role_id, $filters);
+        $data['opt_app_dev']         = $m->get_dynamic_options('app_developer', $user_id, $role_id, $filters);
+        $data['opt_web_server']      = $m->get_dynamic_options('web_server', $user_id, $role_id, $filters);
+        $data['opt_app_server']      = $m->get_dynamic_options('app_server', $user_id, $role_id, $filters);
+        $data['opt_sup_others']      = $m->get_dynamic_options('sup_others', $user_id, $role_id, $filters);
+        $data['opt_src_code']        = $m->get_dynamic_options('src_code', $user_id, $role_id, $filters);
+        $data['opt_url']             = $m->get_dynamic_options('url', $user_id, $role_id, $filters);
 
-        // [TAMBAHAN] Filter khusus Server Type dan Readyness
-        $data['opt_server_type']     = $m->get_dynamic_options('server_type', $user_id, $role_id, $filters);
-        $data['opt_readyness']       = ['Comply', 'Not Comply'];
+        $data['opt_yn'] = ['Yes', 'No'];
 
         $data['selected_filters'] = $filters;
         $data['keyword'] = $keyword;
@@ -75,12 +86,6 @@ class Home extends CI_Controller {
         $this->load->library('pagination');
         $config['base_url'] = base_url('home/index');
         
-        $is_infra_view = in_array($role_id, [4, 5]); 
-        $is_bu_view    = in_array($role_id, [6, 7]);
-
-        $data['is_infra'] = $is_infra_view;
-        $data['is_bu']    = $is_bu_view;
-
         $config['per_page'] = 5;
         $config['page_query_string'] = TRUE;
         $config['reuse_query_string'] = TRUE;
@@ -106,40 +111,23 @@ class Home extends CI_Controller {
         $config['num_tag_close'] = '</li>';
         $config['attributes'] = array('class' => 'page-link');
         
-        $page = ($this->input->get('page')) ? $this->input->get('page') : 0;
+        // SECURITY: Membersihkan parameter angka 
+        $raw_page = $this->security->xss_clean($this->input->get('page'));
+        $page = ($raw_page) ? (int)$raw_page : 0;
+        
+        $raw_export = $this->security->xss_clean($this->input->get('export'));
+        $is_export = $raw_export == 1;
 
-        // Logika PHP Filtering untuk Readyness yang dinamis
-        if ($is_infra_view) {
-            $readyness_filter = isset($filters['readyness']) ? $filters['readyness'] : [];
-            $valid_readyness = array_filter($readyness_filter, function($v) { return $v !== ''; });
-
-            if (!empty($valid_readyness)) {
-                $all_infra = $m->get_my_infra_portfolio($user_id, $role_id, $keyword, $filters, 0, 0);
-                $filtered_infra = [];
-                foreach ($all_infra as $r) {
-                    $this->_calculate_sla($r);
-                    if (in_array($r['readyness'], $valid_readyness)) {
-                        $filtered_infra[] = $r;
-                    }
-                }
-                $config['total_rows'] = count($filtered_infra);
-                $this->pagination->initialize($config);
-                $data['my_portfolio'] = array_slice($filtered_infra, $page, $config['per_page']);
-            } else {
-                $config['total_rows'] = $m->count_my_infra_portfolio($user_id, $role_id, $keyword, $filters);
-                $this->pagination->initialize($config);
-                $data['my_portfolio'] = $m->get_my_infra_portfolio($user_id, $role_id, $keyword, $filters, $config['per_page'], $page);
-                if(!empty($data['my_portfolio'])) {
-                    foreach ($data['my_portfolio'] as &$r) {
-                        $this->_calculate_sla($r);
-                    }
-                }
-            }
-        } else {
-            $config['total_rows'] = $m->count_my_portfolio($user_id, $role_id, $keyword, $filters);
-            $this->pagination->initialize($config);
-            $data['my_portfolio'] = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, $config['per_page'], $page);
+        if ($is_export) {
+            $all_data = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, 0, 0);
+            $data['export_data'] = $all_data;
+            $this->load->view('home_export', $data);
+            return;
         }
+
+        $config['total_rows'] = $m->count_my_portfolio($user_id, $role_id, $keyword, $filters);
+        $this->pagination->initialize($config);
+        $data['my_portfolio'] = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, $config['per_page'], $page);
 
         $data['pagination'] = $this->pagination->create_links();
         $data['total_rows'] = $config['total_rows'];
@@ -149,55 +137,11 @@ class Home extends CI_Controller {
         $this->load->view('home_view', $data);
     }
 
-    private function _mul_non_zero($arr) {
-        $vals = [];
-        foreach ($arr as $v) { $v = (float)$v; if ($v > 0) $vals[] = $v; }
-        if (count($vals) === 0) return 0;
-        $res = 1;
-        foreach ($vals as $v) $res *= $v;
-        return $res;
-    }
+     public function detail($apps_id = 0, $service_id = 0) {
+        // SECURITY: Pastikan parameter dari URL selalu berupa integer untuk mencegah SQL Injection
+        $apps_id = (int)$apps_id;
+        $service_id = (int)$service_id;
 
-    private function _calculate_sla(&$row) {
-        $slaInfra = isset($row['sla_by_infra_pct']) ? ((float)$row['sla_by_infra_pct'] / 100.0) : 
-                    (isset($row['server_sla_pct']) ? ((float)$row['server_sla_pct'] / 100.0) : 0);
-        
-        $w_p = isset($row['server_web_prod_count']) ? (int)$row['server_web_prod_count'] : 0;
-        $a_p = isset($row['server_app_prod_count']) ? (int)$row['server_app_prod_count'] : 0;
-        $d_p = isset($row['server_db_prod_count']) ? (int)$row['server_db_prod_count'] : 0;
-        
-        $sla_w_p = ($w_p > 0) ? (1 - pow((1 - $slaInfra), $w_p)) : 0;
-        $sla_a_p = ($a_p > 0) ? (1 - pow((1 - $slaInfra), $a_p)) : 0;
-        $sla_d_p = ($d_p > 0) ? (1 - pow((1 - $slaInfra), $d_p)) : 0;
-        
-        $row['sla_svr_prod'] = $this->_mul_non_zero([$sla_w_p, $sla_a_p, $sla_d_p]);
-
-        $w_d = isset($row['server_web_dr_count']) ? (int)$row['server_web_dr_count'] : 0;
-        $a_d = isset($row['server_app_dr_count']) ? (int)$row['server_app_dr_count'] : 0;
-        $d_d = isset($row['server_db_dr_count']) ? (int)$row['server_db_dr_count'] : 0;
-
-        $sla_w_d = ($w_d > 0) ? (1 - pow((1 - $slaInfra), $w_d)) : 0;
-        $sla_a_d = ($a_d > 0) ? (1 - pow((1 - $slaInfra), $a_d)) : 0;
-        $sla_d_d = ($d_d > 0) ? (1 - pow((1 - $slaInfra), $d_d)) : 0;
-
-        $row['sla_svr_dr'] = $this->_mul_non_zero([$sla_w_d, $sla_a_d, $sla_d_d]);
-
-        $dr_val = isset($row['resilience_category']) ? (string)$row['resilience_category'] : '';
-        $powN = ($dr_val === 'L0') ? 1 : 2;
-        $diff = (float)$row['sla_svr_prod'] - (float)$row['sla_svr_dr'];
-        $row['sla_actual'] = 1 - pow($diff, $powN);
-
-        $standard = isset($row['standard_category']) ? (float)$row['standard_category'] : 
-                    (isset($row['sla_standard']) ? (float)$row['sla_standard'] : 0);
-        
-        $row['sla_standard'] = $standard; 
-        $standard_dec = $standard / 100.0;
-
-        $row['readyness'] = ($row['sla_actual'] < $standard_dec) ? 'Not Comply' : 'Comply';
-        $row['suggestion'] = ($row['readyness'] === 'Not Comply') ? 'Assesment kembali konfigurasi infra atau kategori kualitas aplikasi' : '-';
-    }
-
-    public function detail($apps_id = 0, $service_id = 0) {
         $user_id = $this->session->userdata('user_id');
         $role_id = $this->session->userdata('role_id');
         $fixed_role = $this->Home_model->_get_fixed_role($user_id, $role_id);
@@ -205,17 +149,14 @@ class Home extends CI_Controller {
         $data['title'] = ($apps_id == 0) ? 'Create Portofolio' : 'Portofolio Detail';
         $data['apps_id'] = $apps_id;
         $data['rid'] = $fixed_role; 
-        $data['service_id_param'] = (int)$service_id; 
+        $data['service_id_param'] = $service_id; 
         
-        $is_infra_view = in_array($fixed_role, [4, 5]);
-        $is_bu_view    = in_array($fixed_role, [6, 7]);
-
-        $data['is_infra'] = $is_infra_view;
-        $data['is_bu']    = $is_bu_view;
+        $data['msg_success'] = $this->session->flashdata('success');
+        $data['msg_error']   = $this->session->flashdata('error');
 
         if ($apps_id == 0) {
             if ($fixed_role != 2) { 
-                $this->session->set_flashdata('error', 'Hanya EA Apps Inputter yang boleh membuat.');
+                $this->session->set_flashdata('error', 'Hanya EA yang boleh membuat.');
                 redirect('home');
             }
             $data['mode'] = 'add';
@@ -223,29 +164,21 @@ class Home extends CI_Controller {
             $data['is_readonly'] = false;
             $data['selected_db_ids'] = [];
             $data['selected_os_ids'] = [];
+            $data['selected_srv_ids'] = []; 
         } else {
             $data['row'] = $this->Home_model->get_portfolio_full_detail($apps_id);
             if(empty($data['row'])) { show_404(); }
-            
-            if ($is_infra_view) {
-                $this->_calculate_sla($data['row']);
-            }
 
             $data['selected_db_ids'] = !empty($data['row']['database_ids_str']) ? explode(',', $data['row']['database_ids_str']) : [];
             $data['selected_os_ids'] = !empty($data['row']['os_ids_str']) ? explode(',', $data['row']['os_ids_str']) : [];
-
+            $data['selected_srv_ids'] = !empty($data['row']['server_ids_str']) ? explode(',', $data['row']['server_ids_str']) : [];
             $current_stage = $this->Home_model->get_current_approval_stage($apps_id);
             $curr_role_turn = isset($current_stage['user_role_id']) ? $current_stage['user_role_id'] : 0;
             $is_status_pending = (isset($current_stage['status']) && $current_stage['status'] == 0);
 
             if ($curr_role_turn == $fixed_role && $is_status_pending) {
-                if (in_array($fixed_role, [2, 4, 6])) {
-                    $data['mode'] = 'edit';
-                    $data['is_readonly'] = false;
-                } else {
-                    $data['mode'] = 'review';
-                    $data['is_readonly'] = true;
-                }
+                $data['mode'] = 'edit';
+                $data['is_readonly'] = false;
             } else {
                 $data['mode'] = 'view';
                 $data['is_readonly'] = true;
@@ -253,50 +186,37 @@ class Home extends CI_Controller {
         }
 
         $m = $this->Home_model;
-        $data['opt_module']     = $m->get_master_data('tbl_module'); 
+        
+        $data['opt_app_type']   = $m->get_master_data('tbl_app_type'); 
         $data['opt_category']   = $m->get_master_data('tbl_apps_category'); 
         $data['opt_deploy']     = $m->get_master_data('tbl_apps_deployment'); 
+        $data['opt_provider']   = $m->get_master_data('tbl_apps_deployment_model'); 
+        $data['opt_site']       = $m->get_master_data('tbl_apps_deployment_site'); 
+        
         $data['opt_network']    = $m->get_master_data('tbl_apps_network');
         $data['opt_day']        = $m->get_master_data('tbl_apps_operational_day');
         $data['opt_hour']       = $m->get_master_data('tbl_apps_operational_hour');
         $data['opt_resilience'] = $m->get_master_data('tbl_resilience');
         $data['opt_database']   = $m->get_master_data('tbl_database_master');
         $data['opt_os']         = $m->get_master_data('tbl_operating_software');
-        $data['opt_it_group']     = $m->get_dynamic_options('it_group', $user_id, $fixed_role, []);
-        $data['opt_directorate']  = $m->get_dynamic_options('directorate', $user_id, $fixed_role, []);
-        $data['opt_it_division']  = $m->get_dynamic_options('it_division', $user_id, $fixed_role, []);
-        $data['opt_server']     = $m->get_master_data('tbl_server'); 
-
-        $data['infra_mapping'] = json_encode($m->get_infra_master_mapping());
-
+        $data['opt_server']     = $m->get_master_data('tbl_server');
+        
         if ($apps_id > 0) {
+            $data['sla_history'] = $this->Home_model->get_sla_history($apps_id);
             $data['timeline']    = $m->get_timeline_data($apps_id);
             $data['audit_trail'] = $m->get_audit_trail($apps_id);
             $data['documents']   = $m->get_documents($apps_id);
-
-            $this->db->select('im.service_id, sv.service_name, im.resilience_id, r.resilience_category');
-            $this->db->select('ts.server_id, ts.server_name as server_type_name, ts.server_sla');
-            $this->db->select('isv.server_web_prod_count, isv.server_app_prod_count, isv.server_db_prod_count');
-            $this->db->select('isv.server_web_dr_count, isv.server_app_dr_count, isv.server_db_dr_count');
-            
-            $this->db->from('tbl_apps_infra ai');
-            $this->db->join('tbl_portofolio_infra_master im', 'im.infra_id = ai.infra_id');
-            $this->db->join('tbl_service sv', 'sv.service_id = im.service_id');
-            $this->db->join('tbl_resilience r', 'r.resilience_id = im.resilience_id', 'left');
-            $this->db->join('tbl_infra_server isv', 'isv.infra_id = ai.infra_id', 'left');
-            $this->db->join('tbl_server ts', 'ts.server_id = isv.server_id', 'left');
-            
-            $this->db->where('ai.apps_id', $apps_id);
-            
-            if ($service_id > 0) {
-                $this->db->where('im.service_id', $service_id);
-            }
-            
-            $data['existing_infra_list'] = $this->db->get()->result_array();
-            
+            $data['is_done']     = $m->is_app_done($apps_id);
         } else {
+            $data['sla_history'] = []; 
             $data['timeline'] = []; $data['audit_trail'] = []; $data['documents'] = [];
-            $data['existing_infra_list'] = []; 
+            $data['is_done']  = false; 
+        }
+
+        if ($fixed_role == 2) {
+            $data['draft_list'] = $this->Home_model->get_my_tasks($user_id, $role_id);
+        } else {
+            $data['draft_list'] = [];
         }
 
         $this->load->view('home_detail_view', $data);
@@ -305,44 +225,351 @@ class Home extends CI_Controller {
     public function save_submission() {
         $user_id = $this->session->userdata('user_id');
         $role_id = $this->session->userdata('role_id');
-        $apps_id = $this->input->post('apps_id');
-        $save_type = $this->input->post('save_type'); 
-        $post_data = $this->input->post();
-        $remarks = $this->input->post('remarks');
-        $target_role_id = $this->input->post('target_role_id');
-
-        $is_submit = ($save_type == 'submit') ? true : false;
         
-        if ($save_type == 'draft' || $save_type == 'submit') {
-            $result = $this->Home_model->save_apps_info($apps_id, $post_data, $is_submit, $role_id);
+        $apps_id = (int)$this->security->xss_clean($this->input->post('apps_id'));
+        $post_data = $this->security->xss_clean($this->input->post());
+        $remarks = $this->security->xss_clean($this->input->post('remarks'));
+        
+        $is_submit = true; 
+        
+        $app_name = isset($post_data['application_name']) ? $post_data['application_name'] : '';
+        $module_name = isset($post_data['module']) ? $post_data['module'] : '';
+
+        if (!empty($app_name) && !empty($module_name)) {
+            $is_duplicate = $this->Home_model->check_duplicate($app_name, $module_name, $apps_id);
             
-            if(is_array($result)) {
-                $this->session->set_flashdata('success', $result['msg']);
-            } else {
-                if ($save_type == 'submit') {
-                    $this->session->set_flashdata('success', 'Data submitted successfully.');
-                } else {
-                    $this->session->set_flashdata('success', 'Draft saved.');
-                }
-            }
-        } 
-        elseif ($save_type == 'approve') {
-            $this->Home_model->advance_workflow($apps_id, $role_id, 'APPROVE', $remarks);
-            $this->session->set_flashdata('success', 'Application Approved.');
-        }
-        elseif ($save_type == 'reject') {
-            if(!empty($target_role_id)) {
-                $this->Home_model->reject_workflow($apps_id, $role_id, $target_role_id, $remarks);
-                $this->session->set_flashdata('success', 'Application Rejected.');
-            } else {
-                $this->session->set_flashdata('error', 'Failed to Reject: Target role is missing.');
+            if ($is_duplicate) {
+                $redirect_id = empty($apps_id) ? 0 : $apps_id;
+                $this->session->set_flashdata('duplicate_error', 'Gagal menyimpan! Aplikasi dengan nama <b>"'.$app_name.'"</b> dan modul <b>"'.$module_name.'"</b> sudah ada.');
+                redirect('home/detail/'.$redirect_id);
+                return; 
             }
         }
-        elseif ($save_type == 'acknowledge') {
-             $this->Home_model->advance_workflow($apps_id, $role_id, 'ACKNOWLEDGE', $remarks);
-             $this->session->set_flashdata('success', 'Application Acknowledged.');
+
+        $action_string = 'SUBMIT';
+        $is_app_done = $this->Home_model->is_app_done($apps_id);
+        
+        if ($is_app_done) {
+            $action_string = 'SUBMIT-RENEWAL';
+            
+            $remarks = $this->input->post('remarks_renewal'); 
+            if(empty($remarks)) {
+                $remarks = 'Aplikasi masuk masa perpanjangan (Renewal).';
+            }
+            
+            $post_data['remarks'] = $remarks; 
+
+            $this->Home_model->insert_audit_trail($apps_id, "SUBMIT", $remarks);
+        }
+
+        $saved_apps_id = $this->Home_model->save_apps_info($apps_id, $post_data, $is_submit, $role_id, $remarks, $action_string);
+        
+        if ($role_id == 1) {
+            $this->_generate_and_save_sla($saved_apps_id);
+        }
+
+        if(is_array($saved_apps_id) && isset($saved_apps_id['msg'])) {
+            $this->session->set_flashdata('success', $saved_apps_id['msg']);
+        } else {
+            $this->session->set_flashdata('success', 'Data submitted successfully.');
         }
         
         redirect('home');
+    }
+
+    public function bulk_submit() {
+        $user_id = $this->session->userdata('user_id');
+        $role_id = $this->session->userdata('role_id');
+        
+        // SECURITY: Membersihkan input dari potensi XSS
+        $modal_remarks = $this->security->xss_clean($this->input->post('remarks'));
+        $selected_apps = $this->security->xss_clean($this->input->post('selected_apps')); 
+
+        if(empty($selected_apps) || !is_array($selected_apps)) {
+            $this->session->set_flashdata('error', 'Tidak ada aplikasi yang dipilih untuk disubmit.');
+            redirect('home/detail/0');
+            return;
+        }
+
+        $incomplete = [];
+        
+        // ====================================================================
+        // DAFTAR FORM WAJIB (Menyamakan dengan validasi ketat di Frontend)
+        // ====================================================================
+        $mandatory_fields = [
+            'application_name', 'short_name', 'module', 'apps_description',
+            'category_id', 'app_type_id', 'deployment_id', 'deployment_provider_id', 'deployment_site_id',
+            'lob_directorate', 'lob_subdirectorate', 'lob_department_head', 'lob_group', 'lob_group_head',
+            'it_subdirectorate', 'it_department_head', 'it_support_group', 'it_group_head', 'it_support_divison', 'it_division_head',
+            'solution_vendor', 'services_vendor', 'live_year', 'resilience_id', 'network_id', 'source_code_owned', 'Url',
+            // Checkbox Multiple (Database akan membacanya sebagai string teks)
+            'database_names_str', 'os_names_str', 'server_names_str' 
+        ];
+
+        // ATURAN KHUSUS ROLE 1 IT SLM
+        if ($role_id == 1) {
+            array_push($mandatory_fields, 'operational_day_id', 'operational_hour_id', 'standard_category');
+        }
+        // ====================================================================
+
+        foreach($selected_apps as $apps_id) {
+            $app = $this->Home_model->get_portfolio_full_detail((int)$apps_id);
+            if (!$app) continue;
+
+            foreach($mandatory_fields as $field) {
+                // Cek apakah data kosong (Angka 0 tetap dianggap sah)
+                if (empty($app[$field]) && $app[$field] !== '0' && $app[$field] !== 0) { 
+                    $app_name_err = !empty($app['application_name']) ? $app['application_name'] : 'Draft ID '.$apps_id;
+                    if(!in_array($app_name_err, $incomplete)) {
+                        $incomplete[] = $app_name_err;
+                    }
+                    break; // Jika ketemu 1 saja form yang kosong, langsung stop cek form lain dan tandai aplikasinya
+                }
+            }
+        }
+        
+        if (!empty($incomplete)) {
+            $this->session->set_flashdata('error', 'Gagal Submit! Ada data yang belum lengkap (termasuk OS/Database/Server) pada aplikasi: <br><br><b>' . implode(', ', $incomplete).'</b><br><br>Silakan klik tombol Edit untuk melengkapinya terlebih dahulu.');
+            redirect('home/detail/0');
+            return;
+        }
+        
+        foreach($selected_apps as $apps_id) {
+            $final_remarks = $modal_remarks;
+
+            // Tarik remarks "titipan" saat EA melakukan Bulk Submit
+            if ($role_id == 2) {
+                $saved_approval = $this->db->get_where('tbl_apps_approval', ['apps_id' => $apps_id, 'user_role_id' => 2])->row_array();
+                
+                if (!empty($saved_approval['remarks'])) {
+                    // Gabungkan remarks dari popup Modal dengan Auto-Remarks
+                    if (empty($final_remarks) || trim($final_remarks) == '-') {
+                        $final_remarks = $saved_approval['remarks'];
+                    } else {
+                        $final_remarks = trim($final_remarks) . "<br><br>" . $saved_approval['remarks'];
+                    }
+                }
+            }
+
+            $this->Home_model->advance_workflow((int)$apps_id, $role_id, 'SUBMIT', $final_remarks);
+            
+            if ($role_id == 1) {
+                $this->_generate_and_save_sla((int)$apps_id);
+            }
+        }
+        
+        $this->session->set_flashdata('success', count($selected_apps) . ' aplikasi berhasil disubmit.');
+        redirect('home');
+    }
+    
+    public function delete_draft($apps_id) {
+        $apps_id = (int)$apps_id; // SECURITY: Type casting mencegah SQL Injection
+        $role_id = $this->session->userdata('role_id');
+        
+        if ($role_id != 2) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menghapus data ini.');
+            redirect('home');
+            return;
+        }
+
+        $deleted = $this->Home_model->delete_app($apps_id);
+
+        if ($deleted) {
+            $this->session->set_flashdata('success', 'Draft berhasil dihapus.');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal menghapus draft. Terjadi kesalahan pada database.');
+        }
+
+        redirect('home/detail/0');
+    }
+    
+    public function export_sla_pdf($apps_id) {
+        $apps_id = (int)$apps_id; // SECURITY: Type casting
+
+        $is_done = $this->Home_model->is_app_done($apps_id);
+
+        if (!$is_done) {
+            $this->session->set_flashdata('error', 'SLA Document belum bisa diunduh karena aplikasi belum berstatus DONE.');
+            redirect('home/detail/'.$apps_id);
+            return;
+        }
+
+        $data['app'] = $this->Home_model->get_portfolio_full_detail($apps_id);
+        
+        if (empty($data['app'])) {
+            show_404();
+        }
+
+        $html = $this->load->view('document_sla_export', $data, TRUE);
+
+        require_once FCPATH . 'vendor/autoload.php';
+
+        try {
+            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'en', true, 'UTF-8', array(10, 10, 10, 10));
+            $html2pdf->pdf->SetDisplayMode('fullpage');
+            $html2pdf->writeHTML($html);
+            
+            $clean_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $data['app']['application_name']);
+            $filename = 'SLA_Document_' . $clean_name . '.pdf';
+            
+            $html2pdf->output($filename, 'I'); 
+            
+        } catch (\Spipu\Html2Pdf\Exception\Html2PdfException $e) {
+            $html2pdf->clean();
+            $formatter = new \Spipu\Html2Pdf\Exception\ExceptionFormatter($e);
+            echo $formatter->getHtmlMessage();
+        }
+    }
+    
+    public function toggle_status($apps_id = 0, $status = null) {
+        // SECURITY: Ambil dari parameter URL atau dari POST jika parameter URL kosong
+        $apps_id = ($apps_id > 0) ? (int)$apps_id : (int)$this->input->post('apps_id');
+        
+        // Jika status tidak ada di URL (null), ambil dari input hidden di form modal
+        if ($status === null) {
+            $status = (int)$this->input->post('status');
+        } else {
+            $status = (int)$status;
+        }
+
+        $role_id = $this->session->userdata('role_id');
+        $user_id = $this->session->userdata('user_id'); 
+        
+        if ($role_id != 2) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses.');
+            redirect('home');
+            return;
+        }
+
+        // Pastikan apps_id valid sebelum lanjut
+        if ($apps_id <= 0) {
+            $this->session->set_flashdata('error', 'ID Aplikasi tidak valid.');
+            redirect('home');
+            return;
+        }
+
+        $new_status = ($status == 1) ? 1 : 0;
+        
+        $decom_year = null;
+        if ($new_status == 0) {
+            $decom_year = date('Y'); 
+        }
+        
+        $uploaded_filename = null;
+        if (!empty($_FILES['attached_document']['name'])) {
+            $config['upload_path']   = './uploads/documents/';
+            $config['allowed_types'] = 'pdf';
+            $config['max_size']      = 5120;
+            $config['encrypt_name']  = TRUE;
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('attached_document')) {
+                $upload_data = $this->upload->data();
+                $uploaded_filename = $upload_data['file_name'];
+            } else {
+                $error_msg = strip_tags($this->upload->display_errors());
+                $this->session->set_flashdata('error', 'Gagal merubah status. Upload dokumen error: ' . $error_msg);
+                redirect('home');
+                return;
+            }
+        }
+        
+        $audit_action = ($new_status == 1) ? 'ACTIVATE' : 'DEACTIVATE';
+        
+        // Ambil remarks dari modal memo
+        $remarks = $this->security->xss_clean($this->input->post('remarks'));
+        if (empty($remarks)) {
+            $remarks = ($new_status == 1) ? "Application Activated" : "Application Deactivated";
+        }
+
+        // Panggil model dengan menyertakan parameter remarks agar audit trail benar
+        $this->Home_model->update_app_status($apps_id, $new_status, $uploaded_filename, $decom_year, $user_id, $role_id, $audit_action, $remarks);
+
+        $action_name = ($new_status == 1) ? 'di-Activate' : 'di-Deactivate';
+        $msg = "Aplikasi berhasil $action_name.";
+
+        $this->session->set_flashdata('success', $msg);
+        redirect('home');
+    }
+    
+    public function download_sla_version($file_name) {
+        // SECURITY: sanitize_filename mencegah penyerang mengunduh file sistem 
+        // dengan teknik Path Traversal seperti '../../etc/passwd'
+        $file_name = $this->security->sanitize_filename($file_name);
+
+        $this->load->helper('download');
+        $path = './uploads/documents/' . $file_name;
+        
+        if (file_exists($path) && is_file($path)) {
+            force_download($path, NULL);
+        } else {
+            $this->session->set_flashdata('error', 'File fisik tidak ditemukan di server.');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+    
+    private function _generate_and_save_sla($apps_id) {
+        $apps_id = (int)$apps_id; // SECURITY
+
+        $data['app'] = $this->Home_model->get_portfolio_full_detail($apps_id);
+        if (empty($data['app'])) return false;
+
+        $html = $this->load->view('document_sla_export', $data, TRUE);
+        require_once FCPATH . 'vendor/autoload.php';
+
+        try {
+            $html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'en', true, 'UTF-8', array(10, 10, 10, 10));
+            $html2pdf->pdf->SetDisplayMode('fullpage');
+            $html2pdf->writeHTML($html);
+            
+            $clean_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $data['app']['application_name']);
+            $timestamp = date('Ymd_His');
+            $filename = 'SLA_' . $clean_name . '_' . $timestamp . '.pdf';
+            
+            $filepath = FCPATH . 'uploads/documents/' . $filename;
+            $html2pdf->output($filepath, 'F'); 
+            
+            $this->Home_model->insert_sla_history($apps_id, $filename, 'Auto-Generated SLA on Final Approval');
+            
+            return true;
+        } catch (\Spipu\Html2Pdf\Exception\Html2PdfException $e) {
+            return false;
+        }
+    }
+    
+    public function trigger_renewal($apps_id) {
+        $apps_id = (int)$apps_id; // SECURITY: Type casting
+
+        $user_id = $this->session->userdata('user_id');
+        $role_id = $this->session->userdata('role_id');
+        
+        if ($role_id != 2) {
+            $this->session->set_flashdata('error', 'Akses Ditolak: Hanya Enterprise Architecture (EA) yang dapat melakukan Renewal.');
+            redirect('home');
+            return;
+        }
+        
+        $is_success = $this->Home_model->process_renewal($apps_id, $user_id, $role_id);
+
+        if ($is_success) {
+            $this->session->set_flashdata('success', 'Proses Renewal berhasil dimulai. Silahkan review data dan klik Submit.');
+            // --- UBAH REDIRECT DI SINI ---
+            redirect('home/detail/'.$apps_id);
+        } else {
+            $this->session->set_flashdata('error', 'Gagal memproses Renewal. Terjadi kesalahan pada database.');
+        }
+
+        redirect('home');
+    }
+    
+    public function check_duplicate_ajax() {
+        $app_name = $this->security->xss_clean($this->input->post('application_name'));
+        $module_name = $this->security->xss_clean($this->input->post('module'));
+        $apps_id = (int)$this->input->post('apps_id');
+
+        $is_duplicate = $this->Home_model->check_duplicate($app_name, $module_name, $apps_id);
+        
+        echo json_encode(['is_duplicate' => $is_duplicate]);
     }
 }

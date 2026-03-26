@@ -274,7 +274,26 @@
 
                                     <td class="align-middle text-muted" style="font-size: 0.9rem;">
                                         <?php if($row['field_name'] && $row['field_name'] != '-'): ?>
-                                                <?= $row['field_name'] ?>
+                                            <?php 
+                                                // Mapping Field Name dari Database ke Label yang user-friendly
+                                                $raw_field = $row['field_name'];
+                                                $field_map = [
+                                                    'product_name'   => 'Product Name',
+                                                    'product_sla'    => 'Product SLA',
+                                                    'provider_name'  => 'Provider Name',
+                                                    'network_id'     => 'Network Name',
+                                                    'status'         => 'Status',
+                                                    'app_type_name'  => 'Application Type Name',
+                                                    // Tambahkan mapping lain di sini jika diperlukan
+                                                ];
+
+                                                if(isset($field_map[$raw_field])) {
+                                                    echo $field_map[$raw_field];
+                                                } else {
+                                                    // Jika tidak ada di map, bersihkan underscore dan jadikan Proper Case
+                                                    echo ucwords(str_replace('_', ' ', $raw_field));
+                                                }
+                                            ?>
                                         <?php else: ?>
                                                 -
                                         <?php endif; ?>

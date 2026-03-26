@@ -184,8 +184,9 @@ class Operational_Hour extends CI_Controller {
     public function audit($id) {
         $this->load->library('pagination');
 
-        $db_data = $this->Operational_Hour_model->get_by_id($id); 
-        if (!$db_data) {
+        // Menggunakan $this->Operational_Hour_model (pastikan ini sesuai dengan load model di __construct)
+        $op_hour_data = $this->Operational_Hour_model->get_by_id($id);
+        if (!$op_hour_data) {
             $this->session->set_flashdata('error', 'Data tidak ditemukan.');
             redirect('operational_hour');
         }
@@ -193,7 +194,8 @@ class Operational_Hour extends CI_Controller {
         // [XSS CLEAN] Membersihkan keyword pencarian di halaman audit
         $keyword = $this->security->xss_clean($this->input->get('keyword'));
         
-        $table_name = 'tbl_apps_operational_hour';
+        // Nama tabel audit untuk Operational Hour
+        $table_name = 'tbl_apps_operational_hour'; 
 
         $config['base_url'] = base_url('operational_hour/audit/' . $id);
         $config['total_rows'] = count($this->Audit_model->get_audit_logs($id, $keyword, $table_name));
@@ -215,13 +217,15 @@ class Operational_Hour extends CI_Controller {
         $start = $this->input->get('per_page');
         $audit_logs = $this->Audit_model->get_audit_logs_paginated($id, $table_name, $config['per_page'], $start, $keyword);
 
-        $data['target_name'] = $db_data['start_time'] . ' - ' . $db_data['end_time'];
+        // Target name disesuaikan agar menampilkan rentang jam (Start - End Time)
+        $data['target_name'] = isset($op_hour_data['start_time']) ? $op_hour_data['start_time'] . ' - ' . $op_hour_data['end_time'] : 'Operational Hour';
         $data['keyword']     = $keyword;
         $data['back_url']    = 'operational_hour';
+        $data['menu_label']  = 'Operational Hour';
         $data['export_url']  = base_url('audit/export_excel/tbl_apps_operational_hour/' . $id);
         $data['audit_data']  = $audit_logs;
         $data['pagination']  = $this->pagination->create_links();
-        $data['total_rows']  = $config['total_rows']; 
+        $data['total_rows']  = $config['total_rows'];
 
         $this->load->view('audit/audit_view', $data);
     }

@@ -45,8 +45,8 @@
                     ?>
                 </td> 
                 
-                <td style="color: #dc3545;"><?= ($log['old_value'] == null || $log['old_value'] == '-') ? '-' : $log['old_value'] ?></td>
-                <td style="color: #28a745;"><?= $log['new_value'] ?></td>
+                <td style="color: #dc3545; text-align: left;"><?= ($log['old_value'] == null || $log['old_value'] == '-') ? '-' : $log['old_value'] ?></td>
+                <td style="color: #28a745; text-align: left;"><?= $log['new_value'] ?></td>
                 <td><em><?= $log['reason'] ?></em></td>
             </tr>
             <?php endforeach; ?>

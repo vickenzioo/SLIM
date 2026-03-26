@@ -8,66 +8,70 @@ class Home_model extends CI_Model {
         $this->db->query("SET sql_mode = ''");
     }
 
-    public function get_infra_master_mapping() {
-        $this->db->select('im.infra_id, im.module_id, im.service_id, im.resilience_id');
-        $this->db->select('sv.service_name');
-        $this->db->select('r.resilience_category');
-        $this->db->from('tbl_portofolio_infra_master im');
-        $this->db->join('tbl_service sv', 'sv.service_id = im.service_id', 'left');
-        $this->db->join('tbl_resilience r', 'r.resilience_id = im.resilience_id', 'left');
-        return $this->db->get()->result_array();
-    }
-
-    // [PERBAIKAN] Mengubah op_hour dan op_day menggunakan format CONCAT agar memunculkan format full seperti "Monday - Sunday"
     protected $_filter_map = [
-        'status'        => "(CASE WHEN (SELECT COUNT(1) FROM tbl_apps_approval ap_done WHERE ap_done.apps_id = a.apps_id AND ap_done.user_role_id = 8 AND ap_done.status = 1) > 0 THEN 'DONE' ELSE tr.role_name END)",
-        'category'      => 'c.category_name',
-        'app_name'      => 'a.application_name',
-        'short_name'    => 'a.short_name',
-        'module'        => 'm.module_name',
-        'service_name'  => 'sv.service_name',
-        'db_name'       => 'dbm.database_name',
-        'os_name'       => 'os.operating_software_name',
-        'app_type'      => 'a.application_type',
-        'live_year'     => 'a.live_year',
-        'decom_year'    => 'a.decommission_year',
-        'resilience'    => 'r.resilience_category',
-        'server_type'   => 'ts.server_name', 
-        'dr_avail'      => 'r.dr',
-        'ha'            => 'r.ha',
-        'flash_copy'    => 'a.flash_copy',
-        'eod'           => 'a.end_of_day',
-        'network'       => 'n.network_name',
-        'deployment'    => "CONCAT_WS(' - ', d.deployment_model, d.deployment_provider, d.main_deployment_site)",
-        'op_hour'       => "CONCAT(oh.start_time, ' - ', oh.end_time)",
-        'op_day'        => "CONCAT(od.start_day, ' - ', od.end_day)",
-        'principle'     => 'a.principle_name',
-        'principle_sol' => 'a.principle_solution_name',
-        'it_group'      => 'a.it_group_name',
-        'it_division'   => 'a.it_division_name',
-        'directorate'   => 'a.owner_directorate',
-        'sub_directorate'=> 'a.owner_subdirectorate',
-        'owner_title'   => 'a.owner_title',
-        'nik_head'      => 'a.nik_owner_head',
-        'nik_owner'     => 'a.nik_owner',
-        'nik_dept'      => 'a.nik_it_department'
+        'app_status'         => "(CASE WHEN a.status = 1 THEN 'Active' ELSE 'Not Active' END)", // <--- TAMBAHAN BARU
+        'status'             => "(CASE WHEN ad.is_done = 1 THEN 'DONE' ELSE tr.role_name END)",
+        'category'           => 'c.category_name',
+        'app_name'           => 'a.application_name',
+        'short_name'         => 'a.short_name',
+        'module'             => 'a.module', 
+        'db_name'            => 'dbm.database_name',
+        'os_name'            => 'os.operating_software_name', 
+        'app_type'           => 'at.app_type_name',
+        'server_name'        => 'srv.server_name',
+        'standard_category'  => 'a.standard_category',
+        'live_year'          => 'a.live_year',
+        'decom_year'         => 'a.decommission_year',
+        'resilience'         => 'r.resilience_category',
+        'dr_avail'           => 'r.dr',
+        'ha'                 => 'r.ha',
+        'network'            => 'n.network_name',
+        'deployment_model'   => "d.deployment_model",
+        'deployment_provider'=> "dp.deployment_provider_name",
+        'deployment_site'    => "ds.deployment_site_name",
+        'op_hour'            => "CONCAT(oh.start_time, ' - ', oh.end_time)",
+        'op_day'             => "CONCAT(od.start_day, ' - ', od.end_day)",
+        'solution_vendor'    => 'a.solution_vendor',
+        'services_vendor'    => 'a.services_vendor',
+        'lob_directorate'    => 'a.lob_directorate',
+        'lob_subdirectorate' => 'a.lob_subdirectorate',
+        'lob_group'          => 'a.lob_group',
+        'lob_group_head'     => 'a.lob_group_head',
+        'lob_department_head'=> 'a.lob_department_head',
+        'it_subdirectorate'  => 'a.it_subdirectorate',
+        'it_department_head' => 'a.it_department_head',
+        'it_support_group'   => 'a.it_support_group',
+        'it_group_head'      => 'a.it_group_head',
+        'it_support_divison' => 'a.it_support_divison',
+        'it_division_head'   => 'a.it_division_head',
+        'app_version'        => 'a.application_version',
+        'dev_language'       => 'a.development_language',
+        'app_developer'      => 'a.application_developer',
+        'web_server'         => 'a.supporting_web_server',
+        'app_server'         => 'a.supporting_application_server',
+        'sup_others'         => 'a.supporting_others',
+        'src_code'           => 'a.source_code_owned',
+        'url'                => 'a.Url'
     ];
 
     private function _join_tables() {
         $this->db->from('tbl_portofolio_apps_master a');
-        $this->db->join('tbl_apps_infra ai', 'ai.apps_id = a.apps_id', 'left');
-        $this->db->join('tbl_portofolio_infra_master im', 'im.infra_id = ai.infra_id', 'left');
-        $this->db->join('tbl_service sv', 'sv.service_id = im.service_id', 'left');
-        $this->db->join('tbl_module m', 'm.module_id = im.module_id', 'left');
-        $this->db->join('tbl_infra_server isv', 'isv.infra_id = ai.infra_id', 'left');
         $this->db->join('tbl_apps_category c', 'c.category_id = a.category_id', 'left');
         $this->db->join('tbl_apps_operational_day od', 'od.operational_day_id = a.operational_day_id', 'left');
         $this->db->join('tbl_apps_operational_hour oh', 'oh.operational_hour_id = a.operational_hour_id', 'left');
         $this->db->join('tbl_apps_network n', 'n.network_id = a.network_id', 'left');
+        $this->db->join('tbl_penanganan_insiden pi', 'pi.category_id = a.category_id', 'left'); // <--- TAMBAHKAN INI
+        
         $this->db->join('tbl_apps_deployment d', 'd.deployment_id = a.deployment_id', 'left');
+        $this->db->join('tbl_apps_deployment_model dp', 'dp.deployment_provider_id = a.deployment_provider_id', 'left');
+        $this->db->join('tbl_apps_deployment_site ds', 'ds.deployment_site_id = a.deployment_site_id', 'left');
+        $this->db->join('tbl_app_type at', 'at.app_type_id = a.app_type_id', 'left');
+        
         $this->db->join('tbl_resilience r', 'r.resilience_id = a.resilience_id', 'left'); 
         $this->db->join('(SELECT apps_id, user_role_id as current_stage_role FROM tbl_apps_approval WHERE current = 1) s', 's.apps_id = a.apps_id', 'left');
         $this->db->join('tbl_role tr', 's.current_stage_role = tr.role_id', 'left');
+        
+        $this->db->join('(SELECT apps_id, 1 as is_done FROM tbl_apps_approval WHERE user_role_id = 1 AND status = 1) ad', 'ad.apps_id = a.apps_id', 'left');
     }
 
     private function _apply_filters($filters) {
@@ -100,48 +104,107 @@ class Home_model extends CI_Model {
                     }
                 }
             }
-            
-            if ($applied_any) {
-                $this->db->group_end();
-            }
+            if ($applied_any) { $this->db->group_end(); }
         }
     }
 
     private function _apply_rbac($user_id, $role_id) {
         $safe_user = (int)$user_id;
         $safe_role = (int)$role_id;
-        if ($safe_role != 1) { 
-            $this->db->where("(
-                a.created_by = $safe_user 
-                OR 
-                a.apps_id IN (SELECT apps_id FROM tbl_apps_approval WHERE user_role_id = $safe_role AND (current=1 OR status=1))
-            )", NULL, FALSE);
+        if ($safe_role == 2) {
+            $this->db->having("(MAX(s.current_stage_role) IN (2, 3, 1, 0) OR MAX(ad.is_done) = 1)");
+        } 
+        elseif ($safe_role == 3) {
+            $this->db->having("(MAX(s.current_stage_role) IN (3, 1, 0) OR MAX(ad.is_done) = 1)");
+        } 
+        elseif ($safe_role == 1) {
+            $this->db->having("(MAX(s.current_stage_role) IN (1, 0) OR MAX(ad.is_done) = 1)");
         }
     }
 
     private function _build_portfolio_query($user_id, $role_id, $keyword = null, $filters = []) {
         $this->_join_tables();
         
+        // Join tabel untuk Database dan Operating Software
         $this->db->join('tbl_apps_database adb', 'adb.apps_id = a.apps_id', 'left');
         $this->db->join('tbl_database_master dbm', 'dbm.database_id = adb.database_id', 'left');
         $this->db->join('tbl_apps_operating_software aos', 'aos.apps_id = a.apps_id', 'left');
         $this->db->join('tbl_operating_software os', 'os.operating_software_id = aos.operating_software_id', 'left');
-        $this->db->join('tbl_server ts', 'ts.server_id = isv.server_id', 'left');
+        $this->db->join('tbl_apps_server asr', 'asr.apps_id = a.apps_id', 'left');
+        $this->db->join('tbl_server srv', 'srv.server_id = asr.server_id', 'left');
 
         $this->_apply_rbac($user_id, $role_id);
 
         if ($keyword) {
             $this->db->group_start();
+            
+            // 1. DATA UTAMA APLIKASI
             $this->db->like('a.application_name', $keyword);
             $this->db->or_like('a.short_name', $keyword);
+            $this->db->or_like('a.module', $keyword);
+            $this->db->or_like('a.application_version', $keyword); 
+            $this->db->or_like('at.app_type_name', $keyword);
+            $this->db->or_like('a.Url', $keyword); 
+            $this->db->or_like('a.live_year', $keyword);
+            $this->db->or_like('a.decommission_year', $keyword);
+            $this->db->or_like('a.development_language', $keyword); 
+            $this->db->or_like('a.application_developer', $keyword); 
+            $this->db->or_like('a.supporting_web_server', $keyword); 
+            $this->db->or_like('a.supporting_application_server', $keyword); 
+            $this->db->or_like('a.supporting_others', $keyword);
+            $this->db->or_like('a.source_code_owned', $keyword);
+
+            // 2. VENDOR & LOB
+            $this->db->or_like('a.solution_vendor', $keyword);
+            $this->db->or_like('a.services_vendor', $keyword);
+            $this->db->or_like('a.standard_category', $keyword);
+            $this->db->or_like('a.lob_directorate', $keyword);
+            $this->db->or_like('a.lob_subdirectorate', $keyword);
+            $this->db->or_like('a.lob_group', $keyword);
+            $this->db->or_like('a.lob_group_head', $keyword);
+            $this->db->or_like('a.lob_department_head', $keyword);
+
+            // 3. IT STRUCTURE
+            $this->db->or_like('a.it_subdirectorate', $keyword);
+            $this->db->or_like('a.it_department_head', $keyword);
+            $this->db->or_like('a.it_support_group', $keyword);
+            $this->db->or_like('a.it_group_head', $keyword);
+            $this->db->or_like('a.it_support_divison', $keyword); 
+            $this->db->or_like('a.it_division_head', $keyword);
+
+            // 4. DATA DARI TABEL JOIN (STATUS & INFRA)
+            $this->db->or_like('c.category_name', $keyword);
+            $this->db->or_like('srv.server_name', $keyword);
             $this->db->or_like('tr.role_name', $keyword);
-            $this->db->or_like('sv.service_name', $keyword);
-            $this->db->or_where("isv.server_web_prod_count LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
-            $this->db->or_where("isv.server_app_prod_count LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
-            $this->db->or_where("isv.server_db_prod_count LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
+            $this->db->or_like('dbm.database_name', $keyword);
+            $this->db->or_like('os.operating_software_name', $keyword);
+            $this->db->or_like('r.resilience_category', $keyword);
+            $this->db->or_like('n.network_name', $keyword);
+            $this->db->or_like('d.deployment_model', $keyword);
+            $this->db->or_like('dp.deployment_provider_name', $keyword);
+            $this->db->or_like('ds.deployment_site_name', $keyword);
+
+            // --- TAMBAHAN: OPERATIONAL DAY & HOUR ---
+            // Mencari berdasarkan format "Day - Day"
+            $day_concat = "CONCAT(od.start_day, ' - ', od.end_day)";
+            $this->db->or_where("$day_concat LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
+
+            // Mencari berdasarkan format "00:00:00 - 00:00:00"
+            $hour_concat = "CONCAT(oh.start_time, ' - ', oh.end_time)";
+            $this->db->or_where("$hour_concat LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
             
-            $done_cond = "(CASE WHEN (SELECT COUNT(1) FROM tbl_apps_approval ap_done WHERE ap_done.apps_id = a.apps_id AND ap_done.user_role_id = 8 AND ap_done.status = 1) > 0 THEN 'DONE' ELSE '' END)";
+            // Pencarian satuan (opsional agar lebih fleksibel)
+            $this->db->or_like('od.start_day', $keyword);
+            $this->db->or_like('od.end_day', $keyword);
+            $this->db->or_like('oh.start_time', $keyword);
+            $this->db->or_like('oh.end_time', $keyword);
+
+            // 5. STATUS KERJA (DONE & ACTIVE)
+            $done_cond = "(CASE WHEN ad.is_done = 1 THEN 'DONE' ELSE '' END)";
             $this->db->or_where("$done_cond LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
+            
+            $status_cond = "(CASE WHEN a.status = 1 THEN 'Active' ELSE 'Not Active' END)";
+            $this->db->or_where("$status_cond LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
             
             $this->db->group_end();
         }
@@ -156,98 +219,69 @@ class Home_model extends CI_Model {
         $this->db->select('a.*'); 
         $this->db->select('MAX(c.category_name) as category_name');
         $this->db->select('MAX(s.current_stage_role) as current_stage_role');
-        $this->db->select('MAX(tr.role_name) as status_name'); 
-        $this->db->select('MAX(m.module_name) as module_name');
-        $this->db->select('MAX(sv.service_id) as service_id'); 
-        $this->db->select('MAX(sv.service_name) as service_name');
-        $this->db->select('MAX(ts.server_name) as server_type_name'); 
+        $this->db->select("(CASE WHEN MAX(ad.is_done) = 1 THEN 'DONE' ELSE MAX(tr.role_name) END) as status_name", FALSE);
+        $this->db->select('MAX(at.app_type_name) as application_type_name');
         $this->db->select('GROUP_CONCAT(DISTINCT dbm.database_name SEPARATOR ", ") as database_names');
         $this->db->select('GROUP_CONCAT(DISTINCT os.operating_software_name SEPARATOR ", ") as os_names');
+        $this->db->select('GROUP_CONCAT(DISTINCT srv.server_name SEPARATOR ", ") as server_name');
         $this->db->select('MAX(n.network_name) as network_name');
         $this->db->select('MAX(r.resilience_category) as resilience'); 
         $this->db->select('MAX(r.dr) as dr_availability');
         $this->db->select('MAX(r.ha) as ha');
-        $this->db->select("CONCAT_WS(' - ', MAX(d.deployment_model), MAX(d.deployment_provider), MAX(d.main_deployment_site)) as deployment_info");
+        $this->db->select("MAX(d.deployment_model) as deployment_model");
+        $this->db->select("MAX(dp.deployment_provider_name) as provider_name");
+        $this->db->select("MAX(ds.deployment_site_name) as site_name");
         $this->db->select("CONCAT(MAX(od.start_day), ' - ', MAX(od.end_day)) as operational_day", FALSE);
         $this->db->select("CONCAT(MAX(oh.start_time), ' - ', MAX(oh.end_time)) as operational_hour", FALSE);
 
         $safe_role = (int)$role_id;
+        $this->db->group_by('a.apps_id');
 
-        if (in_array($safe_role, [4, 5])) {
-            $this->db->group_by(array('a.apps_id', 'ai.apps_infra_id'));
-        } else {
-            $this->db->group_by('a.apps_id');
-        }
+        // 1. Group by Status: Active (1) selalu di atas Not Active (0)
+        $this->db->order_by("a.status", "DESC");
 
-        $this->db->order_by("CASE WHEN MAX(s.current_stage_role) IS NULL OR MAX(s.current_stage_role) = 0 THEN 1 ELSE 0 END", 'ASC');
-        $this->db->order_by("CASE WHEN MAX(s.current_stage_role) = $safe_role THEN 0 ELSE 1 END", 'ASC');
+        // 2. Workflow Status: Role user saat ini paling atas, lalu IT SLM(1) -> IT Dev(3) -> EA(2) -> DONE
         $this->db->order_by("CASE 
-            WHEN LOWER(MAX(c.category_name)) = 'necessary' THEN 1
-            WHEN LOWER(MAX(c.category_name)) = 'critical' THEN 2
-            WHEN LOWER(MAX(c.category_name)) = 'very important' THEN 3
-            WHEN LOWER(MAX(c.category_name)) = 'important' THEN 4
+            WHEN MAX(s.current_stage_role) = $safe_role THEN 0 
+            WHEN MAX(s.current_stage_role) = 1 THEN 1
+            WHEN MAX(s.current_stage_role) = 3 THEN 2
+            WHEN MAX(s.current_stage_role) = 2 THEN 3
+            WHEN MAX(ad.is_done) = 1 THEN 4
             ELSE 5 
-        END", 'ASC');
+        END", "ASC", FALSE);
+
+        // 3. Category: NECESSARY -> CRITICAL -> VERY IMPORTANT -> IMPORTANT -> OTHERS
+        $this->db->order_by("CASE
+            WHEN LOWER(c.category_name) = 'critical' THEN 1
+            WHEN LOWER(c.category_name) = 'very important' THEN 2
+            WHEN LOWER(c.category_name) = 'important' THEN 3
+            WHEN LOWER(c.category_name) = 'necessary' THEN 4
+            ELSE 5
+        END", 'ASC', FALSE);
+
+        // Tambahan urutan ID terbaru jika semua kriteria di atas sama
         $this->db->order_by('a.apps_id', 'DESC');
         
         if ($limit > 0) { $this->db->limit($limit, $start); }
         return $this->db->get()->result_array();
     }
 
-    public function get_my_infra_portfolio($user_id, $role_id, $keyword = null, $filters = [], $limit = 10, $start = 0) {
-        $role_id = $this->_get_fixed_role($user_id, $role_id);
-        $this->_build_portfolio_query($user_id, $role_id, $keyword, $filters);
-
-        $this->db->select('im.infra_id'); 
-        $this->db->select('MAX(sv.service_id) as service_id'); 
-        $this->db->select('MAX(sv.service_name) as service_name'); 
-        $this->db->select('GROUP_CONCAT(DISTINCT dbm.database_name SEPARATOR ", ") as database_names');
-        $this->db->select('GROUP_CONCAT(DISTINCT os.operating_software_name SEPARATOR ", ") as os_names');
-        $this->db->select('MAX(a.apps_id) as apps_id');
-        $this->db->select('MAX(tr.role_name) as status_name');
-        $this->db->select('MAX(s.current_stage_role) as current_stage_role');
-        $this->db->select('MAX(c.category_name) as category_name');
-        $this->db->select('MAX(m.module_name) as module_name');
-        $this->db->select('(SELECT resilience_category FROM tbl_resilience WHERE resilience_id = im.resilience_id) as resilience_category');
-        $this->db->select('MAX(a.application_name) as application_name'); 
-        $this->db->select('MAX(ts.server_name) as server_type_name');
-        $this->db->select('MAX(ts.server_sla) as sla_by_infra_pct');
-        $this->db->select('MAX(c.standard_category) as sla_standard'); 
-        $this->db->select('MAX(isv.server_web_prod_count) as server_web_prod_count');
-        $this->db->select('MAX(isv.server_app_prod_count) as server_app_prod_count');
-        $this->db->select('MAX(isv.server_db_prod_count) as server_db_prod_count');
-        $this->db->select('MAX(isv.server_web_dr_count) as server_web_dr_count');
-        $this->db->select('MAX(isv.server_app_dr_count) as server_app_dr_count');
-        $this->db->select('MAX(isv.server_db_dr_count) as server_db_dr_count');
-
-        $this->db->group_by(array('a.apps_id', 'ai.apps_infra_id'));
-        
-        $safe_role = (int)$role_id;
-        $this->db->order_by("CASE WHEN MAX(s.current_stage_role) IS NULL OR MAX(s.current_stage_role) = 0 THEN 1 ELSE 0 END", 'ASC');
-        $this->db->order_by("CASE WHEN MAX(s.current_stage_role) = $safe_role THEN 0 ELSE 1 END", 'ASC');
-        $this->db->order_by('im.infra_id', 'DESC');
-
-        if ($limit > 0) { $this->db->limit($limit, $start); }
-        
-        return $this->db->get()->result_array();
-    }
-    
-    public function count_my_infra_portfolio($user_id, $role_id, $keyword = null, $filters = []) {
-        $role_id = $this->_get_fixed_role($user_id, $role_id);
-        $this->_build_portfolio_query($user_id, $role_id, $keyword, $filters);
-        $this->db->group_by(array('a.apps_id', 'ai.apps_infra_id')); 
-        return $this->db->get()->num_rows();
-    }
-
     public function count_my_portfolio($user_id, $role_id, $keyword = null, $filters = []) {
         $role_id = $this->_get_fixed_role($user_id, $role_id);
         $this->_build_portfolio_query($user_id, $role_id, $keyword, $filters);
         
-        if (in_array($role_id, [4, 5])) {
-            $this->db->group_by(array('a.apps_id', 'ai.apps_infra_id')); 
-        } else {
-            $this->db->group_by('a.apps_id'); 
+        $safe_role = (int)$role_id;
+        if ($safe_role == 2) {
+            $this->db->having("(MAX(s.current_stage_role) IN (2, 3, 1, 0) OR MAX(ad.is_done) = 1)");
+        } 
+        elseif ($safe_role == 3) {
+            $this->db->having("(MAX(s.current_stage_role) IN (3, 1, 0) OR MAX(ad.is_done) = 1)");
+        } 
+        elseif ($safe_role == 1) {
+            $this->db->having("(MAX(s.current_stage_role) IN (1, 0) OR MAX(ad.is_done) = 1)");
         }
+
+        $this->db->group_by('a.apps_id'); 
         return $this->db->get()->num_rows();
     }
 
@@ -263,15 +297,15 @@ class Home_model extends CI_Model {
         $this->db->join('tbl_database_master dbm', 'dbm.database_id = adb.database_id', 'left');
         $this->db->join('tbl_apps_operating_software aos', 'aos.apps_id = a.apps_id', 'left');
         $this->db->join('tbl_operating_software os', 'os.operating_software_id = aos.operating_software_id', 'left');
-        $this->db->join('tbl_server ts', 'ts.server_id = isv.server_id', 'left');
+        $this->db->join('tbl_apps_server asr', 'asr.apps_id = a.apps_id', 'left');
+        $this->db->join('tbl_server srv', 'srv.server_id = asr.server_id', 'left');
 
         $this->_apply_rbac($user_id, $role_id);
-        $this->_apply_filters($current_filters);
 
         $this->db->where("$column IS NOT NULL", NULL, FALSE);
         $this->db->where("TRIM($column) != ''", NULL, FALSE); 
-        
         $this->db->order_by("val", 'ASC');
+        
         $query = $this->db->get();
         $results = [];
         foreach ($query->result_array() as $row) { if(!empty($row['val'])) $results[] = $row['val']; }
@@ -280,31 +314,24 @@ class Home_model extends CI_Model {
     
     public function get_portfolio_full_detail($apps_id) {
         $this->_join_tables(); 
-        $this->db->join('tbl_server ts', 'ts.server_id = isv.server_id', 'left'); 
         
         $this->db->select('a.*');
-        $this->db->select('c.category_name, c.category_id, c.standard_category'); 
-        $this->db->select('m.module_name, im.module_id');
-        
-        $this->db->select('im.infra_id, im.service_id, im.resilience_id as infra_resilience_id');
-        $this->db->select('sv.service_name'); 
-        $this->db->select('(SELECT resilience_category FROM tbl_resilience WHERE resilience_id = im.resilience_id) as infra_resilience_category');
-
+        $this->db->select('c.category_name, c.category_id'); 
+        $this->db->select('at.app_type_name'); 
         $this->db->select('n.network_name, n.network_id');
-        $this->db->select('d.deployment_model, d.deployment_provider, d.main_deployment_site, d.deployment_id');
-        $this->db->select('od.start_day, od.end_day, od.operational_day_id');
-        $this->db->select('oh.start_time, oh.end_time, oh.operational_hour_id');
-        
+        $this->db->select('d.deployment_model, d.deployment_id');
+        $this->db->select('dp.deployment_provider_name as provider_name, ds.deployment_site_name as site_name');
+        $this->db->select('od.start_day, od.end_day, od.operational_day_id, od.total_day');
+        $this->db->select('oh.start_time, oh.end_time, oh.operational_hour_id, oh.total_hour');
         $this->db->select('r.resilience_category, r.dr as dr_availability, r.ha, r.resilience_id');
+        $this->db->select('pdr.recovery_time_dr'); // Tambahkan kolom recovery_time
+        $this->db->select('pi.response_time, pi.response_time_sat, pi.recovery_time, pi.recovery_time_sat');
         
-        $this->db->select("CONCAT_WS(' - ', d.deployment_model, d.deployment_provider, d.main_deployment_site) as deployment_info_full");
+        $this->db->join('tbl_penanganan_dr pdr', 'pdr.category_id = a.category_id', 'left'); // Tambahkan Join ke tabel 
+
+        
         $this->db->select("CONCAT(od.start_day, ' - ', od.end_day) as operational_day_full", FALSE);
         $this->db->select("CONCAT(oh.start_time, ' - ', oh.end_time) as operational_hour_full", FALSE);
-
-        $this->db->select('isv.server_id');
-        $this->db->select('ts.server_name as server_type_name, ts.server_sla as server_sla_pct');
-        $this->db->select('isv.server_web_prod_count, isv.server_app_prod_count, isv.server_db_prod_count');
-        $this->db->select('isv.server_web_dr_count, isv.server_app_dr_count, isv.server_db_dr_count');
 
         $this->db->where('a.apps_id', $apps_id);
         $this->db->group_by('a.apps_id');
@@ -312,10 +339,6 @@ class Home_model extends CI_Model {
         $row = $this->db->get()->row_array();
 
         if ($row) {
-            if (!empty($row['infra_resilience_category'])) {
-                $row['resilience_category'] = $row['infra_resilience_category'];
-            }
-
             $dbs = $this->db->select('adb.database_id, dbm.database_name')
                 ->from('tbl_apps_database adb')
                 ->join('tbl_database_master dbm', 'dbm.database_id = adb.database_id')
@@ -333,199 +356,81 @@ class Home_model extends CI_Model {
             foreach ($oss as $item) { $os_ids[] = $item['operating_software_id']; $os_names[] = $item['operating_software_name']; }
             $row['os_ids_str'] = implode(',', $os_ids);
             $row['os_names_str'] = implode(', ', $os_names);
+            
+            $srvs = $this->db->select('asr.server_id, srv.server_name')
+                ->from('tbl_apps_server asr')
+                ->join('tbl_server srv', 'srv.server_id = asr.server_id')
+                ->where('asr.apps_id', $apps_id)->get()->result_array();
+            
+            $srv_ids = []; $srv_names = [];
+            foreach ($srvs as $item) { 
+                $srv_ids[] = $item['server_id']; 
+                $srv_names[] = $item['server_name']; 
+            }
+            $row['server_ids_str'] = implode(',', $srv_ids);
+            $row['server_names_str'] = implode(', ', $srv_names);
         }
 
         return $row;
     }
 
-    public function save_apps_info($apps_id, $post_data, $is_submit = false, $role_id = 0) {
+    public function save_apps_info($apps_id, $post_data, $is_submit = false, $role_id = 0, $remarks = null, $uploaded_filename = null) {
         $user_id = $this->session->userdata('user_id');
         $now = date('Y-m-d H:i:s');
-        $remarks = isset($post_data['remarks']) ? $post_data['remarks'] : null;
 
-        if (in_array($role_id, [4])) {
-            if (isset($post_data['infra']) && is_array($post_data['infra'])) {
-                if (empty($post_data['is_single_edit'])) {
-                    $this->db->delete('tbl_apps_infra', ['apps_id' => $apps_id, 'infra_id' => 0]);
-                    
-                    $posted_svc_ids = array_column($post_data['infra'], 'service_id');
-                    if(!empty($posted_svc_ids) && isset($post_data['module_id'])) {
-                        $infra_ids_to_keep = [];
-                        foreach ($posted_svc_ids as $p_sid) {
-                            $this->db->select('infra_id');
-                            $this->db->where('service_id', $p_sid);
-                            $this->db->where('module_id', $post_data['module_id']);
-                            $res = $this->db->get('tbl_portofolio_infra_master')->result();
-                            foreach($res as $r) $infra_ids_to_keep[] = $r->infra_id;
-                        }
-                        if (!empty($infra_ids_to_keep)) {
-                            $this->db->where('apps_id', $apps_id);
-                            $this->db->where_not_in('infra_id', $infra_ids_to_keep);
-                            $this->db->delete('tbl_apps_infra');
-                        } else {
-                            $this->db->delete('tbl_apps_infra', ['apps_id' => $apps_id]);
-                        }
-                    }
-                }
+        // MAPPING AMAN: Hanya update jika field benar-benar dikirim via POST.
+        $data = [];
+        $fields = [
+            'application_name', 'short_name', 'apps_description', 'app_type_id', 'live_year',
+            'decommission_year', 'category_id', 'network_id', 'deployment_id', 'deployment_provider_id',
+            'deployment_site_id', 'resilience_id', 'operational_day_id', 'operational_hour_id', 'module',
+            'lob_directorate', 'lob_subdirectorate', 'lob_group', 'lob_group_head', 'lob_department_head', // NEW LOB HEAD
+            'it_subdirectorate',
+            'it_department_head', 'it_support_group', 'it_group_head', 'it_support_divison', 'it_division_head',
+            'application_version', 'development_language', 'application_developer', 'supporting_web_server',
+            'supporting_application_server', 'supporting_others', 'source_code_owned', 'Url', 'solution_vendor', 'services_vendor',
+            'standard_category'
+        ];
 
-                foreach ($post_data['infra'] as $idx => $row) {
-                    $service_id    = isset($row['service_id']) ? $row['service_id'] : 0;
-                    $server_id     = !empty($row['server_id']) ? $row['server_id'] : 0;
-                    $resilience_id = !empty($row['resilience_id']) ? $row['resilience_id'] : 0;
-                    $module_id     = isset($post_data['module_id']) ? $post_data['module_id'] : 0;
-                    
-                    if(!$service_id || !$module_id) continue;
-
-                    $where_check = [
-                        'module_id'     => $module_id,
-                        'service_id'    => $service_id,
-                        'resilience_id' => $resilience_id
-                    ];
-                    
-                    $master_infra = $this->db->get_where('tbl_portofolio_infra_master', $where_check)->row();
-
-                    if (!$master_infra) {
-                        $this->db->insert('tbl_portofolio_infra_master', $where_check);
-                        $target_infra_id = $this->db->insert_id();
-                    } else {
-                        $target_infra_id = $master_infra->infra_id;
-                    }
-
-                    $this->db->select('ai.apps_infra_id');
-                    $this->db->from('tbl_apps_infra ai');
-                    $this->db->join('tbl_portofolio_infra_master im', 'im.infra_id = ai.infra_id');
-                    $this->db->where('ai.apps_id', $apps_id);
-                    $this->db->where('im.service_id', $service_id);
-                    $existing_link = $this->db->get()->row();
-
-                    if ($existing_link) {
-                        $this->db->where('apps_infra_id', $existing_link->apps_infra_id);
-                        $this->db->update('tbl_apps_infra', ['infra_id' => $target_infra_id]);
-                    } else {
-                        $this->db->insert('tbl_apps_infra', [
-                            'apps_id' => $apps_id, 
-                            'infra_id' => $target_infra_id
-                        ]);
-                    }
-
-                    $data_server = [
-                        'server_id'             => $server_id,
-                        'server_web_prod_count' => !empty($row['prod_web']) ? $row['prod_web'] : 0,
-                        'server_app_prod_count' => !empty($row['prod_apps']) ? $row['prod_apps'] : 0,
-                        'server_db_prod_count'  => !empty($row['prod_db']) ? $row['prod_db'] : 0,
-                        'server_web_dr_count'   => !empty($row['dr_web']) ? $row['dr_web'] : 0,
-                        'server_app_dr_count'   => !empty($row['dr_apps']) ? $row['dr_apps'] : 0,
-                        'server_db_dr_count'    => !empty($row['dr_db']) ? $row['dr_db'] : 0 
-                    ];
-
-                    $check_server = $this->db->get_where('tbl_infra_server', ['infra_id' => $target_infra_id])->row();
-                    if ($check_server) {
-                        $this->db->where('infra_id', $target_infra_id);
-                        $this->db->update('tbl_infra_server', $data_server);
-                    } else {
-                        $data_server['infra_id'] = $target_infra_id;
-                        $this->db->insert('tbl_infra_server', $data_server);
-                    }
-                }
-            } 
-
-            if ($is_submit) {
-                $mod_id = isset($post_data['module_id']) ? $post_data['module_id'] : 0;
-                
-                $this->db->select('service_id')->distinct()->where('module_id', $mod_id);
-                $req_count = $this->db->get('tbl_portofolio_infra_master')->num_rows();
-
-                $this->db->select('im.service_id')->distinct();
-                $this->db->from('tbl_apps_infra ai');
-                $this->db->join('tbl_portofolio_infra_master im', 'im.infra_id = ai.infra_id');
-                $this->db->join('tbl_infra_server isv', 'isv.infra_id = ai.infra_id');
-                $this->db->where('ai.apps_id', $apps_id);
-                $this->db->where('im.module_id', $mod_id);
-                $this->db->where('isv.server_id >', 0);
-                $this->db->where('(isv.server_web_prod_count > 0 OR isv.server_app_prod_count > 0 OR isv.server_db_prod_count > 0 OR isv.server_web_dr_count > 0 OR isv.server_app_dr_count > 0 OR isv.server_db_dr_count > 0)', NULL, FALSE);
-                $filled_count = $this->db->get()->num_rows();
-
-                if ($filled_count >= $req_count && $req_count > 0) {
-                    $this->_handle_inputter_logic($apps_id, $role_id, $user_id, $now, true, $remarks);
-                    return ['apps_id' => $apps_id, 'msg' => 'Semua data Service berhasil disubmit. Lanjut ke Approver.'];
-                } else {
-                    $this->_handle_inputter_logic($apps_id, $role_id, $user_id, $now, false, $remarks);
-                    return ['apps_id' => $apps_id, 'msg' => "Data Service berhasil disimpan! Menunggu service lain disubmit ($filled_count dari $req_count service)."];
-                }
-            } else {
-                $this->_handle_inputter_logic($apps_id, $role_id, $user_id, $now, false, $remarks);
-                return $apps_id;
+        foreach ($fields as $f) {
+            if (isset($post_data[$f])) {
+                $data[$f] = ($post_data[$f] !== '') ? $post_data[$f] : NULL;
             }
         }
 
-        if ($role_id == 6) {
-            $data_bu = [
-                'operational_day_id'  => !empty($post_data['operational_day_id']) ? $post_data['operational_day_id'] : NULL,
-                'operational_hour_id' => !empty($post_data['operational_hour_id']) ? $post_data['operational_hour_id'] : NULL,
-                'modified_at'         => $now,
-                'modified_by'         => $user_id
-            ];
-            $this->db->where('apps_id', $apps_id);
-            $this->db->update('tbl_portofolio_apps_master', $data_bu);
-
-            $this->_handle_inputter_logic($apps_id, $role_id, $user_id, $now, $is_submit, $remarks);
-            return $apps_id;
+        if ($uploaded_filename !== null) {
+            $data['attached_document'] = $uploaded_filename;
         }
-
-        $data = [
-            'application_name' => $post_data['application_name'],
-            'short_name'       => $post_data['short_name'],
-            'apps_description' => $post_data['apps_description'],
-            'application_type' => $post_data['application_type'],
-            'live_year'        => $post_data['live_year'],
-            'decommission_year'=> $post_data['decommission_year'],
-            'category_id'      => !empty($post_data['category_id']) ? $post_data['category_id'] : NULL,
-            'network_id'       => !empty($post_data['network_id']) ? $post_data['network_id'] : NULL,
-            'deployment_id'    => !empty($post_data['deployment_id']) ? $post_data['deployment_id'] : NULL,
-            'resilience_id'    => !empty($post_data['resilience_id']) ? $post_data['resilience_id'] : NULL,
-            'operational_day_id' => !empty($post_data['operational_day_id']) ? $post_data['operational_day_id'] : NULL,
-            'operational_hour_id' => !empty($post_data['operational_hour_id']) ? $post_data['operational_hour_id'] : NULL,
-            'flash_copy'       => !empty($post_data['flash_copy']) ? $post_data['flash_copy'] : NULL,
-            'end_of_day'       => !empty($post_data['end_of_day']) ? $post_data['end_of_day'] : NULL,
-            'it_group_name'    => $post_data['it_group_name'],
-            'it_division_name' => $post_data['it_division_name'],
-            'owner_directorate'=> $post_data['owner_directorate'],
-            'owner_subdirectorate' => $post_data['owner_subdirectorate'],
-            'owner_title'      => $post_data['owner_title'],
-            'nik_owner_head'   => $post_data['nik_owner_head'],
-            'nik_owner'        => $post_data['nik_owner'],
-            'nik_it_department'=> $post_data['nik_it_department'],
-            'principle_name'   => isset($post_data['principle_name']) ? $post_data['principle_name'] : null,
-            'principle_solution_name' => isset($post_data['principle_solution_name']) ? $post_data['principle_solution_name'] : null
-        ];
 
         if (empty($apps_id) || $apps_id == 0) {
             $data['created_at'] = $now;
             $data['created_by'] = $user_id;
+            $data['status'] = 1; 
             $this->db->insert('tbl_portofolio_apps_master', $data);
             $apps_id = $this->db->insert_id();
             
-            $this->db->insert('tbl_apps_infra', ['apps_id' => $apps_id, 'infra_id' => 0]);
-            
             $this->generate_initial_workflow_batch($apps_id, $user_id, $now, $is_submit, $remarks);
-
         } else {
             $data['modified_at'] = $now;
             $data['modified_by'] = $user_id;
-            $this->db->where('apps_id', $apps_id);
-            $this->db->update('tbl_portofolio_apps_master', $data);
-            
+            if (!empty($data)) {
+                $this->db->where('apps_id', $apps_id);
+                $this->db->update('tbl_portofolio_apps_master', $data);
+            }
             $this->_handle_inputter_logic($apps_id, $role_id, $user_id, $now, $is_submit, $remarks);
         }
 
-        if ($role_id == 2) {
+        // Simpan Database & OS hanya jika dikirim
+        if (isset($post_data['database_ids'])) {
             $this->db->delete('tbl_apps_database', ['apps_id' => $apps_id]);
             if (!empty($post_data['database_ids'])) {
                 $db_batch = [];
                 foreach ($post_data['database_ids'] as $db_id) { $db_batch[] = ['apps_id' => $apps_id, 'database_id' => $db_id]; }
                 $this->db->insert_batch('tbl_apps_database', $db_batch);
             }
+        }
 
+        if (isset($post_data['os_ids'])) {
             $this->db->delete('tbl_apps_operating_software', ['apps_id' => $apps_id]);
             if (!empty($post_data['os_ids'])) {
                 $os_batch = [];
@@ -533,52 +438,59 @@ class Home_model extends CI_Model {
                 $this->db->insert_batch('tbl_apps_operating_software', $os_batch);
             }
         }
+        
+        if (isset($post_data['server_ids'])) {
+            $this->db->delete('tbl_apps_server', ['apps_id' => $apps_id]);
+            if (!empty($post_data['server_ids'])) {
+                $srv_batch = [];
+                foreach ($post_data['server_ids'] as $srv_id) { $srv_batch[] = ['apps_id' => $apps_id, 'server_id' => $srv_id]; }
+                $this->db->insert_batch('tbl_apps_server', $srv_batch);
+            }
+        }
+
+        if ($is_submit && $apps_id > 0) {
+            $this->db->insert('tbl_apps_audit_trail', [
+                'apps_id'    => $apps_id,
+                'role_id'    => $role_id,
+                'action'     => (!empty($action_string)) ? $action_string : 'SUBMIT',
+                'remarks'    => !empty($remarks) ? $remarks : 'Application Approved',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
 
         return $apps_id;
     }
 
     private function generate_initial_workflow_batch($apps_id, $user_id, $now, $is_submit, $remarks) {
-        $batch = [];
-        for ($r = 2; $r <= 8; $r++) {
-            $row = [
-                'apps_id'       => $apps_id,
-                'user_role_id' => $r,
-                'created_at'   => null, 
-                'created_by'   => null,
-                'modified_at'  => null, 
+        $row_ea = [
+            'apps_id'      => $apps_id,
+            'user_role_id' => 2,
+            'created_at'   => $now,
+            'created_by'   => $user_id,
+            'modified_at'  => $now,
+            'modified_by'  => $user_id,
+            'status'       => $is_submit ? 1 : 0,
+            'current'      => $is_submit ? 0 : 1,
+            'submit_date'  => $is_submit ? $now : null,
+            'remarks'      => $is_submit ? $remarks : null
+        ];
+        $this->db->insert('tbl_apps_approval', $row_ea);
+
+        if ($is_submit) {
+            $row_dev = [
+                'apps_id'      => $apps_id,
+                'user_role_id' => 3,
+                'created_at'   => $now,
+                'created_by'   => $user_id,
+                'modified_at'  => null,
                 'modified_by'  => null,
-                'status'       => 0, 
-                'current'      => 0, 
-                'submit_date'  => null, 
+                'status'       => 0,
+                'current'      => 1,
+                'submit_date'  => null,
                 'remarks'      => null
             ];
-
-            if ($r == 2) {
-                $row['created_by']  = $user_id; 
-                $row['created_at']  = $now;
-                $row['modified_by'] = $user_id; 
-                $row['modified_at'] = $now;
-                
-                if ($is_submit) {
-                    $row['status'] = 1;
-                    $row['submit_date'] = $now;
-                    $row['remarks'] = $remarks;
-                } else {
-                    $row['current'] = 1; 
-                }
-            }
-            elseif ($r == 3) {
-                if ($is_submit) {
-                    $row['created_by']  = $user_id; 
-                    $row['created_at']  = $now;
-                    $row['modified_by'] = null; 
-                    $row['modified_at'] = null;
-                    $row['current'] = 1; 
-                }
-            }
-            $batch[] = $row;
+            $this->db->insert('tbl_apps_approval', $row_dev);
         }
-        $this->db->insert_batch('tbl_apps_approval', $batch);
     }
 
     private function _handle_inputter_logic($apps_id, $role_id, $user_id, $now, $is_submit, $remarks) {
@@ -607,8 +519,7 @@ class Home_model extends CI_Model {
 
             $next_role = 0;
             if ($role_id == 2) $next_role = 3;      
-            elseif ($role_id == 4) $next_role = 5;  
-            elseif ($role_id == 6) $next_role = 7;  
+            elseif ($role_id == 3) $next_role = 1;  
             
             if ($next_role > 0) {
                 $this->_upsert_approval($apps_id, $next_role, [
@@ -628,6 +539,9 @@ class Home_model extends CI_Model {
     private function _upsert_approval($apps_id, $role_id, $data) {
         $exists = $this->db->where(['apps_id' => $apps_id, 'user_role_id' => $role_id])->count_all_results('tbl_apps_approval');
         if ($exists > 0) {
+            if(isset($data['created_by'])) unset($data['created_by']);
+            if(isset($data['created_at'])) unset($data['created_at']);
+            
             $this->db->where(['apps_id' => $apps_id, 'user_role_id' => $role_id]);
             $this->db->update('tbl_apps_approval', $data);
         } else {
@@ -640,6 +554,8 @@ class Home_model extends CI_Model {
     public function advance_workflow($apps_id, $current_role_id, $action, $remarks = '') {
         $now = date('Y-m-d H:i:s');
         $user_id = $this->session->userdata('user_id');
+        // TAMBAHKAN BARIS INI: ambil role_id dari parameter agar tidak null
+        $role_id = $current_role_id; 
 
         $update_data = [
             'status'      => 1, 
@@ -651,7 +567,7 @@ class Home_model extends CI_Model {
         ];
 
         $row = $this->db->get_where('tbl_apps_approval', ['apps_id' => $apps_id, 'user_role_id' => $current_role_id])->row();
-        if(empty($row->created_by)) {
+        if($row && empty($row->created_by)) {
             $update_data['created_by'] = $user_id;
             $update_data['created_at'] = $now;
         }
@@ -659,68 +575,37 @@ class Home_model extends CI_Model {
         $this->db->where(['apps_id' => $apps_id, 'user_role_id' => $current_role_id]);
         $this->db->update('tbl_apps_approval', $update_data);
         
-        $next_role = $current_role_id + 1;
+        $next_role = 0;
+        if ($current_role_id == 2) $next_role = 3;
+        elseif ($current_role_id == 3) $next_role = 1;
         
-        if ($next_role <= 8) {
+        if ($next_role > 0) {
             $this->_upsert_approval($apps_id, $next_role, [
                 'status'      => 0,
                 'current'     => 1, 
+                'created_by'  => $user_id,
+                'created_at'  => $now,
                 'modified_by' => null,
-                'modified_at' => null
+                'modified_at' => null,
+                'submit_date' => null,
+                'remarks'     => null
             ]);
         }
 
-        if ($current_role_id == 3) {
-            $check_infra = $this->db->get_where('tbl_apps_infra', ['apps_id' => $apps_id])->row();
-            if (!$check_infra) {
-                $this->db->insert('tbl_apps_infra', ['apps_id' => $apps_id, 'infra_id' => 0]);
-            }
-        }
-    }
-
-    public function reject_workflow($apps_id, $current_role_id, $target_role_id, $remarks = '') {
-        $now = date('Y-m-d H:i:s');
-        $user_id = $this->session->userdata('user_id');
-
-        $row = $this->db->get_where('tbl_apps_approval', ['apps_id' => $apps_id, 'user_role_id' => $current_role_id])->row();
-        $update_data = [
-            'current' => 0, 
-            'status' => 0,
-            'modified_by' => $user_id, 
-            'modified_at' => $now,
-            'remarks' => $remarks
-        ];
-        if(empty($row->created_by)) {
-            $update_data['created_by'] = $user_id;
-            $update_data['created_at'] = $now;
-        }
-
-        $this->db->where(['apps_id' => $apps_id, 'user_role_id' => $current_role_id]);
-        $this->db->update('tbl_apps_approval', $update_data);
-
-        $this->db->where('apps_id', $apps_id);
-        $this->db->where('user_role_id >', $target_role_id);
-        $this->db->where('user_role_id <', $current_role_id);
-        $this->db->update('tbl_apps_approval', [
-            'status' => 0,
-            'current' => 0,
-            'submit_date' => NULL,
-            'remarks' => NULL 
+        $this->db->insert('tbl_apps_audit_trail', [
+            'apps_id'    => $apps_id,
+            'role_id'    => $role_id, // Sekarang $role_id sudah memiliki nilai (current_role_id)
+            'action'     => $action,
+            'remarks'    => !empty($remarks) ? $remarks : "-",
+            'created_at' => date('Y-m-d H:i:s')
         ]);
-
-        $this->db->where(['apps_id' => $apps_id, 'user_role_id' => $target_role_id]);
-        $this->db->update('tbl_apps_approval', [
-            'current' => 1, 
-            'status' => 0,
-            'modified_by' => $user_id, 
-            'modified_at' => $now      
-        ]); 
     }
 
     public function get_master_data($table) {
         if ($this->db->table_exists($table)) { return $this->db->get($table)->result_array(); }
         return [];
     }
+    
     public function _get_fixed_role($user_id, $role_id_passed) {
         if (!empty($role_id_passed) && $role_id_passed != 0) return $role_id_passed;
         if ($user_id == 1) return 1;
@@ -729,58 +614,74 @@ class Home_model extends CI_Model {
         if ($row) return (int) $row->role_id;
         return 0;
     }
+    
     private function _build_task_query($user_id, $role_id) {
         $role_id = $this->_get_fixed_role($user_id, $role_id);
         $this->db->from('tbl_apps_approval ap');
         $this->db->join('tbl_portofolio_apps_master a', 'a.apps_id = ap.apps_id');
         $this->db->join('tbl_apps_category c', 'c.category_id = a.category_id', 'left');
-        $this->db->join('tbl_apps_infra ai', 'ai.apps_id = a.apps_id', 'left');
-        $this->db->join('tbl_portofolio_infra_master im', 'im.infra_id = ai.infra_id', 'left');
-        $this->db->join('tbl_service sv', 'sv.service_id = im.service_id', 'left');
-        $this->db->join('tbl_module m', 'm.module_id = im.module_id', 'left');
         $this->db->where('ap.user_role_id', $role_id);
         $this->db->where('ap.current', 1);
         $this->db->where('ap.status', 0);
     }
+    
     public function get_my_tasks($user_id, $role_id) {
         $this->db->select('ap.approval_id, ap.apps_id, ap.user_role_id, ap.status, ap.current, ap.submit_date, ap.modified_by, ap.modified_at');
         $this->db->select('a.application_name, a.short_name, a.created_at, a.created_by');
-        $this->db->select('c.category_name, m.module_name, a.apps_description');
+        $this->db->select('c.category_name, a.module as module_name, a.apps_description');
         $this->_build_task_query($user_id, $role_id);
         $this->db->group_by('ap.approval_id');
-        $this->db->order_by("CASE WHEN LOWER(c.category_name) = 'necessary' THEN 1 WHEN LOWER(c.category_name) = 'critical' THEN 2 ELSE 5 END", 'ASC');
+        
+        // --- LOGIKA PENGURUTAN PRIORITAS KATEGORI ---
+        $this->db->order_by("CASE
+            WHEN LOWER(c.category_name) = 'critical' THEN 1
+            WHEN LOWER(c.category_name) = 'very important' THEN 2
+            WHEN LOWER(c.category_name) = 'important' THEN 3
+            WHEN LOWER(c.category_name) = 'necessary' THEN 4
+            ELSE 5
+        END", 'ASC', FALSE);
+        // --------------------------------------------
+        
         $this->db->order_by('ap.approval_id', 'DESC');
         $query = $this->db->get()->result_array();
+        
         foreach ($query as &$row) {
             $start_time = !empty($row['submit_date']) ? $row['submit_date'] : $row['created_at'];
             $row['time_elapsed'] = $this->time_elapsed_string($start_time);
-            if (in_array($row['user_role_id'], [2, 4, 6])) { 
+            
+            if ($row['user_role_id'] == 2) { 
                 $is_revision = $this->check_is_revision($row['apps_id'], $row['modified_by'], $row['modified_at']);
                 $row['task_status_label'] = $is_revision ? 'Needs Revision' : 'Drafting';
                 $row['task_color'] = $is_revision ? 'orange' : 'yellow';
                 $row['btn_label'] = $is_revision ? 'Fix Now' : 'Take Action';
-            } else { 
-                $is_dev = ($row['user_role_id'] == 8);
-                $row['task_status_label'] = $is_dev ? 'Waiting Acknowledge' : 'Waiting Approval';
-                $row['task_color'] = 'blue';
-                $row['btn_label'] = $is_dev ? 'View' : 'Review';
+            } elseif ($row['user_role_id'] == 3) {
+                $row['task_status_label'] = 'Waiting Review';
+                $row['task_color'] = 'yellow';
+                $row['btn_label'] = 'Take Action';
+            } elseif ($row['user_role_id'] == 1) { 
+                $row['task_status_label'] = 'Waiting Final Review';
+                $row['task_color'] = 'yellow';
+                $row['btn_label'] = 'Take Action';
             }
         }
         return $query;
     }
+    
     public function count_my_tasks($user_id, $role_id) {
         $this->_build_task_query($user_id, $role_id);
         $this->db->group_by('ap.approval_id');
         return $this->db->get()->num_rows();
     }
+    
     private function check_is_revision($apps_id, $mod_by, $mod_at) {
         if(empty($mod_by) || empty($mod_at)) return false;
         $this->db->where('apps_id', $apps_id);
-        $this->db->where_in('user_role_id', [3, 5, 7]); 
+        $this->db->where_in('user_role_id', [1, 3]); 
         $this->db->where('modified_by', $mod_by);        
         $this->db->where('modified_at', $mod_at);        
         return $this->db->count_all_results('tbl_apps_approval') > 0;
     }
+    
     public function time_elapsed_string($datetime, $full = false) {
         if(!$datetime || $datetime == '0000-00-00 00:00:00') return 'Just now';
         try {
@@ -793,6 +694,7 @@ class Home_model extends CI_Model {
             return $string ? implode(', ', $string) . ' ago' : 'just now';
         } catch(Exception $e) { return 'Just now'; }
     }
+    
     public function get_timeline_data($apps_id) {
         $this->db->select('ap.user_role_id, ap.status, ap.current, ap.submit_date, ap.remarks, ap.modified_at, ap.modified_by, r.role_name');
         $this->db->from('tbl_apps_approval ap');
@@ -801,27 +703,169 @@ class Home_model extends CI_Model {
         $this->db->order_by('ap.user_role_id', 'ASC');
         return $this->db->get()->result_array();
     }
+    
     public function get_audit_trail($apps_id) {
-        $this->db->select('ap.*, r.role_name');
-        $this->db->from('tbl_apps_approval ap');
-        $this->db->join('tbl_role r', 'r.role_id = ap.user_role_id');
-        $this->db->where('ap.apps_id', $apps_id);
-        $this->db->where('ap.submit_date IS NOT NULL'); 
-        $this->db->order_by('ap.submit_date', 'DESC');
+        $this->db->select('at.*, r.role_name'); // at.* memastikan kolom 'action' ikut terambil
+        $this->db->from('tbl_apps_audit_trail at');
+        $this->db->join('tbl_role r', 'at.role_id = r.role_id', 'left');
+        $this->db->where('at.apps_id', $apps_id);
+        $this->db->order_by('at.created_at', 'DESC');
         return $this->db->get()->result_array();
     }
+    
     public function get_documents($apps_id) {
         if ($this->db->table_exists('tbl_apps_documents')) {
             return $this->db->get_where('tbl_apps_documents', ['apps_id' => $apps_id])->result_array();
         }
         return [];
     }
+    
     public function get_current_approval_stage($apps_id) {
         $row = $this->db->get_where('tbl_apps_approval', ['apps_id' => $apps_id, 'current' => 1])->row_array();
         if ($row) $row['role_id'] = $row['user_role_id']; 
         return $row;
     }
-    public function is_user_turn($apps_id, $role_id) { 
-        return $this->db->where(['apps_id'=>$apps_id, 'user_role_id'=>$role_id, 'current'=>1])->count_all_results('tbl_apps_approval') > 0; 
+    
+    public function delete_app($apps_id) {
+        // Gunakan Transaction agar jika salah satu gagal, semuanya di-rollback
+        $this->db->trans_start();
+
+        // 1. Hapus data dari tabel relasi (Child) terlebih dahulu
+        $this->db->delete('tbl_apps_database', ['apps_id' => $apps_id]);
+        $this->db->delete('tbl_apps_operating_software', ['apps_id' => $apps_id]);
+        $this->db->delete('tbl_apps_approval', ['apps_id' => $apps_id]);
+
+        // 2. Hapus data dari tabel utama (Parent)
+        $this->db->delete('tbl_portofolio_apps_master', ['apps_id' => $apps_id]);
+
+        $this->db->trans_complete();
+
+        // Kembalikan status keberhasilan eksekusi database
+        return $this->db->trans_status();
+    }
+    
+    public function check_duplicate($app_name, $module, $exclude_apps_id = 0) {
+        $this->db->where('application_name', trim($app_name));
+        $this->db->where('module', trim($module));
+        
+        // Jika sedang Edit data, abaikan ID miliknya sendiri
+        if ($exclude_apps_id > 0) {
+            $this->db->where('apps_id !=', $exclude_apps_id);
+        }
+        
+        return $this->db->count_all_results('tbl_portofolio_apps_master') > 0;
+    }
+    
+    public function is_app_done($apps_id) {
+        $this->db->where('apps_id', $apps_id);
+        $this->db->where('user_role_id', 1); // Role 1 adalah tahap akhir (IT SLM)
+        $this->db->where('status', 1);       // 1 = Approved/DONE
+        $query = $this->db->get('tbl_apps_approval');
+        
+        return $query->num_rows() > 0;
+    }
+    
+    public function update_app_status($apps_id, $new_status, $uploaded_filename, $decom_year, $user_id, $role_id, $audit_action, $remarks) {
+        $this->db->trans_start();
+
+        // 1. Update data di tabel master
+        $update_data = [
+            'status' => $new_status,
+            'decommission_year' => $decom_year
+        ];
+
+        if ($uploaded_filename !== null) {
+            $update_data['attached_document'] = $uploaded_filename;
+            // Blok SLA History dihapus dari sini agar tidak tercampur
+        }
+
+        $this->db->where('apps_id', $apps_id);
+        $this->db->update('tbl_portofolio_apps_master', $update_data);
+
+        // 2. Insert ke Audit Trail HANYA SEKALI
+        $action_label = ($new_status == 1) ? 'APP ACTIVATED' : 'APP DEACTIVATED';
+        $remarks_text = ($new_status == 1) ? 'Aplikasi diaktifkan kembali.' : 'Aplikasi dinonaktifkan (Deactivated).';
+        
+        if ($uploaded_filename !== null) {
+            $remarks_text .= ' Dilengkapi dengan dokumen pendukung terbaru.';
+        }
+
+        $this->db->insert('tbl_apps_audit_trail', [
+            'apps_id'    => $apps_id,
+            'role_id'    => $role_id,
+            'action'     => $audit_action, // Gunakan variabel parameter ini
+            'remarks'    => ($status == 0) ? 'Application Deactivated' : 'Application Activated',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
+    }
+
+    public function get_sla_history($apps_id) {
+        $this->db->where('apps_id', $apps_id);
+        $this->db->order_by('version', 'DESC'); 
+        
+        return $this->db->get('tbl_apps_sla_history')->result_array();
+    }
+    
+    // Fungsi untuk mencatat history SLA hasil generate sistem
+    public function insert_sla_history($apps_id, $filename, $remarks) {
+        // Cari versi terakhir
+        $this->db->where('apps_id', $apps_id);
+        $this->db->select_max('version');
+        $row = $this->db->get('tbl_apps_sla_history')->row();
+        
+        $new_version = ($row && $row->version) ? $row->version + 1 : 1;
+
+        // Insert ke history
+        $this->db->insert('tbl_apps_sla_history', [
+            'apps_id'    => $apps_id,
+            'version'    => $new_version,
+            'file_name'  => $filename,
+            'created_by' => $this->session->userdata('user_id'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'remarks'    => $remarks
+        ]);
+
+        // Opsional: Update dokumen terbaru di tabel master
+        $this->db->where('apps_id', $apps_id);
+        $this->db->update('tbl_portofolio_apps_master', ['attached_document' => $filename]);
+    }
+    
+    // Tambahkan fungsi ini ke Home_model.php
+    public function process_renewal($apps_id, $user_id, $role_id) {
+        $this->db->trans_start(); // Mulai transaksi DB
+
+        // 1. Reset Semua Workflow (Jadikan pending dan bukan current)
+        // Kosongkan remarks dan submit_date untuk siklus renewal
+        $this->db->where('apps_id', $apps_id);
+        $this->db->update('tbl_apps_approval', [
+            'status'      => 0,
+            'current'     => 0,
+            'remarks'     => NULL, 
+            'submit_date' => NULL
+        ]);
+
+        // 2. Set EA (Role 2) sebagai tahap yang aktif saat ini
+        $this->db->where('apps_id', $apps_id);
+        $this->db->where('user_role_id', 2);
+        $this->db->update('tbl_apps_approval', [
+            'current' => 1
+        ]);
+
+        // 3. TAMBAHKAN/PASTIKAN BAGIAN INI: Simpan log "RENEWAL"
+        $this->db->insert('tbl_apps_audit_trail', [
+            'apps_id'    => $apps_id,
+            'role_id'    => $role_id,
+            'action'     => 'RENEWAL', // Ini yang akan jadi badge RENEWAL
+            'remarks'    => 'Aplikasi masuk masa perpanjangan(Renewal)',
+            'created_at' => date('Y-m-d H:i:s')
+         ]);
+
+        $this->db->trans_complete(); // Selesai transaksi
+
+        return $this->db->trans_status();
     }
 }

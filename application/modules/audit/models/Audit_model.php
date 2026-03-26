@@ -79,6 +79,11 @@ class Audit_model extends CI_Model {
             $this->db->select('database_name as name');
             $this->db->from('tbl_database_master');
             $this->db->where('database_id', $id);
+        } elseif ($type == 'application_type' || $type == 'tbl_apps_type' || $type == 'tbl_app_type') {
+            // SESUAIKAN DENGAN GAMBAR DB: kolom adalah app_type_name dan app_type_id
+            $this->db->select('app_type_name as name'); 
+            $this->db->from('tbl_app_type'); // Sesuaikan nama tabel jika di DB adalah tbl_app_type (tanpa 's')
+            $this->db->where('app_type_id', $id);
         } elseif ($type == 'network' || $type == 'tbl_apps_network') {
             $this->db->select('network_name as name');
             $this->db->from('tbl_apps_network');
@@ -103,10 +108,14 @@ class Audit_model extends CI_Model {
             $this->db->select('operating_software_name as name');
             $this->db->from('tbl_operating_software');
             $this->db->where('operating_software_id', $id);
-        } elseif ($type == 'deployment' || $type == 'tbl_apps_deployment') {
-            $this->db->select('deployment_model as name'); 
-            $this->db->from('tbl_apps_deployment');
-            $this->db->where('deployment_id', $id);
+        } elseif ($type == 'deployment provider' || $type == 'tbl_apps_deployment_model') {
+            $this->db->select('deployment_provider_name as name'); 
+            $this->db->from('tbl_apps_deployment_model');
+            $this->db->where('deployment_provider_id', $id);
+        } elseif ($type == 'tbl_apps_deployment_site' || $type == 'deployment_site') {
+            $this->db->select('deployment_site_name as name');
+            $this->db->from('tbl_apps_deployment_site');
+            $this->db->where('deployment_site_id', $id);
         } elseif ($type == 'tbl_apps_operational_day') {
             $this->db->select("CONCAT(start_day, ' - ', end_day) as name");
             $this->db->from('tbl_apps_operational_day');
@@ -118,7 +127,7 @@ class Audit_model extends CI_Model {
         } elseif ($type == 'tbl_user_role') {
             $this->db->select('b.username as name');
             $this->db->from('tbl_user_role a');
-            $this->db->join('users b', 'a.user_id = b.id'); // Join untuk ambil username
+            $this->db->join('users b', 'a.user_id = b.id'); 
             $this->db->where('a.user_role_id', $id);
         } else {
             // Fallback default

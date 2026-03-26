@@ -9,7 +9,6 @@ class Gatekeeper {
         $this->CI =& get_instance();
 
         // 1. Jangan jalankan Gatekeeper di halaman Login/Auth atau CLI
-        // Agar tidak terjadi Loop (Redirect berulang-ulang)
         $current_class = strtolower($this->CI->router->fetch_class());
         if ($current_class === 'auth' || $current_class === 'login' || is_cli()) {
             return;
@@ -26,6 +25,7 @@ class Gatekeeper {
         // 3. Cek Login
         if (!$this->CI->session->userdata('user_id')) {
             redirect('auth');
+            exit; // Pastikan proses berhenti setelah redirect
         }
 
         // =========================================================
@@ -46,28 +46,25 @@ class Gatekeeper {
             }
         }
         // =========================================================
-
-        // 4. LOGIKA PEMANTULAN (GLOBAL REDIRECT)
-        // ---------------------------------------------------------
         
         // SKENARIO A: User adalah IT SLM (Role 1)
         if ($session_role === 1) {
-            // IT SLM DILARANG masuk halaman 'Home'
-            // Jika dia ada di 'home', tendang ke 'portofolio'
-            if ($current_class === 'home') {
-                redirect('portofolio');
-            }
-            // (Dia bebas akses controller lain seperti server, database, admin, dll)
+            // IT SLM memiliki akses Penuh. Biarkan lolos.
+            return;
         }
 
-        // SKENARIO B: User adalah OPERATIONAL (Role 2 - 8)
-        else {
-            // User Ops HANYA BOLEH di halaman 'Home'
-            // Jika dia mencoba akses controller SELAIN 'home', tendang balik ke 'home'
+        // SKENARIO B: User adalah EA Apps (Role 2) atau IT Dev (Role 3)
+        elseif (in_array($session_role, [2, 3])) {
+            // EA Apps & IT Dev HANYA BOLEH di halaman 'home'
             if ($current_class !== 'home') {
-                // Tambahkan flashdata agar user tahu kenapa dia dipantulkan
-                $this->CI->session->set_flashdata('error', 'Akses Ditolak! Anda tidak memiliki izin ke halaman tersebut.');
+                
+                // [KUNCI PERBAIKAN]: 
+                // Fitur $this->CI->session->set_flashdata('error', ...) DIHAPUS.
+                // Sistem hanya akan mengarahkan (redirect) kembali ke home secara diam-diam.
+                // Hal ini menjamin popup "Akses Ditolak" tidak akan pernah muncul secara salah / nyasar lagi.
+                
                 redirect('home');
+                exit; // Pastikan proses berhenti setelah redirect
             }
         }
     }

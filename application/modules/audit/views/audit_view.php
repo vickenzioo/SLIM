@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     
-                    <div class="card-body table-responsive">
+                    <div class="card-body">
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr class="bg-info">
@@ -96,10 +96,10 @@
 
                             <tbody>
                                 <?php if(!empty($audit_data)): ?>
-        							<?php 
-        								$start = $this->input->get('per_page');
-        								$no = $start ? $start + 1 : 1; 
-        							?>
+                                    <?php 
+                                        $start = $this->input->get('per_page');
+                                        $no = $start ? $start + 1 : 1; 
+                                    ?>
 
                                     <?php foreach($audit_data as $log): 
                                         $l = (array) $log; 
@@ -119,8 +119,8 @@
                                                 $bg = '#e9ecef'; $color = '#495057';
                                                 if($l['action'] == 'ADD') { $bg = '#e8f5e9'; $color = '#2e7d32'; }
                                                 elseif($l['action'] == 'EDIT') { $bg = '#e3f2fd'; $color = '#1565c0'; }
-                                                elseif($l['action'] == 'DEACTIVATE') { $bg = '#ffebee'; $color = '#c62828'; }
-                                                elseif($l['action'] == 'ACTIVATE') { $bg = '#e0f2f1'; $color = '#00695c'; } // Tambahkan penutup kurung di sini
+                                                elseif($l['action'] == 'DEACTIVATE' || $l['action'] == 'DELETE') { $bg = '#ffebee'; $color = '#c62828'; }
+                                                elseif($l['action'] == 'ACTIVATE') { $bg = '#e0f2f1'; $color = '#00695c'; }
                                             ?>
                                             
                                             <span class="badge px-3 py-2" style="background-color: <?= $bg ?>; color: <?= $color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">
@@ -131,30 +131,27 @@
                                         <td class="align-middle text-muted" style="font-size: 0.9rem;">
                                             <?php 
                                                 if (!empty($l['field_name'])) {
-                                                    // Mapping nama field database ke nama display di view
+                                                    // MAPPING NAMA FIELD LENGKAP (Termasuk Network Provider & Product)
                                                     $display_names = [
-                                                    'database_name' => 'Database Name',
-                                                    'connection_type' => 'Connection Type',
-                                                    'host'          => 'Host/Server',
-                                                    'username'      => 'DB Username',
-                                                    
-                                                    // Tambahkan field lain di sini sesuai kebutuhan
-
-                                                    // Tambahan untuk Deployment module sesuai screenshot Anda
-                                                    'network_name'     => 'Network Name',
-
-                                                    // Tambahan untuk Deployment module sesuai screenshot Anda
-                                                    'deployment_model'     => 'Deployment Model',
-                                                    'deployment_provider'  => 'Deployment Provider',
-                                                    'main_deployment_site' => 'Main Deployment Site',
-
-                                                    // Tambahan untuk Deployment module sesuai screenshot Anda
-                                                    'operating_software_name'     => 'Operating Software Name',
-        											'status'  => 'Status'
+                                                        'database_name'   => 'Database Name',
+                                                        'connection_type' => 'Connection Type',
+                                                        'host'            => 'Host/Server',
+                                                        'username'        => 'DB Username',
+                                                        'app_type_name'  => 'Application Type',
+                                                        'network_name'    => 'Network Name',
+                                                        'provider_name'   => 'Provider Name',
+                                                        'product_name'    => 'Product Name',
+                                                        'deployment_model'     => 'Deployment Model',
+                                                        'deployment_provider'  => 'Deployment Provider',
+                                                        'main_deployment_site' => 'Main Deployment Site',
+                                                        'operating_software_name' => 'Operating Software Name',
+                                                        'status'          => 'Status',
+                                                        'reason'          => 'Reason',
+                                                        'start_day'       => 'Start Day',
+                                                        'end_day'         => 'End Day'
                                                     ];
 
-                                                    // Tampilkan nama cantik jika ada di map, jika tidak tampilkan aslinya
-                                                    echo isset($display_names[$l['field_name']]) ? $display_names[$l['field_name']] : $l['field_name'];
+                                                    echo isset($display_names[$l['field_name']]) ? $display_names[$l['field_name']] : ucwords(str_replace('_', ' ', $l['field_name']));
                                                 } else {
                                                     echo '-';
                                                 }
@@ -167,7 +164,7 @@
                                                     if ($l['field_name'] == 'status' && $l['old_value'] !== null) {
                                                         echo ($l['old_value'] == '1') ? 'Active' : 'Non Active';
                                                     } else {
-                                                        echo !empty($l['old_value']) ? $l['old_value'] : '-';
+                                                        echo ($l['old_value'] !== null && $l['old_value'] !== '') ? $l['old_value'] : '-';
                                                     }
                                                 ?>
                                             </strike>
@@ -179,51 +176,36 @@
                                                     if ($l['field_name'] == 'status' && $l['new_value'] !== null) {
                                                         echo ($l['new_value'] == '1') ? 'Active' : 'Non Active';
                                                     } else {
-                                                        echo !empty($l['new_value']) ? $l['new_value'] : '-';
+                                                        echo ($l['new_value'] !== null && $l['new_value'] !== '') ? $l['new_value'] : '-';
                                                     }
                                                 ?>
                                             </span>
                                         </td>
 
                                         <td class="align-middle text-muted" style="font-size: 0.85rem; font-style: italic;">
-                                            "<?= $l['reason'] ?>"
+                                            <?= !empty($l['reason']) ? '"'.$l['reason'].'"' : '-' ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
 
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="8" class="text-center py-5 text-muted">
-                                                <div class="mb-3">
-                                                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" style="opacity: 0.5;">
-                                                </div>
-                                                No change history found for this item.
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5 text-muted">
+                                            <div class="mb-3">
+                                                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" style="opacity: 0.5;">
+                                            </div>
+                                            No change history found for this item.
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="card-footer clearfix bg-white">
+                    <div class="card-footer bg-white clearfix" style="border-top: 1px solid #dee2e6;">
                         <div class="float-right">
-                            <?php 
-                                // 1. Cek apakah link pagination dari controller ada isinya?
-                                if(!empty($pagination)) {
-                                    // Jika ada (berarti lebih dari 1 halaman), tampilkan normal
-                                    echo $pagination;
-                                } 
-                                    // 2. Jika kosong TAPI datanya ada (berarti cuma 1 halaman)
-                                elseif(isset($total_rows) && $total_rows > 0) {
-                                    // Tampilkan manual tombol angka 1
-                                    echo '<ul class="pagination pagination-sm m-0 float-right">';
-                                    echo '<li class="page-item active"><a class="page-link" href="#">1</a></li>';
-                                    echo '</ul>';
-                                }
-                                // 3. Jika total_rows 0, biarkan kosong
-                            ?>
+                            <?= $pagination ?>
                         </div>
-
                         <div class="float-left">
                             <small class="text-muted">
                                 Total Data: <?= isset($total_rows) ? $total_rows : 0 ?>
