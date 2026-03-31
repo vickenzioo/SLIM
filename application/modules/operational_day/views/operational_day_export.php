@@ -29,9 +29,9 @@
             <?php $no = 1; foreach($operational_days as $db): ?>
             <tr>
                 <td style="text-align: center;"><?= $no++ ?></td>
-                <td><?= $db['start_day'] ?></td>
-                <td><?= $db['end_day'] ?></td>
-                <td><?= $db['total_day'] ?></td>
+                <td style="text-align: center;"><?= $db['start_day'] ?></td>
+                <td style="text-align: center;"><?= $db['end_day'] ?></td>
+                <td style="text-align: center;"><?= $db['total_day'] ?> Days</td>
                 
                 <td style="text-align: center;">
                     <?= (isset($db['status']) && $db['status'] == 1) ? 'Active' : 'Non Active' ?>

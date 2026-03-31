@@ -28,9 +28,11 @@
             <?php $no = 1; foreach($operational_hours as $db): ?>
             <tr>
                 <td style="text-align: center;"><?= $no++ ?></td>
-                <td><?= $db['start_time'] ?></td>
-                <td><?= $db['end_time'] ?></td>
-                <td><?= $db['total_hour'] ?></td>
+                <td style="text-align: center;"><?= $db['start_time'] ?></td>
+                <td style="text-align: center;"><?= $db['end_time'] ?></td>
+                <td style="text-align: center;">
+                    <?= ($db['total_hour'] !== null && $db['total_hour'] !== '') ? $db['total_hour'] . ' Hours' : '-' ?>
+                </td>
                 <td style="text-align: center;">
                     <?= (isset($db['status']) && $db['status'] == 1) ? 'Active' : 'Non Active' ?>
                 </td>

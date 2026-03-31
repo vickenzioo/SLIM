@@ -89,6 +89,12 @@ class Audit_model extends CI_Model {
             $this->db->from('tbl_apps_network');
             $this->db->where('network_id', $id);
         } 
+		
+		elseif ($type == 'tbl_server' || $type == 'server') {
+            $this->db->select('server_name as name');
+            $this->db->from('tbl_server');
+            $this->db->where('server_id', $id);
+        }
         // --- TAMBAHKAN CODE DI BAWAH INI ---
         elseif ($type == 'tbl_network_product') {
             $this->db->select('product_name as name');

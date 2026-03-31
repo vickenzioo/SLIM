@@ -25,7 +25,7 @@
         <tbody>
             <?php $no = 1; foreach($deployments as $db): ?>
             <tr>
-                <td class="text-center"><?= $no++ ?></td>
+                <td style="text-align: center;"><?= $no++ ?></td>
                 <td><?= isset($db['deployment_model']) ? $db['deployment_model'] : '-' ?></td>
                 
                 <td class="text-center">

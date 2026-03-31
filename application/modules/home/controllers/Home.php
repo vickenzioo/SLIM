@@ -91,27 +91,45 @@ class Home extends CI_Controller {
         $config['reuse_query_string'] = TRUE;
         $config['query_string_segment'] = 'page';
         
+        // --- KONFIGURASI PAGINATION SESUAI PERMINTAAN ---
+        $total_rows = $m->count_my_portfolio($user_id, $role_id, $keyword, $filters);
+        $last_page_num = (string)ceil($total_rows / $config['per_page']);
+
+        $config['num_links'] = 2; 
+        $config['display_pages'] = TRUE;
+        
+        // Mengganti teks First & Last agar menyatu dengan angka, dan panah menjadi Next/Prev
+        $config['first_link'] = '1';
+        $config['last_link'] = $last_page_num;
+        
+        // Tombol panah diletakkan di next_link dan prev_link agar muncul di ujung luar
+        $config['next_link'] = '&rsaquo;'; 
+        $config['prev_link'] = '&lsaquo;';
+
+        // Mengaktifkan pemisah "..." (Ellipsis)
         $config['full_tag_open'] = '<ul class="pagination pagination-sm m-0">';
         $config['full_tag_close'] = '</ul>';
-        $config['first_link'] = '&laquo; First';
-        $config['first_tag_open'] = '<li class="page-item">';
-        $config['first_tag_close'] = '</li>';
-        $config['last_link'] = 'Last &raquo;';
-        $config['last_tag_open'] = '<li class="page-item">';
-        $config['last_tag_close'] = '</li>';
-        $config['next_link'] = '&rsaquo;';
-        $config['next_tag_open'] = '<li class="page-item">';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lsaquo;';
-        $config['prev_tag_open'] = '<li class="page-item">';
-        $config['prev_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close'] = '</a></li>';
+        
+        // Styling untuk simbol ellipsis agar tetap terlihat rapi
         $config['num_tag_open'] = '<li class="page-item">';
         $config['num_tag_close'] = '</li>';
-        $config['attributes'] = array('class' => 'page-link');
         
-        // SECURITY: Membersihkan parameter angka 
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+
+        $config['attributes'] = array('class' => 'page-link');
+        // ------------------------------------------------
+
         $raw_page = $this->security->xss_clean($this->input->get('page'));
         $page = ($raw_page) ? (int)$raw_page : 0;
         
@@ -119,18 +137,34 @@ class Home extends CI_Controller {
         $is_export = $raw_export == 1;
 
         if ($is_export) {
+            // 1. Load model audit terlebih dahulu
+            $this->load->model('audit/Audit_model');
+
+            // 2. Masukkan log ekspor ke tbl_audit_trail
+           $this->Audit_model->insert_log([
+                'username'    => $this->session->userdata('username'),
+                'action'      => 'EXPORT',
+                'table_name'  => 'tbl_portofolio_apps_master', // Ubah ke nama tabel master Anda
+                'foreign_id'  => 0,
+                'field_name'  => '-',
+                'old_value'   => '-',
+                'new_value'   => '-',
+                'reason'      => 'Export Data',
+                'timestamp'   => date('Y-m-d H:i:s')
+            ]);
+
             $all_data = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, 0, 0);
             $data['export_data'] = $all_data;
             $this->load->view('home_export', $data);
             return;
         }
 
-        $config['total_rows'] = $m->count_my_portfolio($user_id, $role_id, $keyword, $filters);
+        $config['total_rows'] = $total_rows;
         $this->pagination->initialize($config);
-        $data['my_portfolio'] = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, $config['per_page'], $page);
 
         $data['pagination'] = $this->pagination->create_links();
-        $data['total_rows'] = $config['total_rows'];
+        $data['my_portfolio'] = $m->get_my_portfolio($user_id, $role_id, $keyword, $filters, $config['per_page'], $page);
+        $data['total_rows'] = $total_rows;
         $data['my_tasks'] = $m->get_my_tasks($user_id, $role_id);
         $data['total_tasks'] = count($data['my_tasks']);
         
@@ -214,7 +248,7 @@ class Home extends CI_Controller {
         }
 
         if ($fixed_role == 2) {
-            $data['draft_list'] = $this->Home_model->get_my_tasks($user_id, $role_id);
+            $data['draft_list'] = $this->Home_model->get_my_tasks($user_id, $role_id, false);
         } else {
             $data['draft_list'] = [];
         }
@@ -227,29 +261,41 @@ class Home extends CI_Controller {
         $role_id = $this->session->userdata('role_id');
         
         $apps_id = (int)$this->security->xss_clean($this->input->post('apps_id'));
+        $save_type = $this->security->xss_clean($this->input->post('save_type')); // Kembalikan deteksi tombol
         $post_data = $this->security->xss_clean($this->input->post());
         $remarks = $this->security->xss_clean($this->input->post('remarks'));
         
-        $is_submit = true; 
+        // ========================================================
+        // LOGIKA KUNCI: 
+        // Role 1 & 3: Selalu paksa jadi SUBMIT (Fitur Draft mati)
+        // Role 2 (EA): Bebas, bisa simpan ke list (draft) atau submit
+        // ========================================================
+        if ($role_id == 1 || $role_id == 3) {
+            $is_submit = true; 
+        } else {
+            $is_submit = ($save_type == 'submit') ? true : false;
+        }
         
         $app_name = isset($post_data['application_name']) ? $post_data['application_name'] : '';
         $module_name = isset($post_data['module']) ? $post_data['module'] : '';
 
+        // Cek Duplikasi Nama dan Modul
         if (!empty($app_name) && !empty($module_name)) {
             $is_duplicate = $this->Home_model->check_duplicate($app_name, $module_name, $apps_id);
             
             if ($is_duplicate) {
                 $redirect_id = empty($apps_id) ? 0 : $apps_id;
-                $this->session->set_flashdata('duplicate_error', 'Gagal menyimpan! Aplikasi dengan nama <b>"'.$app_name.'"</b> dan modul <b>"'.$module_name.'"</b> sudah ada.');
+                $this->session->set_flashdata('duplicate_error', 'Gagal menyimpan! Aplikasi dengan nama <b>"'.$app_name.'"</b> dan module <b>"'.$module_name.'"</b> sudah ada.');
                 redirect('home/detail/'.$redirect_id);
                 return; 
             }
         }
 
-        $action_string = 'SUBMIT';
+        $action_string = $is_submit ? 'SUBMIT' : 'SAVE';
         $is_app_done = $this->Home_model->is_app_done($apps_id);
         
-        if ($is_app_done) {
+        // Logika Renewal khusus jika itu adalah Submit Final
+        if ($is_submit && $is_app_done) {
             $action_string = 'SUBMIT-RENEWAL';
             
             $remarks = $this->input->post('remarks_renewal'); 
@@ -258,16 +304,45 @@ class Home extends CI_Controller {
             }
             
             $post_data['remarks'] = $remarks; 
-
             $this->Home_model->insert_audit_trail($apps_id, "SUBMIT", $remarks);
         }
 
+        // Simpan data ke Database
         $saved_apps_id = $this->Home_model->save_apps_info($apps_id, $post_data, $is_submit, $role_id, $remarks, $action_string);
         
-        if ($role_id == 1) {
+        // Generate SLA jika Role 1 yang mensubmit
+        if ($is_submit && $role_id == 1) {
             $this->_generate_and_save_sla($saved_apps_id);
         }
 
+        // Simpan titipan Remarks EA jika hanya di-save biasa
+        if ($save_type == 'save_stay' && $role_id == 2 && !empty($remarks)) {
+            $target_apps_id = ($apps_id > 0) ? $apps_id : (is_array($saved_apps_id) && isset($saved_apps_id['id']) ? $saved_apps_id['id'] : $saved_apps_id);
+            if ($target_apps_id > 0) {
+                $this->db->where('apps_id', $target_apps_id)
+                         ->where('user_role_id', 2)
+                         ->update('tbl_apps_approval', ['remarks' => $remarks]);
+            }
+        }
+
+        // ========================================================
+        // PENGATURAN REDIRECT & NOTIFIKASI
+        // ========================================================
+        
+        // 1. Jika ini adalah Draft (Role 2)
+        if (!$is_submit) {
+            $this->session->set_flashdata('saved_app_name', $app_name);
+            $this->session->set_flashdata('success', 'Draft berhasil tersimpan.');
+            
+            if ($save_type == 'save_stay') {
+                redirect('home/detail/0?keep_name=1');
+            } else {
+                redirect('home'); 
+            }
+            return;
+        }
+
+        // 2. Jika ini adalah Final Submit (Role 1, 3, atau 2 yang menekan Submit)
         if(is_array($saved_apps_id) && isset($saved_apps_id['msg'])) {
             $this->session->set_flashdata('success', $saved_apps_id['msg']);
         } else {
@@ -329,7 +404,7 @@ class Home extends CI_Controller {
         }
         
         if (!empty($incomplete)) {
-            $this->session->set_flashdata('error', 'Gagal Submit! Ada data yang belum lengkap (termasuk OS/Database/Server) pada aplikasi: <br><br><b>' . implode(', ', $incomplete).'</b><br><br>Silakan klik tombol Edit untuk melengkapinya terlebih dahulu.');
+            $this->session->set_flashdata('error', 'Gagal Submit! Ada data yang belum lengkap pada aplikasi: <br><br><b>' . implode(', ', $incomplete).'</b><br><br>');
             redirect('home/detail/0');
             return;
         }
@@ -571,5 +646,49 @@ class Home extends CI_Controller {
         $is_duplicate = $this->Home_model->check_duplicate($app_name, $module_name, $apps_id);
         
         echo json_encode(['is_duplicate' => $is_duplicate]);
+    }
+	
+	public function cancel_renewal($apps_id) {
+		$apps_id = (int)$apps_id;
+		$user_id = $this->session->userdata('user_id');
+		$role_id = $this->session->userdata('role_id');
+		
+		if ($role_id != 2) {
+			$this->session->set_flashdata('error', 'Akses Ditolak: Hanya Enterprise Architecture (EA) yang dapat melakukan ini.');
+			redirect('home');
+			return;
+		}
+		
+		$remarks = $this->security->xss_clean($this->input->post('remarks'));
+		
+		$is_success = $this->Home_model->cancel_renewal($apps_id, $user_id, $role_id, $remarks);
+
+		if ($is_success) {
+			$this->session->set_flashdata('success', 'Renewal berhasil dibatalkan.');
+		} else {
+			$this->session->set_flashdata('error', 'Terjadi kesalahan saat membatalkan renewal.');
+		}
+
+		redirect('home/detail/'.$apps_id);
+	}
+	
+	// Tambahkan di dalam Controller Home.php
+    public function api_check_master_usage() {
+        // Pastikan hanya bisa diakses via AJAX
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        }
+
+        $master_table = $this->security->xss_clean($this->input->post('table_name'));
+        $id_value     = (int)$this->input->post('id_value');
+
+        // Tanya ke Model apakah data dipakai
+        $is_used = $this->Home_model->check_master_usage($master_table, $id_value);
+
+        // Kembalikan jawaban dalam bentuk JSON
+        echo json_encode([
+            'status'  => 'success',
+            'is_used' => $is_used
+        ]);
     }
 }

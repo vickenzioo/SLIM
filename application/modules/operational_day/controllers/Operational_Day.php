@@ -78,7 +78,11 @@ class Operational_Day extends CI_Controller {
     }
 
     public function export() {
-        // 1. Simpan Log Audit
+        // 1. Tangkap keyword dan filter dari URL (sama seperti di fungsi index)
+        $keyword = $this->security->xss_clean($this->input->get('keyword'));
+        $filters = $this->input->get('filter');
+
+        // 2. Simpan Log Audit
         $this->Audit_model->insert_log([
             'username'   => $this->session->userdata('username'),
             'action'     => 'EXPORT',
@@ -91,9 +95,8 @@ class Operational_Day extends CI_Controller {
             'timestamp'  => date('Y-m-d H:i:s')
         ]);
 
-        $keyword = $this->security->xss_clean($this->input->get('keyword'));
-        $filters = $this->input->get('filter');
-        $data['operational_days'] = $this->Operational_Day_model->get_all_operational_days();
+        // 3. KIRIM keyword dan filters ke Model!
+        $data['operational_days'] = $this->Operational_Day_model->get_all_operational_days($keyword, $filters);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Operational_Day_".date("Y-m-d").".xls");
@@ -103,7 +106,6 @@ class Operational_Day extends CI_Controller {
         $this->load->view('operational_day_export', $data);
     }
 
-    // --- Fungsi CRUD Lainnya (Tidak Berubah) ---
     public function save() {
         $id = $this->security->xss_clean($this->input->post('operational_day_id'));
         $start_day = trim($this->security->xss_clean($this->input->post('start_day')));
@@ -116,6 +118,8 @@ class Operational_Day extends CI_Controller {
             $this->session->set_flashdata('error', 'Data Operational Day dengan hari tersebut sudah ada!');
             redirect('operational_day'); return;
         }
+        
+        $calculated_total_day = $this->_calculate_total_days($start_day, $end_day);
 
         if ($id) {
             if(empty($reason)){
@@ -129,8 +133,17 @@ class Operational_Day extends CI_Controller {
                 $this->session->set_flashdata('error', 'Gagal simpan: Tidak ada perubahan data.');
                 redirect('operational_day'); return;
             }
-            $update_data = [ 'start_day' => $start_day, 'end_day' => $end_day, 'modified_by' => $userId, 'modified_at' => date("Y-m-d H:i:s") ];
+            
+            // Masukkan variabel 'total_day' ke dalam update
+            $update_data = [ 
+                'start_day' => $start_day, 
+                'end_day' => $end_day, 
+                'total_day' => $calculated_total_day, // <-- Disisipkan di sini
+                'modified_by' => $userId, 
+                'modified_at' => date("Y-m-d H:i:s") 
+            ];
             $this->Operational_Day_model->update_operational_day($id, $update_data);
+            
             $fields_to_track = [ 'start_day' => 'Start Day', 'end_day' => 'End Day' ];
             foreach ($fields_to_track as $field => $display_name) {
                 if ($oldData[$field] != ${$field}) {
@@ -139,8 +152,16 @@ class Operational_Day extends CI_Controller {
             }
             $this->session->set_flashdata('success', 'Data Operational Day berhasil diperbarui');
         } else {
-            $insert_data = [ 'start_day' => $start_day, 'end_day' => $end_day, 'created_by' => $userId, 'created_at' => date("Y-m-d H:i:s") ];
+            // Masukkan variabel 'total_day' ke dalam insert baru
+            $insert_data = [ 
+                'start_day' => $start_day, 
+                'end_day' => $end_day, 
+                'total_day' => $calculated_total_day, // <-- Disisipkan di sini
+                'created_by' => $userId, 
+                'created_at' => date("Y-m-d H:i:s") 
+            ];
             $this->Operational_Day_model->insert_operational_day($insert_data);
+            
             $new_id = $this->db->insert_id(); 
             $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_apps_operational_day', 'foreign_id' => $new_id, 'field_name' => 'Start Day', 'old_value' => '-', 'new_value' => $start_day, 'reason' => 'Initial Creation', 'timestamp' => date('Y-m-d H:i:s') ]);
             $this->Audit_model->insert_log([ 'username' => $username, 'action' => 'ADD', 'table_name' => 'tbl_apps_operational_day', 'foreign_id' => $new_id, 'field_name' => 'End Day', 'old_value' => '-', 'new_value' => $end_day, 'reason' => 'Initial Creation', 'timestamp' => date('Y-m-d H:i:s') ]);
@@ -252,5 +273,35 @@ class Operational_Day extends CI_Controller {
 
         $this->load->view('audit/audit_view', $data);
     }
+	
+	// --- FUNGSI OTOMATIS PENGHITUNG TOTAL HARI ---
+    private function _calculate_total_days($start, $end) {
+        $days_map = [
+            'Monday'    => 1,
+            'Tuesday'   => 2,
+            'Wednesday' => 3,
+            'Thursday'  => 4,
+            'Friday'    => 5,
+            'Saturday'  => 6,
+            'Sunday'    => 7
+        ];
 
+        // Jika nama hari tidak valid, kembalikan 0
+        if (!isset($days_map[$start]) || !isset($days_map[$end])) {
+            return 0; 
+        }
+
+        $start_num = $days_map[$start];
+        $end_num = $days_map[$end];
+
+        $diff = $end_num - $start_num;
+        
+        // Menangani kasus jika harinya melompat minggu (misal: Friday ke Tuesday)
+        if ($diff < 0) {
+            $diff += 7; 
+        }
+
+        // Ditambah 1 karena perhitungannya inklusif (Senin ke Senin = 1 Hari, Senin ke Selasa = 2 Hari)
+        return $diff + 1; 
+    }
 }

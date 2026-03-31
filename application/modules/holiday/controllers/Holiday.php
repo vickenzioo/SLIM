@@ -260,18 +260,55 @@ class Holiday extends CI_Controller {
     }
 
     public function audit_trail($id) {
+        // 1. Load Library & Model Audit
+        $this->load->library('pagination');
+        $this->load->model('audit/Audit_model'); 
+
+        // 1. Ambil data utama holiday
         $holiday = $this->Holiday_model->get_holiday_by_id($id);
         if (!$holiday) {
             show_404();
         }
 
+        $keyword = $this->input->get('keyword');
+        $table_name = 'tbl_holiday';
+
+        // 2. Konfigurasi Pagination
+        $config['base_url'] = base_url('holiday/audit_trail/' . $id);
+        $config['total_rows'] = count($this->Audit_model->get_audit_logs($id, $keyword, $table_name));
+        $config['per_page'] = 5; 
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'per_page';
+        $config['reuse_query_string'] = TRUE;
+
+        // --- STYLE PAGINATION ---
+        $config['full_tag_open']    = '<ul class="pagination pagination-sm m-0 float-right">';
+        $config['full_tag_close']   = '</ul>';
+        $config['cur_tag_open']     = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close']    = '</a></li>';
+        $config['num_tag_open']     = '<li class="page-item">';
+        $config['num_tag_close']    = '</li>';
+        $config['attributes']       = array('class' => 'page-link');
+
+        $this->pagination->initialize($config);
+
+        // 3. Ambil data yang sudah dilimit (Paginated)
+        $start = $this->input->get('per_page');
+        $audit_logs = $this->Audit_model->get_audit_logs_paginated($id, $table_name, $config['per_page'], $start, $keyword);
+
+        // 3. Susun data untuk dikirim ke view
+        $data['keyword']     = $keyword;
+        $data['menu_label']  = 'Holiday';
         $data['target_name'] = $holiday->Holiday_Name; 
         $data['back_url']    = 'holiday';
         $data['export_url']  = base_url('holiday/export_audit/' . $id);
+        $data['audit_data']  = $audit_logs;
+        $data['pagination']  = $this->pagination->create_links();
         
-        $data['audit_data']  = $this->Holiday_model->get_audit_trail($id);
-        $data['total_rows']  = count($data['audit_data']);
+        // 4. Hitung total baris untuk informasi di header view
+        $data['total_rows']  = $config['total_rows']; 
 
+        // 5. Load view audit
         $this->load->view('audit/audit_view', $data); 
     }
 

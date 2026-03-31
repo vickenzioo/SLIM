@@ -3,11 +3,9 @@
 <head>
     <title>Export Audit Trail</title>
     <style>
-        table { width: 100%; border-collapse: collapse; font-family: sans-serif; }
-        th, td { border: 1px solid black; padding: 8px; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 5px; }
         th { background-color: #f2f2f2; text-align: center; }
-        .text-center { text-align: center; }
-        .date-text { mso-number-format:"\@"; }
     </style>
 </head>
 <body>
@@ -29,8 +27,8 @@
         <tbody>
             <?php $no = 1; foreach($audit_logs as $log): ?>
             <tr>
-                <td class="text-center"><?= $no++ ?></td>
-                <td class="date-text"><?= $log['timestamp'] ?></td>
+                <td style="text-align: center;"><?= $no++ ?></td>
+                <td class="date-text" style="text-align: center;"><?= $log['timestamp'] ?></td>
                 <td><?= $log['username'] ?></td> 
                 <td class="text-center"><?= strtoupper($log['action']) ?></td>
                 
@@ -45,8 +43,27 @@
                     ?>
                 </td> 
                 
-                <td style="color: #dc3545; text-align: left;"><?= ($log['old_value'] == null || $log['old_value'] == '-') ? '-' : $log['old_value'] ?></td>
-                <td style="color: #28a745; text-align: left;"><?= $log['new_value'] ?></td>
+                <td style="color: #dc3545; text-align: left;">
+                    <?php 
+                        $val_old = ($log['old_value'] == null || $log['old_value'] == '-') ? '-' : $log['old_value'];
+                        if ($log['field_name'] == 'status') {
+                            echo ($val_old == '1') ? 'Active' : (($val_old == '0') ? 'Non Active' : $val_old);
+                        } else {
+                            echo $val_old;
+                        }
+                    ?>
+                </td>
+
+                <td style="color: #28a745; text-align: left;">
+                    <?php 
+                        $val_new = $log['new_value'];
+                        if ($log['field_name'] == 'status') {
+                            echo ($val_new == '1') ? 'Active' : (($val_new == '0') ? 'Non Active' : $val_new);
+                        } else {
+                            echo $val_new;
+                        }
+                    ?>
+                </td>
                 <td><em><?= $log['reason'] ?></em></td>
             </tr>
             <?php endforeach; ?>

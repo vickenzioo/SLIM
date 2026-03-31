@@ -567,9 +567,22 @@
 
                             <?php if($mode == 'add' || $mode == 'edit' || $mode == 'review'): ?>
                                 <?php if($rid == 2): ?>
+                                    
+                                    <?php 
+                                        $is_renewal_draft = false;
+                                        if ($apps_id > 0 && $mode == 'edit') {
+                                            $ci =& get_instance();
+                                            $cek = $ci->db->where('apps_id', $apps_id)->where('action', 'RENEWAL')->count_all_results('tbl_apps_audit_trail');
+                                            if ($cek > 0) $is_renewal_draft = true;
+                                        }
+                                    ?>
+                                    
+                                    <?php if($is_renewal_draft): ?>
+                                        <button type="button" class="btn btn-deactivate mr-2" onclick="cancelRenewal(<?= $apps_id ?>)">Cancel</button>
+                                    <?php endif; ?>
+                                    
                                     <button type="button" class="btn btn-secondary" onclick="submitForm('save_stay')">Save</button>
                                 <?php else: ?>
-                                    <button type="button" class="btn btn-secondary mr-2" onclick="submitForm('draft')">Save Draft</button>
                                     <button type="button" class="btn btn-save-custom" onclick="submitForm('submit')">Submit</button>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -604,7 +617,7 @@
                         <div class="card-header p-0 pt-1 border-bottom-0" style="flex: 0 0 auto;">
                             <ul class="nav nav-tabs custom-scroll-tabs" id="rightTabs" role="tablist" style="flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; white-space: nowrap;">
                                 
-                                <?php if($show_list_for_ea): // UPDATED ?>
+                                <?php if($show_list_for_ea):?>
                                 <li class="nav-item" style="flex: 0 0 auto;">
                                     <a class="nav-link active text-dark font-weight-bold" id="tab-list" data-toggle="pill" href="#content-list" title="List" style="display: flex; align-items: center; gap: 8px; padding: 12px 20px;">
                                         <i class="fas fa-clipboard-list" style="font-size: 1.1rem; color: #2c3e50;"></i>
@@ -644,7 +657,7 @@
                                  <div class="tab-pane fade show active h-100" id="content-list">
                                      <div class="d-flex flex-column h-100">
                                          
-                                         <div class="table-responsive scrollable-card-body p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0;">
+                                         <div class="table-responsive custom-scroll-tabs custom-scroll-kiri p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0;">
                                              <table class="table table-bordered table-hover text-nowrap text-sm m-0 w-100">
                                                  <thead class="bg-light" style="position: sticky; top: 0; z-index: 1; font-size: 11px;">
                                                      <tr class= "bg-info">
@@ -671,14 +684,14 @@
                                                         ?>
                                                         <tr class="<?= $is_active ?>">
                                                             <td class="align-middle p-0">
-                                                                <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px;">
+                                                                <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px; min-width: 50px;">
                                                                     <input type="checkbox" class="check-draft" value="<?= $d['apps_id'] ?>">
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center align-middle"><?= $d['application_name'] ?: $d['short_name'] ?></td>
-                                                            <td class="text-center align-middle"><?= $d['module_name'] ?></td>
+                                                            <td class="text-center align-middle" style="min-width: 150px; max-width: 150px; white-space: normal; word-wrap: break-word;"><?= $d['application_name'] ?: $d['short_name'] ?></td>
+                                                            <td class="text-center align-middle" style="min-width: 150px; max-width: 150px; white-space: normal; word-wrap: break-word;"><?= $d['module_name'] ?></td>
                                                             <td class="align-middle p-0">
-                                                                <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px;">
+                                                                <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px; min-width: 70px;">
                                                                     <a href="<?= base_url('home/detail/'.$d['apps_id']) ?>" class="btn btn-xs btn-info mr-1" title="Edit Data" style="margin-bottom: 0;">
                                                                         <i class="fas fa-edit"></i>
                                                                     </a>
@@ -709,7 +722,7 @@
 
                                  <div class="tab-pane fade <?= $workflow_active ? 'show active' : '' ?> h-100" id="content-timeline">
                                     <div class="d-flex flex-column h-100">
-                                         <div class="scrollable-card-body p-3 h-100" style="overflow-y: auto;">
+                                         <div class="custom-scroll-tabs custom-scroll-kiri p-3 h-100" style="overflow-y: auto; overflow-x: auto;">
                                              <div class="timeline-wrapper">
                                              <?php 
                                                 $stages = [2 => 'EA', 3 => 'IT Dev', 1 => 'IT SLM'];
@@ -736,12 +749,23 @@
                                                         $mySig = (!empty($myData['modified_at']) && !empty($myData['modified_by'])) ? $myData['modified_at'].'|'.$myData['modified_by'] : '';
                                                         $isRejectEvent = ($mySig && isset($reject_signatures[$mySig]) && $reject_signatures[$mySig] > 1);
 
-                                                        if($myData['status'] == 1) {
+														if ($current_pos == 2 && $myData['status'] == 0 && in_array($rid_key, [1, 3])) {
+															$isRejectEvent = false;
+														}
+
+														if($myData['status'] == 1) {
                                                             $containerClass = 'passed'; $markerClass = 'bg-success'; 
                                                             $rawDate = !empty($myData['submit_date']) ? $myData['submit_date'] : $myData['modified_at'];
                                                             $displayDate = date('d M Y H:i', strtotime($rawDate));
                                                             $displayRemarks = $myData['remarks'];
-                                                            $showDetails = true;
+															if (!empty($displayRemarks)) {
+																$displayRemarks = preg_replace(
+																	"/'(.*?)'\s*->\s*'(.*?)'/", 
+																	"<span class=\"text-danger\" style=\"text-decoration: line-through;\">'$1'</span> -> <span class=\"text-success font-weight-bold\">'$2'</span>", 
+																	$displayRemarks
+																);
+															}
+															$showDetails = true;
                                                         } elseif($myData['status'] == 0 && $isRejectEvent) {
                                                             $markerClass = 'bg-danger'; $containerClass = 'rejected';
                                                             if(in_array($rid_key, [1, 3])) { $displayRemarks = $myData['remarks']; $showDetails = true; } 
@@ -761,7 +785,7 @@
                                                         <span class="timeline-date <?= $textClass ?>" style="font-size: 14px;"><?= $displayDate ?></span>
                                                         <?php if(!empty($displayRemarks)): ?>
                                                             <div class="text-muted small mt-1 <?= $textClass ?>" style="font-size: 14px;">
-                                                                <i class="fas fa-comment-dots mr-1"></i> "<?= $displayRemarks ?>"
+                                                                <i class="fas fa-comment-dots mr-1"></i> "<?= nl2br($displayRemarks) ?>"
                                                             </div>
                                                         <?php endif; ?>
                                                     <?php endif; ?>
@@ -776,7 +800,7 @@
 
                                 <div class="tab-pane fade h-100" id="content-audit">
                                     <div class="d-flex flex-column h-100">
-                                        <div class="table-responsive scrollable-card-body p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0px;">
+                                        <div class="table-responsive custom-scroll-tabs custom-scroll-kiri p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0px;">
                                             <table class="table table-striped table-bordered table-hover text-sm m-0 w-100 text-center">
                                                 <thead class="bg-light" style="position: sticky; top: 0; z-index: 1; font-size: 11px;">
                                                     <tr class = "bg-info">
@@ -812,9 +836,9 @@
                                                                             case 'DEACTIVATE':
                                                                                 $bg = '#ffebee'; $color = '#c62828'; 
                                                                                 break;
-                                                                            case 'ACTIVATE':
-                                                                                $bg = '#e0f2f1'; $color = '#00695c'; // Toska
-                                                                                break;
+                                                                            case 'CANCEL':
+																				$bg = '#fff3e0'; $color = '#e65100'; // Toska
+																				break;
                                                                             case 'DRAFT':
                                                                                 $bg = '#fff3e0'; $color = '#ef6c00'; // Oranye
                                                                                 break;
@@ -825,8 +849,19 @@
                                                                     </span>
                                                                 </td>
                                                                 <td class="align-middle">
-                                                                    <?= !empty($aud['remarks']) ? nl2br($aud['remarks']) : '-' ?>
-                                                                </td>
+																	<?php 
+																		$audit_remarks = '-';
+																		if (!empty($aud['remarks'])) {
+																			$audit_remarks = preg_replace(
+																				"/'(.*?)'\s*->\s*'(.*?)'/", 
+																				"<span class=\"text-danger\" style=\"text-decoration: line-through;\">'$1'</span> -> <span class=\"text-success font-weight-bold\">'$2'</span>", 
+																				$aud['remarks']
+																			);
+																			$audit_remarks = nl2br($audit_remarks);
+																		}
+																	?>
+																	<?= $audit_remarks ?>
+																</td>
                                                             </tr>
                                                         <?php endforeach; ?>
                                                     <?php else: ?>
@@ -845,14 +880,14 @@
 
                                  <div class="tab-pane fade h-100" id="content-docs">
                                     <div class="d-flex flex-column h-100">
-                                        <div class="table-responsive scrollable-card-body p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0;">
+                                        <div class="table-responsive custom-scroll-tabs custom-scroll-kiri p-0" style="flex: 1 1 auto; overflow-y: auto; min-height: 0;">
                                             <table class="table table-striped table-bordered table-hover text-sm m-0 w-100 text-center">
                                                 <thead class="bg-light" style="position: sticky; top: 0; z-index: 1; font-size: 11px;">
                                                     <tr class= "bg-info">
                                                         <th class="text-center align-middle border-top-0">Version</th>
                                                         <th class="text-center align-middle border-top-0">Date Uploaded</th>
                                                         <th class="border-top-0 p-0 align-middle">
-                                                            <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px;">
+                                                            <div class="d-flex justify-content-center align-items-center" style="height: 100%; min-height: 0px; min-width: 50px;">
                                                                 Action
                                                             </div>
                                                         </th>
@@ -907,6 +942,19 @@
     var timelineData = <?= !empty($timeline) ? json_encode($timeline) : '[]' ?>;
     var isReadonly = <?= $is_readonly ? 'true' : 'false' ?>;
 
+    function showNotification(title, message, icon = 'success') {
+        Swal.fire({
+            title: title,
+            html: message,
+            icon: icon,
+            confirmButtonText: 'OK',
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-theme-gradient px-4'
+            }
+        });
+    }
+
     const toggleBtn = document.getElementById('darkModeBtn');
     const body = document.body;
     const icon = toggleBtn ? toggleBtn.querySelector('i') : null;
@@ -956,16 +1004,19 @@
                 const urlLogout = this.getAttribute('href');
 
                 Swal.fire({
-                    title: 'Berhasil Logout!',
-                    text: 'Anda akan keluar dari sistem',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'OK',
+                    title: 'Konfirmasi Logout',
+                    text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Logout',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
                     customClass: {
-                        confirmButton: 'btn-theme-gradient' 
+                        confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                        cancelButton: 'btn btn-secondary px-4 mx-2'
                     }
                 }).then((result) => {
-                    if (result.isConfirmed || result.isDismissed) {
+                    if (result.isConfirmed) {
                         if(overlay) overlay.style.display = 'flex';
                         window.location.href = urlLogout;
                     }
@@ -987,7 +1038,97 @@
                 $(this).removeClass('is-invalid');
             }
         });
-        // -------------------------------------------
+		
+        $('#formDetail').on('input', 'input[type="text"], textarea', function() {
+            var el = $(this);
+            var id = el.attr('id');
+            var name = el.attr('name');
+            var currentValue = el.val();
+            var forbiddenChars;
+
+            // 1. Pengecualian untuk URL (biarkan divalidasi oleh Pattern URL di atas)
+            if (id === 'input_url' || name === 'Url') {
+                return; 
+            }
+
+            // 2. Validasi Live Year (Hanya boleh ANGKA)
+            if (id === 'live_year' || name === 'Live_Year') {
+                forbiddenChars = /[^0-9]/g;
+            } 
+            // 3. Validasi Standard Category (Angka, Titik, Koma)
+            else if (id === 'standard_category' || name === 'Standard_Category') {
+                forbiddenChars = /[^0-9.,]/g;
+            } 
+            // 4. Validasi Umum (Huruf, Angka, Spasi, Titik, Koma, Strip, Underscore)
+            else {
+                forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g;
+            }
+
+            // Eksekusi pembersihan karakter jika melanggar regex
+            if (forbiddenChars.test(currentValue)) {
+                el.val(currentValue.replace(forbiddenChars, ''));
+                
+                // Efek visual kedip merah
+                el.addClass('is-invalid');
+                setTimeout(function() {
+                    el.removeClass('is-invalid');
+                }, 400);
+            }
+        });
+			
+		$(document).on('keydown', '#live_year, #standard_category, input[name="Live_Year"], input[name="Standard_Category"]', function(e) {
+            // Blokir simbol -, +, dan huruf e / E
+            if (['-', '+', 'e', 'E'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+		
+        $('#formDetail').on('input', 'input[type="text"], textarea', function() {
+            // Pengecualian untuk field URL (karena URL wajib pakai titik dua, garis miring, dll)
+            if ($(this).attr('id') === 'input_url' || $(this).attr('name') === 'Url') {
+                return; 
+            }
+
+            // Regex: HANYA izinkan huruf, angka, spasi, titik, koma, strip, dan underscore
+            var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+            var currentValue = $(this).val();
+
+            if (forbiddenChars.test(currentValue)) {
+                // Langsung hapus karakter terlarang yang baru saja diketik
+                $(this).val(currentValue.replace(forbiddenChars, ''));
+                
+                // Beri efek visual berkedip merah agar user sadar karakternya ditolak
+                var el = $(this);
+                el.addClass('is-invalid');
+                setTimeout(function() {
+                    el.removeClass('is-invalid');
+                }, 400); // Kedip selama 400ms
+            }
+        });
+
+        $(document).on('input', '.swal2-popup textarea', function() {
+            var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+            var currentValue = $(this).val();
+
+            if (forbiddenChars.test(currentValue)) {
+                // Langsung hapus karakter terlarang
+                $(this).val(currentValue.replace(forbiddenChars, ''));
+                
+                // Beri efek visual border merah berkedip pada form Swal
+                var el = $(this);
+                el.css({
+                    'border-color': '#dc3545',
+                    'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+                });
+                
+                setTimeout(function() {
+                    el.css({
+                        'border-color': '',
+                        'box-shadow': ''
+                    });
+                }, 400);
+            }
+        });
 
         $('.select2').select2({ 
             theme: 'bootstrap4', 
@@ -1009,8 +1150,8 @@
                 osSelected.push($(this).data('label')); 
             });
             $('#labelOS').text(osSelected.length > 0 ? osSelected.join(', ') : '-- Select OS --');
-			
-			let srvSelected = [];
+            
+            let srvSelected = [];
             $('.srv-checkbox:checked').each(function() { 
                 srvSelected.push($(this).data('label')); 
             });
@@ -1096,7 +1237,16 @@
             let modName = $('input[name="module"]').val(); 
 
             if((type === 'draft' || type === 'save_stay') && (!appName || !modName)) {
-                Swal.fire({ icon: 'warning', title: 'Data Belum Lengkap', text: 'Application Name dan Module Name wajib diisi untuk menyimpan data.' });
+                Swal.fire({ 
+                    icon: 'warning', 
+                    title: 'Data Belum Lengkap', 
+                    text: 'Application Name dan Module Name wajib diisi untuk menyimpan data.',
+                    confirmButtonText: 'OK',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-theme-gradient px-4'
+                    }
+                });
                 return;
             }
 
@@ -1124,7 +1274,9 @@
                                 html: 'Gagal! Aplikasi dengan nama <b>"'+appName+'"</b> dan modul <b>"'+modName+'"</b> sudah ada di database.', 
                                 confirmButtonText: 'OK', 
                                 buttonsStyling: false, 
-                                customClass: { confirmButton: 'btn btn-danger px-4' } 
+                                customClass: { 
+                                    confirmButton: 'btn btn-theme-gradient px-4' 
+                                } 
                             });
                         } else {
                             // JIKA AMAN: Lanjut ke validasi sisa dan submit
@@ -1166,7 +1318,6 @@
             $('#formDetail').find('input, select, textarea').not('input[type=hidden], input[type=file]').each(function() {
                 let fieldName = $(this).attr('name');
                 if(!fieldName || $(this).attr('type') === 'checkbox') return;
-                if(fieldName === 'operational_day_id' || fieldName === 'operational_hour_id') return;
 
                 let currentVal = $(this).val() || '';
                 let originalVal = $(this).data('original') || '';
@@ -1288,8 +1439,13 @@
                      Swal.fire({ 
                         icon: 'error', 
                         title: 'Data Belum Lengkap', 
-                        text: 'Mohon lengkapi semua form yang di-highlight merah sebelum melakukan Submit (Kecuali form opsional).' 
-                     });
+                        text: 'Mohon lengkapi semua form sebelum Submit.',
+                        confirmButtonText: 'OK',
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: 'btn btn-theme-gradient px-4'
+                        }
+                    });
                      return; 
                 } else {
                     $('#labelDB').css('color', ''); 
@@ -1304,9 +1460,14 @@
                           '<textarea id="swal-remarks" class="form-control" rows="3" placeholder="Enter remarks..."></textarea></div>', 
                     icon: 'question', 
                     showCancelButton: true, 
-                    confirmButtonColor: '#007bff', 
-                    confirmButtonText: 'Yes, submit', 
+                    confirmButtonText: 'Yes, Submit', 
+                    cancelButtonText: 'Cancel',
                     reverseButtons: true,
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-theme-gradient px-4 ml-2',
+                        cancelButton: 'btn btn-secondary px-4'
+                    },
                     preConfirm: () => {
                         let remarks = Swal.getPopup().querySelector('#swal-remarks').value;
                         if(autoRemark !== "") {
@@ -1325,8 +1486,8 @@
                 });
             }
         }
-		
-        function downloadSlaDoc(downloadUrl) {
+        
+        window.downloadSlaDoc = function(downloadUrl) {
             Swal.fire({
                 title: 'Download SLA Document?',
                 text: "Dokumen ini akan diunduh ke perangkat Anda.",
@@ -1334,6 +1495,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, download!',
                 cancelButtonText: 'Cancel',
+                reverseButtons: true,
                 buttonsStyling: false,
                 customClass: {
                     confirmButton: 'btn btn-save-custom px-4 mx-2',
@@ -1357,87 +1519,139 @@
                 }
             });
         }
-	
-		window.bulkSubmit = function() {
-			let selectedApps = [];
-			$('.check-draft:checked').each(function() {
-				selectedApps.push($(this).val());
-			});
+    
+        window.bulkSubmit = function() {
+            let selectedApps = [];
+            $('.check-draft:checked').each(function() {
+                selectedApps.push($(this).val());
+            });
 
-			if(selectedApps.length === 0) {
+            if(selectedApps.length === 0) {
                 Swal.fire({ icon: 'warning', title: 'Pilih Data', text: 'Silakan centang aplikasi dari tabel untuk disubmit.' });
                 return;
             }
 
-			Swal.fire({
-				title: 'Submit ' + selectedApps.length + ' Aplikasi?',
-				text: "Aplikasi yang dicentang akan dikirim ke tahap selanjutnya.",
-				html: '<div class="text-left mt-3 mb-2"><label class="font-weight-normal">Remarks (Optional)</label>' +
-					  '<textarea id="swal-remarks-bulk" class="form-control" rows="3" placeholder="Enter remarks..."></textarea></div>',
-				icon: 'question',
-				showCancelButton: true,
-				confirmButtonColor: '#007bff',
-				confirmButtonText: 'Yes, Submit',
-				reverseButtons: true,
-				preConfirm: () => {
-					return document.getElementById('swal-remarks-bulk').value;
-				}
-			}).then((result) => {
-				if(result.isConfirmed) {
-					$('#loadingOverlay').css('display', 'flex');
-					let form = document.createElement('form');
-					form.method = 'POST';
-					form.action = '<?= base_url("home/bulk_submit") ?>';
-					
-					let inputRemarks = document.createElement('input');
-					inputRemarks.type = 'hidden';
-					inputRemarks.name = 'remarks';
-					inputRemarks.value = result.value;
-					form.appendChild(inputRemarks);
-					
-					selectedApps.forEach(function(id) {
-						let inputId = document.createElement('input');
-						inputId.type = 'hidden';
-						inputId.name = 'selected_apps[]';
-						inputId.value = id;
-						form.appendChild(inputId);
-					});
-					
-					document.body.appendChild(form);
-					form.submit();
-				}
-			});
-		}
+            Swal.fire({
+                title: 'Submit ' + selectedApps.length + ' Aplikasi?',
+                text: "Aplikasi yang dicentang akan dikirim ke tahap selanjutnya.",
+                html: '<div class="text-left mt-3 mb-2"><label class="font-weight-normal">Remarks (Optional)</label>' +
+                      '<textarea id="swal-remarks-bulk" class="form-control" rows="3" placeholder="Enter remarks..."></textarea></div>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Submit',
+                cancelButtonText: 'Cancel', // Tambahkan teks cancel
+                reverseButtons: true,
+                buttonsStyling: false, // Wajib false agar class custom bisa jalan
+                customClass: {
+                    confirmButton: 'btn btn-theme-gradient px-4 ml-2', // Menggunakan gradient agar seragam
+                    cancelButton: 'btn btn-secondary px-4' // Sesuai permintaan Anda
+                },
+                preConfirm: () => {
+                    return document.getElementById('swal-remarks-bulk').value;
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    $('#loadingOverlay').css('display', 'flex');
+                    let form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '<?= base_url("home/bulk_submit") ?>';
+                    
+                    let inputRemarks = document.createElement('input');
+                    inputRemarks.type = 'hidden';
+                    inputRemarks.name = 'remarks';
+                    inputRemarks.value = result.value;
+                    form.appendChild(inputRemarks);
+                    
+                    selectedApps.forEach(function(id) {
+                        let inputId = document.createElement('input');
+                        inputId.type = 'hidden';
+                        inputId.name = 'selected_apps[]';
+                        inputId.value = id;
+                        form.appendChild(inputId);
+                    });
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
 
-        <?php $msg_success = $this->session->flashdata('success'); ?>
-        <?php if(!empty($msg_success)): ?>
-            Swal.fire({ icon: 'success', title: 'Success', text: '<?= $msg_success ?>', confirmButtonText: 'OK', confirmButtonColor: '#28a745' });
+        <?php if($this->session->flashdata('success')): ?>
+            showNotification('Success', '<?= $this->session->flashdata('success') ?>', 'success');
             <?php $this->session->unset_userdata('success'); ?>
         <?php endif; ?>
 
-        <?php $msg_error = $this->session->flashdata('error'); ?>
-        <?php if(!empty($msg_error)): ?>
-            <?php if(strpos($msg_error, 'Akses Ditolak') === false): ?>
-                Swal.fire({ icon: 'error', title: 'Gagal!', html: '<?= $msg_error ?>', confirmButtonText: 'OK', buttonsStyling: false, customClass: { confirmButton: 'btn btn-danger px-4' } });
+        // 2. Cek Notifikasi Error Umum
+        <?php if($this->session->flashdata('error')): ?>
+            <?php if(strpos($this->session->flashdata('error'), 'Akses Ditolak') === false): ?>
+                showNotification('Gagal!', '<?= $this->session->flashdata('error') ?>', 'error');
             <?php endif; ?>
             <?php $this->session->unset_userdata('error'); ?>
         <?php endif; ?>
 
+        // 3. Cek Notifikasi Duplicate Error
         <?php if($this->session->flashdata('duplicate_error')): ?>
-            Swal.fire({ icon: 'error', title: 'Data Duplikat!', html: '<?= $this->session->flashdata('duplicate_error') ?>', confirmButtonText: 'OK', buttonsStyling: false, customClass: { confirmButton: 'btn btn-danger px-4' } });
+            showNotification('Data Duplikat!', '<?= $this->session->flashdata('duplicate_error') ?>', 'error');
             <?php $this->session->unset_userdata('duplicate_error'); ?>
         <?php endif; ?>
     });
 
     window.deleteDraft = function(apps_id) {
         Swal.fire({
-            title: 'Apakah Anda yakin?', text: "Data draft ini tidak dapat dikembalikan!",
-            icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, hapus!', cancelButtonText: 'Batal', reverseButtons: true
+            title: 'Apakah Anda yakin?', 
+            text: "Data draft ini tidak dapat dikembalikan!",
+            icon: 'warning', 
+            showCancelButton: true, 
+            confirmButtonText: 'Yes, Delete', 
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-deactivate px-4 mx-2', 
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 $('#loadingOverlay').css('display', 'flex');
                 window.location.href = '<?= base_url("home/delete_draft/") ?>' + apps_id;
+            }
+        });
+    }
+	
+	window.cancelRenewal = function(apps_id) {
+        Swal.fire({
+            title: 'Batalkan Renewal?',
+            text: "Status aplikasi akan dikembalikan menjadi DONE (selesai) seperti sebelum Renewal.",
+            html: '<div class="text-left mt-3 mb-2"><label class="font-weight-normal">Remarks / Alasan (Opsional)</label>' +
+                  '<textarea id="swal-remarks-cancel" class="form-control" rows="3" placeholder="Contoh: Salah tekan tombol renewal..."></textarea></div>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel',
+            cancelButtonText: 'No',
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-deactivate px-4 mx-2', 
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            },
+            preConfirm: () => {
+                return document.getElementById('swal-remarks-cancel').value;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#loadingOverlay').css('display', 'flex');
+                
+                let form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '<?= base_url("home/cancel_renewal/") ?>' + apps_id;
+                
+                let inputRemarks = document.createElement('input');
+                inputRemarks.type = 'hidden';
+                inputRemarks.name = 'remarks';
+                inputRemarks.value = result.value;
+                form.appendChild(inputRemarks);
+                
+                document.body.appendChild(form);
+                form.submit();
             }
         });
     }

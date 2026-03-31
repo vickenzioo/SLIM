@@ -16,7 +16,7 @@
     <div class="login-split-wrapper">
         <div class="mascot-side">
             <div class="interactive-mascot-wrapper">
-                <img src="https://cdn-icons-png.flaticon.com/512/1864/1864497.png" alt="Maskot Gajah Lucu" class="base-mascot">
+                <img src="<?= base_url('assets/img/slim_icon.svg') ?>" alt="Maskot Gajah Lucu" class="base-mascot">
                 <div class="eye-socket js-eye">
                     <div class="pupil"></div>
                 </div>
@@ -58,41 +58,41 @@
                     </div>
 
                     
-                    <form action="<?= base_url('auth/process_login'); ?>" method="post">
-                        
-                        <div class="form-label-group text-left">
-                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Email" 
-                                value="<?= $this->session->flashdata('old_email') ? $this->session->flashdata('old_email') : set_value('email'); ?>">
-                            <label for="emailInput">Email</label>
-                            <small class="text-danger"><?= form_error('email'); ?></small>
-                        </div>
+                    <form action="<?= base_url('auth/process_login'); ?>" method="post" autocomplete="off">
+    
+						<div class="form-label-group text-left">
+							<input type="email" class="form-control" id="emailInput" name="email" placeholder="Email" autocomplete="off"
+								value="<?= $this->session->flashdata('old_email') ? $this->session->flashdata('old_email') : set_value('email'); ?>">
+							<label for="emailInput">Email</label>
+							<small class="text-danger"><?= form_error('email'); ?></small>
+						</div>
 
-                        <div class="form-label-group text-left position-relative">
-                            <input type="password" 
-                               class="form-control <?= (form_error('password') || $this->session->flashdata('error_password')) ? 'is-invalid' : ''; ?>" 
-                               id="passwordInput" name="password" placeholder="Password"
-                               value="<?= $this->session->flashdata('old_password'); ?>">
-                            
-                            <label for="passwordInput">Password</label>
-                            
-                            <button type="button" class="password-toggle-btn" id="togglePassword">
-                                <i class="fa-regular fa-eye" id="eyeIcon"></i>
-                            </button>
+						<div class="form-label-group text-left position-relative">
+							<input type="password" 
+							   class="form-control <?= (form_error('password') || $this->session->flashdata('error_password')) ? 'is-invalid' : ''; ?>" 
+							   id="passwordInput" name="password" placeholder="Password" autocomplete="new-password"
+							   value="<?= $this->session->flashdata('old_password'); ?>">
+							
+							<label for="passwordInput">Password</label>
+							
+							<button type="button" class="password-toggle-btn" id="togglePassword">
+								<i class="fa-regular fa-eye" id="eyeIcon"></i>
+							</button>
 
-                            <div class="d-flex justify-content-end">
-                                <small class="text-danger font-weight-bold mt-2">
-                                    <?= form_error('password'); ?>
-                                    <?= $this->session->flashdata('error_password'); ?>
-                                </small>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-theme-yellow btn-block shadow-sm">
-                                <i class="fa-solid fa-lock"></i> Masuk Sekarang
-                            </button>
-                        </div>
-                    </form>
+							<div class="d-flex justify-content-end">
+								<small class="text-danger font-weight-bold mt-2">
+									<?= form_error('password'); ?>
+									<?= $this->session->flashdata('error_password'); ?>
+								</small>
+							</div>
+						</div>
+						
+						<div class="mt-4">
+							<button type="submit" class="btn btn-theme-yellow btn-block shadow-sm">
+								<i class="fa-solid fa-lock"></i> Masuk Sekarang
+							</button>
+						</div>
+					</form>
                 </div>
             </div>
         </div>
@@ -162,6 +162,23 @@
                 overlay.style.display = 'flex';
             });
         }
+		
+		window.addEventListener('pageshow', function(event) {
+			// Jika event.persisted = true, berarti halaman dimuat dari Cache (tombol Back browser)
+			if (event.persisted) {
+				// Sembunyikan div loading overlay-mu (sesuaikan ID-nya jika berbeda)
+				var overlay = document.getElementById('loadingOverlay'); // Ganti dengan ID loading-mu
+				if (overlay) {
+					overlay.style.display = 'none';
+				}
+				
+				// Opsional: Kosongkan password demi keamanan
+				var passInput = document.getElementById('passwordInput');
+				if (passInput) {
+					passInput.value = '';
+				}
+			}
+		});
     </script>
 </body>
 </html>

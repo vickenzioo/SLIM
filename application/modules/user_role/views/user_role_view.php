@@ -100,7 +100,7 @@
                 <div class="card-body">
                     <table class="table table-striped table-bordered table-hover mb-0">
                         <thead>
-                            <tr class="bg-info">
+                            <tr class="bg-info text-center">
                                 <th class="text-center" style="width: 200px;">Action</th>
                                 <?php 
 									// Helper Render Header with Filter
@@ -173,7 +173,7 @@
 
                                 <?= render_th('Username', 'username', $opt_username, $selected_filters) ?>
                                 <?= render_th('Email', 'email', $opt_email, $selected_filters) ?>
-                                <th class="text-left" style="width: 200px;">Password</th>
+                                <th class="text-center" style="width: 200px;">Password</th>
                                 <?= render_th('Role Assignment', 'Role Assignment', $opt_role_name, $selected_filters) ?>
                                 <th style="width: 200px; text-align: center; color: var(--text-dark);">Status</th>
 
@@ -415,273 +415,287 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.17/dist/sweetalert2.all.min.js"></script>
+<?php $this->load->view('layout/foot_links'); ?>
 
 <script>
-$(document).ready(function() {
-    // Inisialisasi semua Select2 di dalam modal
-    $('.select2').each(function() {
-        var $this = $(this);
-        $this.select2({
-            theme: 'bootstrap4',
-            placeholder: $this.data('placeholder'),
-            allowClear: true,
-            width: '100%',
-            // Menghapus baris dropdownParent statis agar otomatis mengikuti modal masing-masing
-            dropdownParent: $this.closest('.modal'),
-            minimumResultsForSearch: Infinity
+	$(document).ready(function() {
+		// Inisialisasi semua Select2 di dalam modal
+		$('.select2').each(function() {
+            var $this = $(this);
+            $this.select2({
+                theme: 'bootstrap4',
+                placeholder: $this.data('placeholder'),
+                allowClear: false,
+                width: '100%',
+                dropdownParent: $this.closest('.modal'),
+                minimumResultsForSearch: Infinity
+            });
         });
-    });
 
-    // Menghilangkan highlight biru default Select2 saat dibuka
-    $('.select2').on('select2:open', function() {
-        document.querySelector('.select2-search__field').focus();
-    });
-    
-    $('#loadingOverlay').fadeOut();
-});
-
-
-$(document).ready(function() {
-    // Fungsi Show/Hide Password
-    $('#togglePasswordAdd').on('click', function() {
-        const passwordField = $('#passwordInputAdd');
-        const eyeIcon = $('#eyeIconAdd');
-        
-        // Cek tipe input
-        const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
-        passwordField.attr('type', type);
-        
-        // Ganti icon
-        eyeIcon.toggleClass('fa-eye fa-eye-slash');
-    });
-});
+		// Menghilangkan highlight biru default Select2 saat dibuka
+		$('.select2').on('select2:open', function() {
+			document.querySelector('.select2-search__field').focus();
+		});
+		
+		$('#loadingOverlay').fadeOut();
+	});
 
 
+	$(document).ready(function() {
+		// Fungsi Show/Hide Password
+		$('#togglePasswordAdd').on('click', function() {
+			const passwordField = $('#passwordInputAdd');
+			const eyeIcon = $('#eyeIconAdd');
+			
+			// Cek tipe input
+			const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+			passwordField.attr('type', type);
+			
+			// Ganti icon
+			eyeIcon.toggleClass('fa-eye fa-eye-slash');
+		});
+	});
 
-// --- FILTER LOGIC ---
-function filterList(input) {
-    var filter = input.value.toUpperCase();
-    var div = input.parentNode.nextElementSibling;
-    var labels = div.getElementsByTagName("label");
-    for (var i = 0; i < labels.length; i++) {
-        var txtValue = labels[i].textContent || labels[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            labels[i].style.display = "block";
-        } else {
-            labels[i].style.display = "none";
-        }
+
+
+	// --- FILTER LOGIC ---
+	function filterList(input) {
+		var filter = input.value.toUpperCase();
+		var div = input.parentNode.nextElementSibling;
+		var labels = div.getElementsByTagName("label");
+		for (var i = 0; i < labels.length; i++) {
+			var txtValue = labels[i].textContent || labels[i].innerText;
+			if (txtValue.toUpperCase().indexOf(filter) > -1) {
+				labels[i].style.display = "block";
+			} else {
+				labels[i].style.display = "none";
+			}
+		}
+	}
+
+	function applyFilter(key) {
+		$('.filter-applied-' + key).remove();
+		var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
+		var container = document.getElementById('activeFiltersContainer');
+		checkboxes.forEach(function(cb) {
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = 'filter[' + key + '][]';
+			input.value = cb.value;
+			input.className = 'filter-applied-' + key;
+			container.appendChild(input);
+		});
+		document.getElementById('mainFilterForm').submit();
+	}
+
+	function clearFilter(key) {
+		$('#loadingOverlay').css('display', 'flex'); 
+		var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
+		checkboxes.forEach(cb => cb.checked = false);
+		$('.filter-applied-' + key).remove();
+		document.getElementById('mainFilterForm').submit();
+	}
+
+	function openAssignModal() {
+		$('#modalAssignRole form')[0].reset();
+		$('#modalAssignRole .select2').val(null).trigger('change');
+		$('#modalAssignRole').modal('show');
+	}
+
+	function openEditModal(id, userId, roleId, username, email) {
+		$('#edit_user_role_id').val(id);
+		$('#edit_user_id').val(userId);
+		$('#edit_username').val(username);
+		$('#edit_email').val(email);
+		$('#edit_role_id').val(roleId).trigger('change');
+		$('#edit_reason').val('');
+		$('#modalEditData').modal('show');
+	}
+
+	function confirmExport() {
+		Swal.fire({
+			title: 'Export to Excel?',
+			text: "File akan otomatis diunduh.",
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonText: 'Yes, Export',
+			cancelButtonText: 'Cancel',
+			reverseButtons: true,
+			buttonsStyling: false,
+			customClass: {
+				confirmButton: 'btn btn-save-custom px-4 mx-2', 
+				cancelButton: 'btn btn-secondary px-4 mx-2'
+			}
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const Toast = Swal.mixin({
+					toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
+				});
+				Toast.fire({ icon: 'success', title: 'Downloading file...' });
+				window.location.href = "<?= base_url('user_role/export') ?>" + window.location.search;
+			}
+		})
+	}
+
+	function confirmDelete(id) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "User akan dinonaktifkan.",
+            icon: 'warning',
+            input: 'text',
+            inputLabel: 'Alasan:',
+            inputPlaceholder: 'Masukkan Alasan...',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Deactivate',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                buttonsStyling: false, 
+                customClass: {
+                    confirmButton: 'btn btn-deactivate px-4 mx-2',  
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
+            },
+            inputAttributes: {
+                style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
+            },
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Anda harus menuliskan alasan!';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "<?= base_url('user_role/update_status') ?>",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        id: id,
+                        status: 0, // Set Non-Active
+                        reason: result.value
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                confirmButtonText: 'OK',
+                                buttonsStyling: false,
+                                customClass: {
+                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message,
+                                confirmButtonText: 'OK',
+                                buttonsStyling: false,
+                                customClass: {
+                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                }
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Gagal memproses data ke server',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
-}
 
-function applyFilter(key) {
-    $('.filter-applied-' + key).remove();
-    var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
-    var container = document.getElementById('activeFiltersContainer');
-    checkboxes.forEach(function(cb) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'filter[' + key + '][]';
-        input.value = cb.value;
-        input.className = 'filter-applied-' + key;
-        container.appendChild(input);
-    });
-    document.getElementById('mainFilterForm').submit();
-}
-
-function clearFilter(key) {
-    $('#loadingOverlay').css('display', 'flex'); 
-    var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
-    checkboxes.forEach(cb => cb.checked = false);
-    $('.filter-applied-' + key).remove();
-    document.getElementById('mainFilterForm').submit();
-}
-
-function openAssignModal() {
-    $('#modalAssignRole form')[0].reset();
-    $('#modalAssignRole .select2').val(null).trigger('change');
-    $('#modalAssignRole').modal('show');
-}
-
-function openEditModal(id, userId, roleId, username, email) {
-    $('#edit_user_role_id').val(id);
-    $('#edit_user_id').val(userId);
-    $('#edit_username').val(username);
-    $('#edit_email').val(email);
-    $('#edit_role_id').val(roleId).trigger('change');
-    $('#edit_reason').val('');
-    $('#modalEditData').modal('show');
-}
-
-function confirmExport() {
-    Swal.fire({
-        title: 'Export to Excel?',
-        text: "File akan otomatis diunduh.",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, export!',
-        cancelButtonText: 'Cancel',
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-save-custom px-4 mx-2', 
-            cancelButton: 'btn btn-secondary px-4 mx-2'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const Toast = Swal.mixin({
-                toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
-            });
-            Toast.fire({ icon: 'success', title: 'Downloading file...' });
-            window.location.href = "<?= base_url('user_role/export') ?>" + window.location.search;
-        }
-    })
-}
-
-// Fungsi untuk Menonaktifkan (Status 0)
-function confirmDelete(id) {
-    Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "User akan dinonaktifkan.",
-        icon: 'warning',
-        input: 'text',
-        inputLabel: 'Alasan:',
-        inputPlaceholder: 'Masukkan Alasan...',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Nonaktifkan!',
-        cancelButtonText: 'Batal',
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-danger px-4 mx-2',
-            cancelButton: 'btn btn-secondary px-4 mx-2'
-        },
-        inputAttributes: {
-            style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
-        },
-        inputValidator: (value) => {
-            if (!value) {
-                return 'Anda harus menuliskan alasan!';
+    // Fungsi untuk Mengaktifkan Kembali (Status 1)
+    function confirmRestore(id) {
+        Swal.fire({
+            title: 'Aktifkan User Kembali?',
+            text: "User akan mendapatkan aksesnya kembali.",
+            icon: 'info',
+            input: 'text',
+            inputLabel: 'Alasan:',
+            inputPlaceholder: 'Masukkan Alasan...',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Activate',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-activate px-4 mx-2',
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            },
+            inputAttributes: {
+                style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
+            },
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Anda harus menuliskan alasan!';
+                }
             }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "<?= base_url('user_role/update_status') ?>",
-                type: "POST",
-                dataType: "JSON",
-                data: {
-                    id: id,
-                    status: 0, // Set Non-Active
-                    reason: result.value
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            confirmButtonText: 'OK',
-                            buttonsStyling: false,
-                            customClass: {
-                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
-                            }
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "<?= base_url('user_role/update_status') ?>",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        id: id,
+                        status: 1, // Set Active
+                        reason: result.value
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                confirmButtonText: 'OK',
+                                buttonsStyling: false,
+                                customClass: {
+                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message,
+                                confirmButtonText: 'OK',
+                                buttonsStyling: false,
+                                customClass: {
+                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                }
+                            });
+                        }
+                    },
+                    error: function() {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Gagal',
-                            text: response.message,
+                            title: 'Error',
+                            text: 'Gagal memproses data ke server',
                             confirmButtonText: 'OK',
-                            buttonsStyling: false,
                             customClass: {
                                 confirmButton: 'btn btn-theme-gradient px-4 mx-2'
                             }
                         });
                     }
-                },
-                error: function() {
-                    Swal.fire('Error', 'Gagal memproses data ke server', 'error');
-                }
-            });
-        }
-    });
-}
-
-// Fungsi untuk Mengaktifkan Kembali (Status 1)
-function confirmRestore(id) {
-    Swal.fire({
-        title: 'Aktifkan User Kembali?',
-        text: "User akan mendapatkan aksesnya kembali.",
-        icon: 'info',
-        input: 'text',
-        inputLabel: 'Alasan:',
-        inputPlaceholder: 'Masukkan Alasan...',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Aktifkan!',
-        cancelButtonText: 'Batal',
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-success px-4 mx-2',
-            cancelButton: 'btn btn-secondary px-4 mx-2'
-        },
-        inputAttributes: {
-            style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
-        },
-        inputValidator: (value) => {
-            if (!value) {
-                return 'Anda harus menuliskan alasan!';
+                });
             }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "<?= base_url('user_role/update_status') ?>",
-                type: "POST",
-                dataType: "JSON",
-                data: {
-                    id: id,
-                    status: 1, // Set Active
-                    reason: result.value
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            confirmButtonText: 'OK',
-                            buttonsStyling: false,
-                            customClass: {
-                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
-                            }
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: response.message,
-                            confirmButtonText: 'OK',
-                            buttonsStyling: false,
-                            customClass: {
-                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
-                            }
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire('Error', 'Gagal memproses data ke server', 'error');
-                }
-            });
-        }
-    });
-}
-
+        });
+    }
+ 
  // Flashdata Success
     <?php if($this->session->flashdata('success')): ?>
         Swal.fire({
@@ -752,10 +766,6 @@ function confirmRestore(id) {
                 updateIcon(false);
             }
 
-            // --- PERUBAHAN PENTING DISINI ---
-            // Cek dulu: Apakah fungsi updateChartTheme SUDAH DIBUAT di halaman ini?
-            // Jika halaman ini punya grafik (Portofolio), maka jalankan.
-            // Jika halaman ini tidak punya grafik (Database), maka LEWATI agar tidak error.
             if (typeof updateChartTheme === 'function') {
                 updateChartTheme(isDark);
             }
@@ -764,7 +774,7 @@ function confirmRestore(id) {
     
     // --- Script Logout ---
     const logoutBtn = document.getElementById('logoutLink');
-    const overlay = document.getElementById('loadingOverlay');
+	const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -772,22 +782,140 @@ function confirmRestore(id) {
             const urlLogout = this.getAttribute('href');
 
             Swal.fire({
-                title: 'Berhasil Logout!',
-                text: 'Anda akan keluar dari sistem',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Logout',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
                 customClass: {
-                    confirmButton: 'btn-theme-gradient' 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
                 }
             }).then((result) => {
-                if (result.isConfirmed || result.isDismissed) {
-                    overlay.style.display = 'flex';
+                if (result.isConfirmed) {
+                    if(overlay) overlay.style.display = 'flex';
                     window.location.href = urlLogout;
                 }
             });
         });
     }
+	
+	// 1. Validasi Global (Search, Filter, Reason, Username Edit, dan Username Add)
+    $(document).on('input', '#edit_username, #edit_reason, input[name="username"], #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
+        var el = $(this);
+        var currentValue = el.val();
+        var forbiddenChars;
+        var isEmailFilter = false;
+
+        // Cek jika ini adalah filter pencarian untuk kolom email
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'email') {
+                isEmailFilter = true;
+            }
+        }
+
+        if (isEmailFilter) {
+            // Izinkan format email (@, titik, strip, underscore)
+            forbiddenChars = /[^a-zA-Z0-9@.\-_]/g;
+        } else {
+            // Standar nama dan alasan
+            forbiddenChars = /[^a-zA-Z0-9@\s.,_\-]/g; 
+        }
+
+        if (forbiddenChars.test(currentValue)) {
+            el.val(currentValue.replace(forbiddenChars, ''));
+            
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+            
+            if (el.hasClass('filter-search-input')) {
+                filterList(this);
+            }
+        }
+    });
+
+    // 2. Validasi KHUSUS untuk form Email (Edit dan Add New User)
+    $(document).on('input', '#edit_email, input[name="email"]', function() {
+        var forbiddenChars = /[^a-zA-Z0-9@.\-_]/g;
+        var currentValue = $(this).val();
+
+        if (forbiddenChars.test(currentValue)) {
+            $(this).val(currentValue.replace(forbiddenChars, ''));
+            var el = $(this);
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
+	
+
+    // 1. Paste Validation - Global (Search, Filter, Reason, Username)
+    $(document).on('paste', '#edit_username, #edit_reason, input[name="username"], #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
+        var el = $(this);
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+        var forbiddenChars;
+        var isEmailFilter = false;
+
+        // Cek jika ini adalah filter pencarian untuk kolom email
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'email') {
+                isEmailFilter = true;
+            }
+        }
+
+        // Tentukan Regex: Email filter boleh pakai @ . - _, sisanya standar
+        if (isEmailFilter) {
+            forbiddenChars = /[^a-zA-Z0-9@.\-_]/g;
+        } else {
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        }
+
+        if (forbiddenChars.test(pasteData)) {
+            // Gagalkan proses paste secara total jika mengandung karakter terlarang
+            e.preventDefault();
+            
+            // Efek visual border merah berkedip
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
+
+    // 2. Paste Validation - KHUSUS Email (Form Add & Edit)
+    $(document).on('paste', '#edit_email, input[name="email"]', function(e) {
+        var el = $(this);
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+        var forbiddenChars = /[^a-zA-Z0-9@.\-_]/g;
+
+        if (forbiddenChars.test(pasteData)) {
+            e.preventDefault();
+            
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
 </script>
 
 </body>

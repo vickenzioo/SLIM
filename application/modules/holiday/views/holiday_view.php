@@ -90,7 +90,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <div class="modal-header bg-warning">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%); color: var(--text-dark);">
                 <h5 class="modal-title" id="detail_title">Holiday Detail</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -130,10 +130,7 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.17/dist/sweetalert2.all.min.js"></script>
+<?php $this->load->view('layout/foot_links'); ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -164,7 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
             text: "File akan otomatis diunduh.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, export!',
+            confirmButtonText: 'Yes, Export',
+            reverseButtons: true,
             cancelButtonText: 'Cancel',
             buttonsStyling: false,
             customClass: {
@@ -201,11 +199,12 @@ document.addEventListener('DOMContentLoaded', function() {
             inputLabel: 'Alasan Penghapusan:',
             inputPlaceholder: 'Masukkan Alasan...',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
             buttonsStyling: false,
             customClass: {
-                confirmButton: 'btn btn-danger px-4 mx-2',
+                confirmButton: 'btn btn-deactivate px-4 mx-2',  
                 cancelButton: 'btn btn-secondary px-4 mx-2'
             },
             inputAttributes: {
@@ -324,25 +323,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const nextBtn   = document.querySelector('.fc-next-button');
 
         if(addBtn){
-            // Menggunakan className akan menghapus class fc-button bawaan, 
-            // ini bagus agar style tidak bentrok.
+            // Pastikan hanya menggunakan btn-sm agar ukurannya standar Bootstrap
             addBtn.className = 'btn btn-sm btn-holiday-add'; 
             addBtn.innerHTML = '<i class="fas fa-plus mr-1"></i> Add';
         }
 
         if(exportBtn){
-            exportBtn.className = 'btn btn-sm btn-holiday-export ml-1';
+            exportBtn.className = 'btn btn-sm btn-holiday-export ml-2';
             exportBtn.innerHTML = '<i class="fas fa-file-export mr-1"></i> Export';
         }
 
         if(prevBtn) {
-            // Khusus navigasi, kita tambahkan class btn-sm agar tingginya terkunci 31px
-            prevBtn.classList.add('btn', 'btn-sm'); 
+            // Hapus penambahan class manual agar mengikuti style CSS holiday
             prevBtn.innerHTML = '<i class="fas fa-chevron-left" style="font-size: 12px;"></i>';
         }
 
         if(nextBtn) {
-            nextBtn.classList.add('btn', 'btn-sm', 'ml-1');
+            // Menambahkan ml-2 agar jaraknya sama dengan button Add & Export (8px)
+            nextBtn.classList.add('ml-2');
             nextBtn.innerHTML = '<i class="fas fa-chevron-right" style="font-size: 12px;"></i>';
         }
     }
@@ -398,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     });
 
-    /* ====================== FLASHDATA SUCCESS ====================== */
+    // Flashdata Success
     <?php if($this->session->flashdata('success')): ?>
         Swal.fire({
             icon: 'success',
@@ -411,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
 
-    /* ====================== FLASHDATA ERROR ====================== */
+    // Flashdata Error
     <?php if($this->session->flashdata('error')): ?>
         Swal.fire({
             icon: 'error',
@@ -419,12 +417,12 @@ document.addEventListener('DOMContentLoaded', function() {
             text: '<?= $this->session->flashdata('error') ?>',
             confirmButtonText: 'OK',
             buttonsStyling: false,
-            customClass: { confirmButton: 'btn btn-danger px-4' }
+            customClass: { confirmButton: 'btn btn-danger px-4' } 
         });
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
-
-    /* ====================== DARK MODE ====================== */
+    
+    // --- Script Dark Mode & Logout ---
     const toggleBtn = document.getElementById('darkModeBtn');
     const body = document.body;
     const icon = toggleBtn ? toggleBtn.querySelector('i') : null;
@@ -433,10 +431,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!icon) return;
         if (isDark) {
             icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
+            icon.classList.add('fa-sun'); 
         } else {
             icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
+            icon.classList.add('fa-moon'); 
         }
     }
 
@@ -450,10 +448,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if(toggleBtn) {
         toggleBtn.addEventListener('click', function(e) {
             e.preventDefault();
-
+            
             body.classList.toggle('dark-mode');
             const isDark = body.classList.contains('dark-mode');
-
+            
             if (isDark) {
                 localStorage.setItem('theme', 'dark');
                 updateIcon(true);
@@ -467,10 +465,82 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    const logoutBtn = document.getElementById('logoutLink');
+    const overlay = document.getElementById('loadingOverlay');
 
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const urlLogout = this.getAttribute('href');
+
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Logout',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if(overlay) overlay.style.display = 'flex';
+                    window.location.href = urlLogout;
+                }
+            });
+        });
+    }
 });
+
+$(document).on('input', '#modal_holiday_name, #modal_holiday_desc, #modal_holiday_reason, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
+        var el = $(this);
+        var currentValue = el.val();
+        var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+
+        if (forbiddenChars.test(currentValue)) {
+            el.val(currentValue.replace(forbiddenChars, ''));
+            
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
+	
+    $(document).on('paste', '#modal_holiday_name, #modal_holiday_desc, #modal_holiday_reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
+        
+        // Regex: HANYA izinkan huruf, angka, spasi, titik, koma, strip, dan underscore
+        var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        
+        // Ambil data teks dari clipboard
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+
+        if (forbiddenChars.test(pasteData)) {
+            // Jika mengandung karakter terlarang, batalkan proses paste secara total
+            e.preventDefault();
+            
+            // Beri feedback visual border merah berkedip
+            var el = $(this);
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            
+            setTimeout(function() {
+                el.css({
+                    'border-color': '',
+                    'box-shadow': ''
+                });
+            }, 400);
+        }
+    });
 </script>
-
-
 </body>
 </html>

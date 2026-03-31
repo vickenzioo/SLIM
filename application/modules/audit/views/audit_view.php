@@ -83,7 +83,7 @@
                     <div class="card-body">
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
-                                <tr class="bg-info">
+                                <tr class="bg-info text-center">
                                     <th style="border-bottom: none;" class="px-4">Timestamp</th>
                                     <th style="border-bottom: none;">User</th>
                                     <th style="border-bottom: none;">Action</th>
@@ -110,11 +110,11 @@
                                             <?= $l['timestamp'] ?>
                                         </td>
 
-                                        <td class="align-middle font-weight-bold" style="font-size: 0.9rem;">
+                                        <td class="text-center align-middle font-weight-bold" style="font-size: 0.9rem;">
                                             <?= !empty($l['email']) ? $l['email'] : $l['username'] ?>
                                         </td>
 
-                                        <td class="align-middle">
+                                        <td class="text-center align-middle">
                                             <?php 
                                                 $bg = '#e9ecef'; $color = '#495057';
                                                 if($l['action'] == 'ADD') { $bg = '#e8f5e9'; $color = '#2e7d32'; }
@@ -192,7 +192,7 @@
                                     <tr>
                                         <td colspan="8" class="text-center py-5 text-muted">
                                             <div class="mb-3">
-                                                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" style="opacity: 0.5;">
+                                                <img src="<?= base_url('assets/img/no_change_icon.svg') ?>" width="80" style="opacity: 0.5;">
                                             </div>
                                             No change history found for this item.
                                         </td>
@@ -226,9 +226,7 @@
     <div class="loading-text mt-2 font-weight-bold">Processing...</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.17/dist/sweetalert2.all.min.js"></script>
+<?php $this->load->view('layout/foot_links'); ?>
 
 <script>
      function confirmExport() {
@@ -237,8 +235,9 @@
             text: "File akan otomatis diunduh.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, export!',
+            confirmButtonText: 'Yes, Export',
             cancelButtonText: 'Cancel',
+			reverseButtons: true,
             buttonsStyling: false,
             customClass: {
                 confirmButton: 'btn btn-save-custom px-4 mx-2', 
@@ -337,7 +336,7 @@
     }
     
     const logoutBtn = document.getElementById('logoutLink');
-    const overlay = document.getElementById('loadingOverlay');
+	const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -345,22 +344,78 @@
             const urlLogout = this.getAttribute('href');
 
             Swal.fire({
-                title: 'Berhasil Logout!',
-                text: 'Anda akan keluar dari sistem',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Logout',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
                 customClass: {
-                    confirmButton: 'btn-theme-gradient' 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
                 }
             }).then((result) => {
-                if (result.isConfirmed || result.isDismissed) {
-                    overlay.style.display = 'flex';
+                if (result.isConfirmed) {
+                    if(overlay) overlay.style.display = 'flex';
                     window.location.href = urlLogout;
                 }
             });
         });
     }
+	
+	    // Target: Search Bar Utama dan Filter Dropdown
+    var auditSelectors = 'input[name="keyword"], .filter-search-input';
+
+    // Regex khusus Audit: Izinkan Huruf, Angka, Spasi, dan simbol log (. , _ - : | > ( ) )
+    var auditForbiddenChars = /[^a-zA-Z0-9\s.,_\-:|>()]/g;
+
+    // 1. Validasi saat KETIK (Input)
+    $(document).on('input', auditSelectors, function() {
+        var el = $(this);
+        var currentValue = el.val();
+
+        if (auditForbiddenChars.test(currentValue)) {
+            // Hapus karakter terlarang
+            el.val(currentValue.replace(auditForbiddenChars, ''));
+            
+            // Efek visual border merah berkedip
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+            
+            // Jika ini input filter, panggil ulang fungsi pencarian
+            if (el.hasClass('filter-search-input')) {
+                if (typeof filterList === "function") {
+                    filterList(this);
+                }
+            }
+        }
+    });
+
+    // 2. Validasi saat TEMPEL (Paste)
+    $(document).on('paste', auditSelectors, function(e) {
+        var el = $(this);
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+
+        if (auditForbiddenChars.test(pasteData)) {
+            // Batalkan paste jika mengandung karakter ilegal
+            e.preventDefault();
+            
+            // Feedback visual merah
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
 </script>
 </body>
 </html>

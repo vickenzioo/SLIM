@@ -11,6 +11,9 @@ class Auth extends CI_Controller {
     }
 
     public function index() {
+		header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+		header("Cache-Control: post-check=0, pre-check=0", false);
+		header("Pragma: no-cache");
         // Cek apakah sudah login
         if ($this->session->userdata('email')) {
             $role_id = (int)$this->session->userdata('role_id');
@@ -18,7 +21,7 @@ class Auth extends CI_Controller {
             if (in_array($role_id, [2, 3])) {
                 redirect('home');
             } else {
-                redirect('portofolio');
+                redirect('home');
             }
         }
 
@@ -89,7 +92,7 @@ class Auth extends CI_Controller {
                     $this->session->set_flashdata('old_email', $email);
                     $this->session->set_flashdata('old_password', $password);
                     
-                    $this->session->set_flashdata('error_password', 'Email atau password tidak valid');
+                    $this->session->set_flashdata('error_password', 'Email atau password tidak valid!');
                     redirect('auth');
                 }
             } else {

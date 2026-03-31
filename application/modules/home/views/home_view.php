@@ -32,7 +32,7 @@
         <div class="row row-dashboard">
             
             <div class="col-md-4" id="colLeft">
-                <div class="card shadow-sm" style="border-radius: 8px; border-top: 3px solid #ffc107;">
+                <div class="card shadow-sm" style="border-radius: 8px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px; border-top: 3px solid #ffc107;">
 
                     <div class="card-header bg-white border-0 pb-0 pt-4 pl-4 pr-3 d-flex justify-content-between align-items-center">
                         <h4 class="font-weight-bold mb-0 d-flex align-items-center" id="titleTask" data-count="<?= !empty($my_tasks) ? count($my_tasks) : 0 ?>">
@@ -52,18 +52,43 @@
                             <?php if(!empty($my_tasks)): ?>
                                 <?php foreach($my_tasks as $task): ?>
                                     <?php 
-                                        $colorClass = 'task-yellow'; 
-                                        $btnClass   = 'btn-yellow';
-                                        if(isset($task['task_color'])) {
-                                            if($task['task_color'] == 'orange') { $colorClass = 'task-orange'; $btnClass = 'btn-orange'; } 
-                                            elseif($task['task_color'] == 'blue') { $colorClass = 'task-blue'; $btnClass = 'btn-blue'; }
+                                        $colorClass = 'task-yellow'; // Default Kuning
+										$btnClass   = 'btn-yellow'; // Default Kuning
+
+										if (isset($task['task_color'])) {
+
+											if ($task['task_color'] == 'red') {
+												$colorClass = 'task-red'; // Asumsikan kelas CSS ini sudah ada
+												$btnClass = 'btn-red-force'; // Gunakan kelas tombol Bootstrap default untuk merah
+											}
+                                            elseif($task['task_color'] == 'orange') { 
+                                                $colorClass = 'task-orange'; 
+                                                $btnClass = 'btn-orange'; 
+                                            } elseif($task['task_color'] == 'blue') { 
+                                                $colorClass = 'task-blue'; 
+                                                $btnClass = 'btn-blue'; 
+                                            }
                                         }
                                     ?>
                                     <div class="card card-task <?= $colorClass ?> mb-3">
                                         <div class="card-body p-3">
                                             <div class="mb-2 clearfix">
                                                 <span class="task-meta"><?= $task['time_elapsed'] ?></span>
-                                                <span class="task-title"><?= $task['application_name'] ? $task['application_name'] : $task['short_name'] ?></span>
+                                            </div>
+											<div class="mb-2 clearfix">
+                                                <?php 
+                                                    $ci =& get_instance();
+                                                    $is_renewal = $ci->db->where('apps_id', $task['apps_id'])
+                                                                         ->where('action', 'RENEWAL')
+                                                                         ->count_all_results('tbl_apps_audit_trail') > 0;
+                                                ?>
+                                                <span class="task-title">
+                                                    <?= $task['application_name'] ? $task['application_name'] : $task['short_name'] ?>
+                                                    
+                                                    <?php if($is_renewal): ?>
+                                                        <span class="text-danger font-weight-bold">(RENEWAL)</span>
+                                                    <?php endif; ?>
+                                                </span>
                                             </div>
                                             <div class="mb-3">
                                                 <?php if(!empty($task['category_name'])): ?>
@@ -80,7 +105,15 @@
                                             </div>
                                             <div class="task-status-text">Status : <?= isset($task['task_status_label']) ? $task['task_status_label'] : 'Pending' ?></div>
                                             <div class="clearfix mt-2">
-                                                <a href="<?= base_url('home/detail/'.$task['apps_id']) ?>" class="btn btn-task <?= $btnClass ?>"><?= isset($task['btn_label']) ? $task['btn_label'] : 'View Detail' ?></a>
+                                                <?php if(isset($task['is_need_renewal']) && $task['is_need_renewal'] === true): ?>
+                                                    <button type="button" onclick="confirmRenewal(<?= $task['apps_id'] ?>)" class="btn btn-task <?= $btnClass ?>">
+                                                       <?= isset($task['btn_label']) ? $task['btn_label'] : 'Renewal' ?>
+                                                    </button>
+                                                <?php else: ?>
+                                                    <a href="<?= base_url('home/detail/'.$task['apps_id']) ?>" class="btn btn-task <?= $btnClass ?>">
+                                                        <?= isset($task['btn_label']) ? $task['btn_label'] : 'View Detail' ?>
+                                                    </a>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -152,20 +185,20 @@
                                     <input type="text" name="keyword" class="form-control" placeholder="Search..." value="<?= isset($keyword) ? $keyword : '' ?>">
                                     <div class="input-group-append">
                                         <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
-                                        <a href="<?= base_url('home') ?>" class="btn btn-secondary btn-sm">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </a>
+										<a href="<?= base_url('home') ?>" id="btnResetFilter" class="btn btn-secondary btn-sm" onclick="sessionStorage.removeItem('portfolioTableScrollLeft');">
+											<i class="fas fa-sync-alt"></i>
+										</a>
                                     </div>
                                 </div>
                             </div>
 
 
-                            <div class="top-scrollbar-wrapper" style="width: 100%; overflow-x: auto; overflow-y: hidden; height: 16px;">
+                            <div class="top-scrollbar-wrapper" style="width: 98.5%; overflow-x: auto; overflow-y: hidden; height: 16px;">
                                 <div class="top-scrollbar-content" style="height: 16px;"></div>
                             </div>
 
                             <div class="main-table-wrapper" style="flex: 1; overflow-y: auto; overflow-x: auto; max-height: none !important;" id="scrollableTable">
-                                <table class="table table-striped table-bordered table-hover text-nowrap">
+                                <table class="table table-striped table-bordered table-hover text-nowrap custom-scroll-tabs custom-scroll-kiri">
 
                                     <thead>
                                         <tr class="bg-info">
@@ -390,28 +423,51 @@
 											</td>
                                             
                                             <td class="text-center align-middle">
-                                                <?php 
-                                                    $curr = isset($row['current_stage_role']) ? $row['current_stage_role'] : 0;
-                                                    $roles_map = [1 => 'IT SLM', 2 => 'EA', 3 => 'IT Dev'];
-                                                    
-                                                    $status_label = isset($roles_map[$curr]) ? $roles_map[$curr] : 'Unknown';
-                                                    $bg = '#f8f9fa'; $color = '#6c757d'; 
+												<?php 
+													$curr = isset($row['current_stage_role']) ? $row['current_stage_role'] : 0;
+													$roles_map = [1 => 'IT SLM', 2 => 'EA', 3 => 'IT Dev'];
+													
+													$status_label = isset($roles_map[$curr]) ? $roles_map[$curr] : 'Unknown';
+													$bg = '#f8f9fa'; $color = '#6c757d'; 
 
-                                                    if ($curr == 0) {
-                                                        $is_done = $this->db->where(['apps_id' => $row['apps_id'], 'user_role_id' => 1, 'status' => 1])->count_all_results('tbl_apps_approval');
-                                                        if ($is_done > 0) {
-                                                            $status_label = 'DONE';
-                                                            $bg = 'rgba(46, 213, 115, 0.2)'; $color = '#218c74';
-                                                        }
-                                                    } 
-                                                    elseif ($curr == 1) { $bg = 'rgba(0, 210, 211, 0.15)'; $color = '#008a8a'; } // IT SLM
-                                                    elseif ($curr == 2) { $bg = 'rgba(162, 155, 254, 0.2)'; $color = '#6c5ce7'; } // EA
-                                                    elseif ($curr == 3) { $bg = 'rgba(232, 67, 147, 0.15)'; $color = '#d63031'; } // IT Dev
-                                                ?>
-                                                <span class="badge px-3 py-2" style="background-color: <?= $bg ?>; color: <?= $color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; display: inline-block; min-width: 120px;">
-                                                    <?= strtoupper($status_label) ?>
-                                                </span>
-                                            </td>
+													if ($curr == 0) {
+														// 1. Ambil data persetujuan Role 1 (IT SLM) untuk mengecek tanggal
+														$r1_approval = $this->db->where(['apps_id' => $row['apps_id'], 'user_role_id' => 1, 'status' => 1])
+																				->get('tbl_apps_approval')
+																				->row_array();
+														
+														if ($r1_approval) {
+															$status_label = 'DONE';
+															$bg = 'rgba(46, 213, 115, 0.2)'; $color = '#218c74'; // Hijau untuk DONE
+															
+															$waktu_submit = !empty($r1_approval['submit_date']) ? $r1_approval['submit_date'] : $r1_approval['modified_at'];
+															
+															if (!empty($waktu_submit)) {
+																$tanggal_submit = strtotime($waktu_submit);
+																$batas_satu_tahun = strtotime('-1 year');
+																
+																// Jika tanggal submit lebih lama (<=) dari 1 tahun yang lalu
+																if ($tanggal_submit <= $batas_satu_tahun) {
+																	
+																	// PASTIKAN APLIKASINYA MASIH ACTIVE (1). JIKA NOT ACTIVE (0), ABAIKAN.
+																	if (isset($row['status']) && $row['status'] == 1) {
+																		$status_label = 'NEED RENEWAL';
+																		$bg = 'rgba(255, 71, 87, 0.15)'; // Latar Merah Pudar
+																		$color = '#ff4757'; // Teks Merah Terang
+																	}
+																	
+																}
+															}
+														}
+													} 
+													elseif ($curr == 1) { $bg = 'rgba(0, 210, 211, 0.15)'; $color = '#008a8a'; } // IT SLM
+													elseif ($curr == 2) { $bg = 'rgba(162, 155, 254, 0.2)'; $color = '#6c5ce7'; } // EA
+													elseif ($curr == 3) { $bg = 'rgba(232, 67, 147, 0.15)'; $color = '#d63031'; } // IT Dev
+												?>
+												<span class="badge px-3 py-2" style="background-color: <?= $bg ?>; color: <?= $color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; display: inline-block; min-width: 120px;">
+													<?= strtoupper($status_label) ?>
+												</span>
+											</td>
 
                                             <td class="text-center align-middle">
                                                 <?php 
@@ -583,6 +639,56 @@
             $topScrollWrapper.scrollLeft(currentScroll);
             sessionStorage.setItem('portfolioTableScrollLeft', currentScroll); 
         });
+
+        $(document).on('input', 'input[name="keyword"], .filter-search-input', function() {
+            // Regex: HANYA izinkan huruf, angka, spasi, titik, koma, strip, dan underscore
+            var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+            var currentValue = $(this).val();
+
+            if (forbiddenChars.test(currentValue)) {
+                // Langsung hapus karakter terlarang yang diketik
+                $(this).val(currentValue.replace(forbiddenChars, ''));
+                
+                // Beri efek visual border merah berkedip pada kotak pencarian
+                var el = $(this);
+                el.css({
+                    'border-color': '#dc3545',
+                    'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+                });
+                
+                // Hilangkan efek merah setelah 400ms
+                setTimeout(function() {
+                    el.css({
+                        'border-color': '',
+                        'box-shadow': ''
+                    });
+                }, 400);
+                
+                // Jika ini adalah input filter, panggil ulang fungsi pencarian agar list-nya update
+                if (el.hasClass('filter-search-input')) {
+                    filterList(this);
+                }
+            }
+            $(document).on('paste', allTargetSelectors, function(e) {
+                // Ambil data teks dari clipboard
+                var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+
+                if (forbiddenChars.test(pasteData)) {
+                    // Jika mengandung karakter terlarang, batalkan proses paste
+                    e.preventDefault();
+                    
+                    // Beri feedback visual merah agar user tahu paste ditolak
+                    var el = $(this);
+                    el.css({
+                        'border-color': '#dc3545',
+                        'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+                    });
+                    setTimeout(function() {
+                        el.css({ 'border-color': '', 'box-shadow': '' });
+                    }, 400);
+                }
+            });
+        });
     });
     
     function toggleTaskSize(btn) {
@@ -660,8 +766,9 @@
             text: "Data tabel ini akan otomatis diunduh.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, export!',
+            confirmButtonText: 'Yes, Export',
             cancelButtonText: 'Cancel',
+            reverseButtons: true,
             buttonsStyling: false,
             customClass: {
                 confirmButton: 'btn btn-save-custom px-4 mx-2', 
@@ -703,6 +810,112 @@
         }
     }
 
+    window.toggleAppStatus = function(apps_id, status, actionName) {
+        // 1. Mencegah halaman reload tiba-tiba saat tombol diklik
+        if (window.event) {
+            window.event.preventDefault();
+        }
+
+        let colorBtn = (status === 1) ? '#28a745' : '#dc3545';
+        let iconSwal = (status === 1) ? 'question' : 'warning';
+        
+        // Sesuai perubahanmu: Wajib diubah menjadi tanda bintang merah
+        let fileLabel = (status === 0) ? 
+            "Attach Document Memo (PDF Only) <span class='text-danger'>*</span>" : 
+            "Attach Document (PDF Only) - <i>Opsional</i>";
+        
+        Swal.fire({
+            title: actionName + ' Aplikasi?',
+            html: "<p style='margin-bottom: 15px;'>Aplikasi akan menjadi<b>" + (status === 1 ? "Active" : "Not Active") + "</b>.</p>" +
+                  "<div class='text-left px-2'>" +
+                  "<label class='font-weight-normal' style='font-size: 14px;'>" + fileLabel + "</label>" +
+                  "<input type='file' id='swal-file' name='attached_document' class='form-control' accept='application/pdf' style='padding: 3px;'>" +
+                  "</div>",
+            icon: iconSwal,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, ' + actionName ,
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-save-custom px-4 mx-2',
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            },
+            preConfirm: () => {
+                let fileInput = document.getElementById('swal-file');
+                
+                // Jika Deactivate (status === 0) WAJIB ada file
+                if (status === 0 && fileInput.files.length === 0) {
+                    Swal.showValidationMessage('Dokumen Memo wajib diunggah untuk menonaktifkan aplikasi!');
+                    return false;
+                }
+
+                // Validasi ekstensi PDF
+                if (fileInput.files.length > 0) {
+                    let fileName = fileInput.files[0].name;
+                    let ext = fileName.split('.').pop().toLowerCase();
+                    if (ext !== 'pdf') {
+                        Swal.showValidationMessage('Format file tidak didukung! Harus berformat PDF.');
+                        return false;
+                    }
+                }
+                
+                // 2. SELAMATKAN FILE INPUT: Sembunyikan dan pindahkan ke body 
+                // SEBELUM modal SweetAlert dihancurkan
+                fileInput.style.display = 'none';
+                document.body.appendChild(fileInput);
+                
+                return fileInput; 
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#loadingOverlay').css('display', 'flex'); 
+                
+                let form = document.createElement('form');
+                form.method = 'POST';
+                // Pastikan kode ini berada di file PHP (View), bukan di file .js terpisah
+                // agar tag <?= base_url() ?> bisa dieksekusi oleh server
+                form.action = '<?= base_url("home/toggle_status/") ?>' + apps_id + '/' + status;
+                form.enctype = 'multipart/form-data'; 
+                
+                // Ambil input file yang sudah kita selamatkan tadi, lalu masukkan ke form
+                let safeFileInput = result.value;
+                form.appendChild(safeFileInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                // Jika user klik Batal, bersihkan sisa input file yang tertinggal di body
+                let orphanedInput = document.getElementById('swal-file');
+                if (orphanedInput) {
+                    orphanedInput.remove();
+                }
+            }
+        });
+    }
+    
+    function confirmRenewal(appsId) {
+        Swal.fire({
+            title: 'Mulai Proses Renewal?',
+            text: "Pastikan dokumen Renewal sudah lengkap.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Continue',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true, // Menempatkan tombol Cancel di kiri
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "<?= base_url('home/trigger_renewal/') ?>" + appsId;
+            }
+        });
+    }
+
+
     document.addEventListener("DOMContentLoaded", function() {
         if (localStorage.getItem('theme') === 'dark') {
             updateIcon(true);
@@ -737,16 +950,19 @@
                 const urlLogout = this.getAttribute('href');
 
                 Swal.fire({
-                    title: 'Berhasil Logout!',
-                    text: 'Anda akan keluar dari sistem',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonText: 'OK',
+                    title: 'Konfirmasi Logout',
+                    text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Logout',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
                     customClass: {
-                        confirmButton: 'btn-theme-gradient' 
+                        confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                        cancelButton: 'btn btn-secondary px-4 mx-2'
                     }
                 }).then((result) => {
-                    if (result.isConfirmed || result.isDismissed) {
+                    if (result.isConfirmed) {
                         if(overlay) overlay.style.display = 'flex';
                         window.location.href = urlLogout;
                     }
@@ -761,9 +977,10 @@
                 text: '<?= $this->session->flashdata('success') ?>',
                 confirmButtonText: 'OK',
                 buttonsStyling: false,
-                customClass: { confirmButton: 'btn btn-primary px-4' }
+                customClass: { 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2' 
+                }
             });
-            // PERBAIKAN: Gunakan fungsi unset CodeIgniter
             <?php $this->session->unset_userdata('success'); ?>
         <?php endif; ?>
 
@@ -774,111 +991,15 @@
                 html: '<?= $this->session->flashdata('error') ?>',
                 confirmButtonText: 'OK',
                 buttonsStyling: false,
-                customClass: { confirmButton: 'btn btn-danger px-4' } 
+                customClass: { 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2' 
+                }
             });
             <?php $this->session->unset_userdata('error'); ?>
         <?php endif; ?>
     });
 	
-	window.toggleAppStatus = function(apps_id, status, actionName) {
-		// 1. Mencegah halaman reload tiba-tiba saat tombol diklik
-		if (window.event) {
-			window.event.preventDefault();
-		}
-
-		let colorBtn = (status === 1) ? '#28a745' : '#dc3545';
-		let iconSwal = (status === 1) ? 'question' : 'warning';
-		
-		// Sesuai perubahanmu: Wajib diubah menjadi tanda bintang merah
-		let fileLabel = (status === 0) ? 
-			"Attach Document Memo (PDF Only) <span class='text-danger'>*</span>" : 
-			"Attach Document (PDF Only) - <i>Opsional</i>";
-		
-		Swal.fire({
-			title: actionName + ' Aplikasi?',
-			html: "<p style='margin-bottom: 15px;'>Status aplikasi ini akan diubah menjadi <b>" + (status === 1 ? "Active" : "Not Active") + "</b>.</p>" +
-				  "<div class='text-left px-2'>" +
-				  "<label class='font-weight-normal' style='font-size: 14px;'>" + fileLabel + "</label>" +
-				  "<input type='file' id='swal-file' name='attached_document' class='form-control' accept='application/pdf' style='padding: 3px;'>" +
-				  "</div>",
-			icon: iconSwal,
-			showCancelButton: true,
-			confirmButtonColor: colorBtn,
-			cancelButtonColor: '#6c757d',
-			confirmButtonText: 'Ya, ' + actionName + '!',
-			cancelButtonText: 'Batal',
-			reverseButtons: true,
-			preConfirm: () => {
-				let fileInput = document.getElementById('swal-file');
-				
-				// Jika Deactivate (status === 0) WAJIB ada file
-				if (status === 0 && fileInput.files.length === 0) {
-					Swal.showValidationMessage('Dokumen Memo wajib diunggah untuk menonaktifkan aplikasi!');
-					return false;
-				}
-
-				// Validasi ekstensi PDF
-				if (fileInput.files.length > 0) {
-					let fileName = fileInput.files[0].name;
-					let ext = fileName.split('.').pop().toLowerCase();
-					if (ext !== 'pdf') {
-						Swal.showValidationMessage('Format file tidak didukung! Harus berformat PDF.');
-						return false;
-					}
-				}
-				
-				// 2. SELAMATKAN FILE INPUT: Sembunyikan dan pindahkan ke body 
-				// SEBELUM modal SweetAlert dihancurkan
-				fileInput.style.display = 'none';
-				document.body.appendChild(fileInput);
-				
-				return fileInput; 
-			}
-		}).then((result) => {
-			if (result.isConfirmed) {
-				$('#loadingOverlay').css('display', 'flex'); 
-				
-				let form = document.createElement('form');
-				form.method = 'POST';
-				// Pastikan kode ini berada di file PHP (View), bukan di file .js terpisah
-				// agar tag <?= base_url() ?> bisa dieksekusi oleh server
-				form.action = '<?= base_url("home/toggle_status/") ?>' + apps_id + '/' + status;
-				form.enctype = 'multipart/form-data'; 
-				
-				// Ambil input file yang sudah kita selamatkan tadi, lalu masukkan ke form
-				let safeFileInput = result.value;
-				form.appendChild(safeFileInput);
-				
-				document.body.appendChild(form);
-				form.submit();
-			} else {
-				// Jika user klik Batal, bersihkan sisa input file yang tertinggal di body
-				let orphanedInput = document.getElementById('swal-file');
-				if (orphanedInput) {
-					orphanedInput.remove();
-				}
-			}
-		});
-	}
 	
-	function confirmRenewal(appsId) {
-		Swal.fire({
-			title: 'Mulai Proses Renewal?',
-			text: "Pastikan dokumen Renewal sudah lengkap.",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Ya, Lanjutkan Renewal!',
-			cancelButtonText: 'Batal'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				window.location.href = "<?= base_url('home/trigger_renewal/') ?>" + appsId;
-			}
-		});
-	}
-
-    
 </script>
 </body>
 </html>

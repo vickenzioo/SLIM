@@ -28,7 +28,9 @@
             <tr>
                 <td style="text-align: center;"><?= $no++ ?></td>
                 <td><?= $db['category_name'] ?></td>
-                <td><?= $db['standard_category'] ?></td>
+                <td style="text-align: center;">
+                    <?= ($db['standard_category'] !== null && $db['standard_category'] !== '') ? $db['standard_category'] . '%' : '-' ?>
+                </td>
                 
                 <td style="text-align: center;">
                     <?= (isset($db['status']) && $db['status'] == 1) ? 'Active' : 'Non Active' ?>

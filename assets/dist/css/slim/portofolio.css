@@ -11,7 +11,9 @@
 body { font-family: 'Poppins', sans-serif; }
 
 /* --- 2. SIDEBAR & NAVBAR --- */
-.main-sidebar { background-color: var(--sidebar-bg); }
+.main-sidebar { 
+    background-color: #343A40 !important; 
+}
 
 .brand-link {
     border-bottom: 1px solid rgba(255,255,255,0.1) !important;
@@ -72,14 +74,80 @@ body { font-family: 'Poppins', sans-serif; }
 }
 .btn-theme-gradient:hover { transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
 .btn-add-custom { background-color: #2f50b7 !important; color: white !important; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.dark-mode .btn-add-custom,
+.dark-mode .btn-add-custom.dropdown-toggle {
+    background-color: #2f50b7 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.dark-mode .btn-add-custom:hover,
+.dark-mode .btn-add-custom.dropdown-toggle:hover {
+    background-color: #2f50b7 !important;
+    color: #fff !important;
+    opacity: 0.9; /* Sedikit efek feedback saat hover */
+}
+
+.dark-mode .btn-add-custom:hover {
+    background-color: #2f50b7 !important;
+}
+
+.task-red {
+    border-left: 5px solid #dc3545 !important ; 
+}
+
+.btn-red-force {
+        background-color: #dc3545 !important; 
+        border-color: #dc3545 !important;
+        color: #212529 !important;
+    }
+	
+.btn-red-force:hover {
+	background-color: #c82333 !important;
+}
+
 .btn-export-custom { background: #10B981 !important; color: white !important; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 .btn-save-custom { 
     background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%); 
     border: none; color: var(--text-dark); 
     font-weight: bold; 
 }
-.btn-primary:hover, .btn-secondary:hover, .btn-success:hover, .btn-add-custom:hover, .btn-export-custom:hover, .btn-save-custom:hover { transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+.btn-primary:hover, .btn-add-custom:hover,.btn-secondary:hover, 
+.btn-export-custom:hover, .btn-save-custom:hover,{ 
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15); 
+}
 
+.btn-activate {
+    color: #fff !important;
+    background-color: #00bc8c;
+    border-color: #00bc8c;
+    box-shadow: none;
+}
+
+/* Tambahkan ini agar saat hover warna tulisan tidak berubah */
+.btn-activate:hover {
+    color: #fff !important;
+    background-color: #008966; /* Warna hijau yang sedikit lebih gelap saat hover */
+    border-color: #008966;
+    opacity: 1;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.btn-deactivate {
+    color: #fff !important; /* Tambahkan !important agar pasti putih */
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    box-shadow: none;
+}
+
+/* Tambahkan ini agar saat hover warna tulisan tidak berubah */
+.btn-deactivate:hover {
+    color: #fff !important;
+    background-color: #c0392b; /* Warna merah yang sedikit lebih gelap saat hover */
+    border-color: #c0392b;
+    opacity: 1; /* Memastikan tidak transparan */
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
 
 /* Operation Button */
 .btn-operation {
@@ -275,7 +343,7 @@ body { font-family: 'Poppins', sans-serif; }
 .btn-header-back { color: var(--text-dark); font-size: 1.1rem; margin-right: 10px; transition: color 0.2s; background: transparent; border: none; padding: 0; }
 .btn-header-back:hover { color: var(--theme-yellow-hover); }
 
-.timeline-wrapper { position: relative; padding: 10px 0 10px 20px; list-style: none; }
+.timeline-wrapper { position: relative; padding: 10px 0 10px 20px; list-style: none; min-width: 600px;}
 .timeline-item { position: relative; padding-bottom: 25px; border-left: 2px solid #e0e0e0; padding-left: 20px; }
 .timeline-item:last-child { border-left: 0; padding-bottom: 0; }
 .timeline-marker { position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 3px solid #ccc; z-index: 1; }
@@ -383,7 +451,7 @@ body.dark-mode .filter-active { color: #000000 !important; font-weight: bold; }
 /* Dark Mode Operation Dropdowns */
 body.dark-mode .dropdown-operation-menu { border: 1px solid #ffffff !important; }
 body.dark-mode .dropdown-operation-menu .dropdown-item { border: 1px solid #ffffff !important; border-bottom: none !important; }
-body.dark-mode .dropdown-operation-menu .dropdown-item:last-child { border: 1px solid #ffffff !important; border-top: none !important; }
+body.dark-mode .dropdown-operation-menu .dropdown-item:last-child { border: 1px solid #ffffff !important;}
 body.dark-mode .btn-operation { border: 1px solid #ffffff !important; }
 body.dark-mode .btn-operation:hover { border-color: #f8f9fa !important; box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
 body.dark-mode .btn-operation i { color: #ffffff !important; }
@@ -1012,4 +1080,81 @@ body.dark-mode .btn-minimize-task,
 body.dark-mode .btn-minimize-task i {
     color: #adb5bd; /* Warna abu-abu terang */
     transition: color 0.3s ease; /* Biar transisi perubahannya mulus */
+}
+
+
+.task-scroll-container::-webkit-scrollbar:vertical {
+    display: block;
+    width: 16px; 
+    background-color: rgba(0, 0, 0, 0.01);
+    border-radius: 10px;
+}
+
+.task-scroll-container::-webkit-scrollbar:horizontal {
+    display: none; 
+}
+
+.task-scroll-container::-webkit-scrollbar-track:vertical {
+    background-color: transparent; 
+}
+
+.task-scroll-container::-webkit-scrollbar-thumb:vertical {
+    background-color: #8b8b8b; 
+    border-radius: 10px;
+    border: 4px solid transparent; 
+    background-clip: padding-box;
+}
+.task-scroll-container::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #6b6b6b; 
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement,
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: block; 
+    height: 16px;
+    background-color: transparent; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px; 
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b8b8b'%3E%3Cpath d='M7 15l5-7 5 7H7z'/%3E%3C/svg%3E");
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b8b8b'%3E%3Cpath d='M7 9l5 7 5-7H7z'/%3E%3C/svg%3E");
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    background-color: rgba(0, 0, 0, 0.03); 
+    border-radius: 10px 10px 0 0;
+}
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment:hover {
+    background-color: rgba(0, 0, 0, 0.03); 
+    border-radius: 0 0 10px 10px;
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar:vertical {
+    background-color: transparent; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-track:vertical,
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement,
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-color: transparent; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-thumb:vertical {
+    background-color: #9e9e9e; 
+    border: 4px solid transparent; 
+    background-clip: padding-box; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 15l5-7 5 7H7z'/%3E%3C/svg%3E");
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 9l5 7 5-7H7z'/%3E%3C/svg%3E");
 }

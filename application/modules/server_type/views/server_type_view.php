@@ -2,15 +2,12 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>SLIM | Deployment</title>
+  <title>SLIM | Server Type Management</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <?php $this->load->view('layout/head_links'); ?>
-  
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
-
 <script>
     if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark-mode'); }
 </script>
@@ -29,13 +26,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0" style="color: var(--text-dark); font-weight: 700;">Deployment Management</h1>
+            <h1 class="m-0" style="color: var(--text-dark); font-weight: 700;">Server Type Management</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">
-                <a href="<?= base_url('portofolio')?>" class="breadcrumb-home">Home</a></li>
-              <li class="breadcrumb-item active">Deployment</li>
+              <li class="breadcrumb-item"><a href="<?= base_url('portofolio')?>" class="breadcrumb-home">Home</a></li>
+              <li class="breadcrumb-item active">Server Type</li>
             </ol>
           </div>
         </div>
@@ -44,12 +40,9 @@
 
     <section class="content">
       <div class="container-fluid">
-        
         <div class="card" style="border-top: 3px solid var(--theme-yellow-primary);">
-            
-            <form id="mainFilterForm" action="<?= base_url('deployment') ?>" method="get">
+            <form id="mainFilterForm" action="<?= base_url('server_type') ?>" method="get">
                 <input type="hidden" name="keyword" value="<?= isset($keyword) ? $keyword : '' ?>">
-                
                 <div id="activeFiltersContainer">
                     <?php if(!empty($selected_filters) && is_array($selected_filters)): ?>
                         <?php foreach($selected_filters as $key => $values): ?>
@@ -64,20 +57,18 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <button type="button" class="btn btn-add-custom btn-sm" onclick="clearForm()">
-								<i class="fas fa-plus mr-1"></i> Add
-							</button>
-							<button type="button" class="btn btn-export-custom btn-sm ml-2" onclick="confirmExport()">
-								<i class="fas fa-file-export mr-1"></i> Export
-							</button>
+                                <i class="fas fa-plus mr-1"></i> Add
+                            </button>
+                            <button type="button" class="btn btn-export-custom btn-sm ml-2" onclick="confirmExport()">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
                         </div>
                         <div class="col-md-4">
                             <div class="input-group">
-                                <input type="text" name="keyword" class="form-control" placeholder="Search Deployment..." value="<?= isset($keyword) ? $keyword : '' ?>">
+                                <input type="text" name="keyword" class="form-control" placeholder="Search Server Type..." value="<?= isset($keyword) ? $keyword : '' ?>">
                                 <div class="input-group-append">
-                                    <button class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                    <a href="<?= base_url('deployment') ?>" class="btn btn-secondary d-flex align-items-center">
+                                    <button class="btn btn-default"><i class="fas fa-search"></i></button>
+                                    <a href="<?= base_url('server_type') ?>" class="btn btn-secondary d-flex align-items-center">
                                         <i class="fas fa-sync-alt"></i>
                                     </a>
                                 </div>
@@ -87,12 +78,11 @@
                 </div>
             
                 <div class="card-body">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover text-nowrap">
                         <thead>
                             <tr class="bg-info">
-                                <th class="text-center" style="width: 150px;">Action</th>
+                                <th class="text-center" style="width: 200px;">Action</th>
                                 <?php 
-                                    // Helper Render Header (Tetap ada namun hanya memanggil 1 kolom filter)
                                     function render_th($label, $key, $options, $selected) {
                                         $isActive = isset($selected[$key]) && !empty($selected[$key]);
                                         $iconClass = $isActive ? 'filter-active' : ''; 
@@ -122,14 +112,13 @@
                                         echo '</div></div></div></div></th>';
                                     }
                                 ?>
-                                <?= render_th('Deployment Name', 'deployment_model', $opt_deployment_model, $selected_filters) ?>
-                                <th style="width: 200px; text-align: center;">Status</th>
+                                <?= render_th('Server Type', 'server_name', $opt_server_name, $selected_filters) ?>
+                                <th style="width: 200px; text-align: center; color: var(--text-dark);">Status</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            <?php if(!empty($deployments)): ?>
-                                <?php foreach($deployments as $db): ?>
+                            <?php if(!empty($servers)): ?>
+                                <?php foreach($servers as $row): ?>
                                 <tr>
                                     <td class="text-center align-middle">
                                         <div class="dropdown">
@@ -137,33 +126,34 @@
                                                 <i class="fas fa-cog mr-2"></i> Operation
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right shadow dropdown-operation-menu">
-                                                <button class="dropdown-item" type="button" onclick="window.location.href='<?= base_url('deployment/audit/'.$db['deployment_id']) ?>'">
+                                                <button class="dropdown-item" type="button" onclick="window.location.href='<?= base_url('server_type/audit/'.$row['server_id']) ?>'">
                                                     <i class="fas fa-clipboard-list fa-fw text-primary mr-2"></i> Audit Trail
                                                 </button>
-                                                <?php if($db['status'] == 1): ?>
-                                                    <button class="dropdown-item" type="button" onclick="editDep(<?= $db['deployment_id'] ?>, '<?= htmlspecialchars($db['deployment_model']) ?>')">
+                                                <?php if($row['status'] == 1): ?>
+                                                    <button class="dropdown-item" type="button" onclick="editData(<?= $row['server_id'] ?>, '<?= $row['server_name'] ?>')">
                                                         <i class="fas fa-edit fa-fw text-warning mr-2"></i> Edit Data
                                                     </button>
-                                                    <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $db['deployment_id'] ?>)">
+                                                    <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $row['server_id'] ?>)">
                                                         <i class="fas fa-power-off fa-fw text-danger mr-2"></i> Deactivate
                                                     </button>
                                                 <?php else: ?>
-                                                    <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $db['deployment_id'] ?>)">
+                                                    <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $row['server_id'] ?>)">
                                                         <i class="fas fa-undo-alt fa-fw text-success mr-2"></i> Activate
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="align-middle"><?= $db['deployment_model'] ?></td>
+                                    <td class="align-middle"><?= $row['server_name'] ?></td>
                                     <td class="text-center align-middle">
                                         <?php 
-                                            $status_bg = ($db['status'] == 1) ? '#e8f5e9' : '#ffebee';
-                                            $status_color = ($db['status'] == 1) ? '#2e7d32' : '#c62828';
-                                            $status_label = ($db['status'] == 1) ? 'Active' : 'Non Active';
+                                            $isActive = ($row['status'] == 1);
+                                            $bg = $isActive ? '#e8f5e9' : '#ffebee';
+                                            $clr = $isActive ? '#2e7d32' : '#c62828';
+                                            $lbl = $isActive ? 'Active' : 'Non Active';
                                         ?>
-                                        <span class="badge px-3 py-2" style="background-color: <?= $status_bg ?>; color: <?= $status_color ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 700; min-width: 85px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                            <?= $status_label ?>
+                                        <span class="badge px-3 py-2" style="background-color: <?= $bg ?>; color: <?= $clr ?>; border-radius: 6px; font-size: 0.75rem; font-weight: 700; min-width: 85px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <?= $lbl ?>
                                         </span>
                                     </td>
                                 </tr>
@@ -176,38 +166,30 @@
                 </div>
             </form>
             
-            <div class="card-footer bg-white clearfix" style="border-top: 1px solid #dee2e6;">
-                <div class="float-right">
-                    <?= $pagination ?>
-                </div>
-                <div class="float-left">
-                    <small class="text-muted">
-                        Total Data: <?= isset($total_rows) ? $total_rows : 0 ?>
-                    </small>
-                </div>
+            <div class="card-footer bg-white clearfix">
+                <div class="float-right"><?= $pagination ?></div>
+                <div class="float-left"><small class="text-muted">Total Data: <?= $total_rows ?></small></div>
             </div>
-
         </div>
       </div>
     </section>
   </div>
-  
   <?php $this->load->view('layout/footer'); ?>
 </div>
 
-<div class="modal fade" id="modalDeployment" tabindex="-1" role="dialog">
+<div class="modal fade" id="modalServer" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%); color: var(--text-dark);">
-        <h5 class="modal-title" id="modalTitle">Add Deployment</h5>
+        <h5 class="modal-title" id="modalTitle">Add Server Type</h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-      <form action="<?= base_url('deployment/save') ?>" method="post">
+      <form action="<?= base_url('server_type/save') ?>" method="post">
           <div class="modal-body">
-            <input type="hidden" name="deployment_id" id="deployment_id">
+            <input type="hidden" name="server_id" id="server_id">
             <div class="form-group">
-                <label>Deployment Name</label>
-                <input type="text" name="deployment_model" id="deployment_model" class="form-control" required placeholder="Enter Deployment Name">
+                <label>Server Type Name</label>
+                <input type="text" name="server_name" id="server_name" class="form-control" required placeholder="Enter Server Name">
             </div>
             <div class="form-group" id="reason_container" style="display: none;">
                 <label>Reason</label>
@@ -228,88 +210,43 @@
 <script>
     function filterList(input) {
         var filter = input.value.toUpperCase();
-        var div = input.parentNode.nextElementSibling;
-        var labels = div.getElementsByTagName("label");
+        var labels = input.parentNode.nextElementSibling.getElementsByTagName("label");
         for (var i = 0; i < labels.length; i++) {
-            var txtValue = labels[i].textContent || labels[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                labels[i].style.display = "block";
-            } else {
-                labels[i].style.display = "none";
-            }
+            var txt = labels[i].textContent || labels[i].innerText;
+            labels[i].style.display = (txt.toUpperCase().indexOf(filter) > -1) ? "block" : "none";
         }
     }
 
     function applyFilter(key) {
-        // No Loading Spinner
         $('.filter-applied-' + key).remove();
         var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
-        var container = document.getElementById('activeFiltersContainer');
         checkboxes.forEach(function(cb) {
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'filter[' + key + '][]';
-            input.value = cb.value;
-            input.className = 'filter-applied-' + key;
-            container.appendChild(input);
+            $('<input>').attr({type: 'hidden', name: 'filter['+key+'][]', value: cb.value, class: 'filter-applied-'+key}).appendTo('#activeFiltersContainer');
         });
         document.getElementById('mainFilterForm').submit();
     }
 
     function clearFilter(key) {
         $('#loadingOverlay').css('display', 'flex');
-        var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
-        checkboxes.forEach(cb => cb.checked = false);
         $('.filter-applied-' + key).remove();
         document.getElementById('mainFilterForm').submit();
     }
 
-    function confirmExport() {
-        Swal.fire({
-            title: 'Export to Excel?',
-            text: "File akan otomatis diunduh.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, Export',
-            cancelButtonText: 'Cancel',
-			reverseButtons: true,
-            buttonsStyling: false,
-            customClass: {
-                confirmButton: 'btn btn-save-custom px-4 mx-2', 
-                cancelButton: 'btn btn-secondary px-4 mx-2'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const Toast = Swal.mixin({
-                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
-                });
-                
-                Toast.fire({ icon: 'success', title: 'Downloading file...' });
-                
-                window.location.href = "<?= base_url('deployment/export') ?>" + window.location.search;
-            }
-        })
-    }
-
-    // --- STANDARD FUNCTIONS ---
     function clearForm() {
-        $('#modalTitle').text('Add Deployment');
-        $('#deployment_id').val('');
-        // Pastikan menggunakan ID 'deployment_model' sesuai dengan input di modal
-        $('#deployment_model').val(''); 
-        $('#reason').val(''); 
-        $('#reason_container').hide(); 
-        $('#modalDeployment').modal('show'); 
+        $('#modalTitle').text('Add Server Type');
+        $('#server_id').val('');
+        $('#server_name').val('');
+        $('#reason_container').hide();
+        $('#modalServer').modal('show');
     }
 
-    function editDep(id, name) {
-        $('#modalTitle').text('Edit Deployment');
-        $('#deployment_id').val(id);
-        // Pastikan menggunakan ID 'deployment_model' sesuai dengan input di modal
-        $('#deployment_model').val(name); 
-        $('#reason').val(''); 
-        $('#reason_container').show(); 
-        $('#modalDeployment').modal('show'); 
+    function editData(id, name) {
+        $('#modalTitle').text('Edit Server Type');
+        $('#server_id').val(id);
+        $('#server_name').val(name);
+        $('#reason').val('');
+        $('#reason_container').show();
+        $('#modalServer').modal('show');
     }
 
 	function confirmDelete(id) {
@@ -320,7 +257,7 @@
             type: 'POST',
             dataType: 'json',
             data: {
-                table_name: 'tbl_apps_deployment',
+                table_name: 'tbl_server',
                 id_value: id
             },
             success: function(response) {
@@ -366,7 +303,7 @@
                             $('#loadingOverlay').css('display', 'flex');
                             
                             $.ajax({
-                                url: "<?= base_url('deployment/update_status') ?>",
+                                url: "<?= base_url('server_type/update_status') ?>",
                                 type: "POST",
                                 dataType: "JSON",
                                 data: { 
@@ -402,7 +339,7 @@
                                 },
                                 error: function() {
                                     $('#loadingOverlay').css('display', 'none');
-                                    Swal.fire({
+                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
                                         text: 'Gagal memproses data ke server',
@@ -460,12 +397,12 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "<?= base_url('deployment/update_status') ?>",
+                    url: "<?= base_url('server_type/update_status') ?>",
                     type: "POST",
                     dataType: "JSON",
                     data: { 
                         id: id, 
-                        status: 1, // Balikkan ke Active
+                        status: 1, 
                         reason: result.value 
                     },
                     success: function(response) {
@@ -485,7 +422,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
-                                text: response.message, // Menampilkan pesan gagal dari controller
+                                text: response.message,
                                 confirmButtonText: 'OK',
                                 customClass: {
                                     confirmButton: 'btn btn-theme-gradient px-4 mx-2'
@@ -505,6 +442,31 @@
                         });
                     }
                 });
+            }
+        })
+    }
+
+    function confirmExport() {
+        Swal.fire({
+            title: 'Export to Excel?',
+            text: "File akan otomatis diunduh.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Export',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const Toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
+                });
+                Toast.fire({ icon: 'success', title: 'Downloading file...' });
+                window.location.href = "<?= base_url('server_type/export') ?>" + window.location.search;
             }
         })
     }
@@ -536,7 +498,7 @@
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
     
-	// --- 1. Script Dark Mode (Versi Universal) ---
+    // --- 1. Script Dark Mode (Versi Universal) ---
     const toggleBtn = document.getElementById('darkModeBtn');
     const body = document.body;
     // Cek dulu apakah tombol ada (untuk menghindari error di halaman tanpa navbar)
@@ -588,10 +550,10 @@
             }
         });
     }
-	
+    
     // --- Script Logout ---
     const logoutBtn = document.getElementById('logoutLink');
-	const overlay = document.getElementById('loadingOverlay');
+    const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -619,25 +581,34 @@
         });
     }
 	
-	$(document).on('input', '#deployment_model, #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
-        
-        var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
-        var currentValue = $(this).val();
+	$(document).on('input', '#reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
+        var el = $(this);
+        var currentValue = el.val();
+        var forbiddenChars;
+        var isServerTypeFilter = false;
+
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'server_name') {
+                isServerTypeFilter = true;
+            }
+        }
+
+        if (isServerTypeFilter) {
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g;
+        } else {
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        }
 
         if (forbiddenChars.test(currentValue)) {
-            $(this).val(currentValue.replace(forbiddenChars, ''));
+            el.val(currentValue.replace(forbiddenChars, ''));
             
-            var el = $(this);
             el.css({
                 'border-color': '#dc3545',
                 'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
             });
-            
             setTimeout(function() {
-                el.css({
-                    'border-color': '',
-                    'box-shadow': ''
-                });
+                el.css({ 'border-color': '', 'box-shadow': '' });
             }, 400);
             
             if (el.hasClass('filter-search-input')) {
@@ -645,17 +616,34 @@
             }
         }
     });
+    
+    $(document).on('input', '#server_name', function() {
+        var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        var currentValue = $(this).val();
+
+        if (forbiddenChars.test(currentValue)) {
+            $(this).val(currentValue.replace(forbiddenChars, ''));
+            var el = $(this);
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
 	
-    $(document).on('paste', '#deployment_model, #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
+    $(document).on('paste', '#server_name, #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
         
         // Regex: HANYA izinkan huruf, angka, spasi, titik, koma, strip, dan underscore
         var forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
         
-        // Ambil data teks dari clipboard
+        // Ambil data teks dari clipboard (data yang sedang di-copas)
         var pasteData = (e.originalEvent || e).clipboardData.getData('text');
 
         if (forbiddenChars.test(pasteData)) {
-            // Jika mengandung karakter terlarang, batalkan proses paste
+            // Jika mengandung karakter terlarang, batalkan proses paste secara total
             e.preventDefault();
             
             // Beri feedback visual border merah berkedip

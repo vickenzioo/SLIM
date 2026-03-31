@@ -347,7 +347,8 @@
         $('#start_day').select2({
             theme: 'bootstrap4',
             placeholder: "Select Start Day",
-            allowClear: true,
+            allowClear: false,
+			width: '100%',
             dropdownParent: $('#modalOperational_Day'),
             minimumResultsForSearch: Infinity
         });
@@ -356,7 +357,8 @@
         $('#end_day').select2({
             theme: 'bootstrap4',
             placeholder: "Select End Day",
-            allowClear: true,
+            allowClear: false,
+			width: '100%',
             dropdownParent: $('#modalOperational_Day'),
             minimumResultsForSearch: Infinity
         });
@@ -400,12 +402,13 @@
         document.getElementById('mainFilterForm').submit();
     }
 
-    // --- STANDARD SCRIPTS ---
     function clearForm() {
         $('#modalTitle').text('Add Operational Day');
         $('#operational_day_id').val('');
-        $('#start_day').val('');
-        $('#end_day').val('');
+        
+        // PERBAIKAN: Tambahkan .trigger('change') agar Select2 ikut kereset
+        $('#start_day').val('').trigger('change');
+        $('#end_day').val('').trigger('change');
         $('#total_day').val(''); 
         
         $('#reason').val(''); 
@@ -417,8 +420,10 @@
     function editOpD(id, start_day, end_day, total_day) {
         $('#modalTitle').text('Edit Operational Day');
         $('#operational_day_id').val(id);
-        $('#start_day').val(start_day);
-        $('#end_day').val(end_day);
+        
+        // PERBAIKAN: Tambahkan .trigger('change') agar Select2 merender nilai yang dipilih
+        $('#start_day').val(start_day).trigger('change');
+        $('#end_day').val(end_day).trigger('change');
         
         if(total_day) {
             $('#total_day').val(total_day + " Days");
@@ -463,8 +468,9 @@
             text: "File akan otomatis diunduh.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, export!',
+            confirmButtonText: 'Yes, Export',
             cancelButtonText: 'Cancel',
+			reverseButtons: true,
             buttonsStyling: false,
             customClass: {
                 confirmButton: 'btn btn-save-custom px-4 mx-2', 
@@ -483,72 +489,124 @@
         })
     }
     
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data akan dinonaktifkan.",
-            icon: 'warning',
-            input: 'text',
-            inputLabel: 'Alasan:',
-            inputPlaceholder: 'Masukkan Alasan...',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Nonaktifkan!',
-            cancelButtonText: 'Batal',
-            buttonsStyling: false, 
-            customClass: {
-                confirmButton: 'btn btn-danger px-4 mx-2', 
-                cancelButton: 'btn btn-secondary px-4 mx-2'
+	function confirmDelete(id) {
+        $('#loadingOverlay').css('display', 'flex');
+
+        $.ajax({
+            url: '<?= base_url("home/api_check_master_usage") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                table_name: 'tbl_apps_operational_day',
+                id_value: id
             },
-            inputAttributes: {
-                style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
-            },
-            inputValidator: (value) => {
-                if (!value) {
-                    return 'Anda harus menuliskan alasan!';
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "<?= base_url('operational_day/update_status') ?>",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: { 
-                        id: id, 
-                        status: 0, // Ubah ke Non-Active
-                        reason: result.value 
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message,
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
-                                }
-                            }).then(() => {
-                                location.reload(); 
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: response.message,
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+            success: function(response) {
+                $('#loadingOverlay').css('display', 'none');
+
+                if (response.is_used) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Deactivate Ditolak!',
+                        text: 'Data sedang digunakan aplikasi. ',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data akan dinonaktifkan.",
+                        icon: 'warning',
+                        input: 'text',
+                        inputLabel: 'Alasan:',
+                        inputPlaceholder: 'Masukkan Alasan...',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Deactivate',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true,
+                        buttonsStyling: false, 
+                        customClass: {
+                            confirmButton: 'btn btn-deactivate px-4 mx-2',  
+                            cancelButton: 'btn btn-secondary px-4 mx-2'
+                        },
+                        inputAttributes: {
+                            style: 'width: 95%; margin: 10px auto; display: block; border: 1px solid #ced4da; padding: 8px; border-radius: 4px;'
+                        },
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'Anda harus menuliskan alasan!';
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#loadingOverlay').css('display', 'flex');
+                            
+                            $.ajax({
+                                url: "<?= base_url('operational_day/update_status') ?>",
+                                type: "POST",
+                                dataType: "JSON",
+                                data: { 
+                                    id: id, 
+                                    status: 0, 
+                                    reason: result.value 
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil',
+                                            text: response.message,
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                            }
+                                        }).then(() => {
+                                            location.reload(); 
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: response.message,
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                            }
+                                        });
+                                        $('#loadingOverlay').css('display', 'none');
+                                    }
+                                },
+                                error: function() {
+                                    $('#loadingOverlay').css('display', 'none');
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Gagal memproses data ke server',
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                                        }
+                                    });
                                 }
                             });
                         }
-                    },
-                    error: function() {
-                        Swal.fire('Error', 'Gagal memproses data ke server', 'error');
+                    });
+                }
+            },
+            error: function() {
+                $('#loadingOverlay').css('display', 'none');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal terhubung ke server validasi.',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-theme-gradient px-4 mx-2'
                     }
                 });
             }
-        })
+        });
     }
 
     function confirmRestore(id) {
@@ -560,11 +618,12 @@
             inputLabel: 'Alasan Pengaktifan:',
             inputPlaceholder: 'Masukkan Alasan...',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Aktifkan!',
-            cancelButtonText: 'Batal',
+            confirmButtonText: 'Yes, Activate',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
             buttonsStyling: false,
             customClass: {
-                confirmButton: 'btn btn-success px-4 mx-2',
+                confirmButton: 'btn btn-activate px-4 mx-2',
                 cancelButton: 'btn btn-secondary px-4 mx-2'
             },
             inputAttributes: {
@@ -603,7 +662,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
-                                text: response.message,
+                                text: response.message, // Menampilkan pesan gagal dari controller
                                 confirmButtonText: 'OK',
                                 customClass: {
                                     confirmButton: 'btn btn-theme-gradient px-4 mx-2'
@@ -612,7 +671,15 @@
                         }
                     },
                     error: function() {
-                        Swal.fire('Error', 'Gagal memproses data ke server', 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Gagal memproses data ke server',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn btn-theme-gradient px-4 mx-2'
+                            }
+                        });
                     }
                 });
             }
@@ -701,7 +768,7 @@
     
     // --- Script Logout ---
     const logoutBtn = document.getElementById('logoutLink');
-    const overlay = document.getElementById('loadingOverlay');
+	const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -709,22 +776,101 @@
             const urlLogout = this.getAttribute('href');
 
             Swal.fire({
-                title: 'Berhasil Logout!',
-                text: 'Anda akan keluar dari sistem',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Logout',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
                 customClass: {
-                    confirmButton: 'btn-theme-gradient' 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
                 }
             }).then((result) => {
-                if (result.isConfirmed || result.isDismissed) {
-                    overlay.style.display = 'flex';
+                if (result.isConfirmed) {
+                    if(overlay) overlay.style.display = 'flex';
                     window.location.href = urlLogout;
                 }
             });
         });
     }
+	
+	$(document).on('input', '#reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
+        var el = $(this);
+        var currentValue = el.val();
+        var forbiddenChars;
+        var isTotalDayFilter = false;
+
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'total_day') {
+                isTotalDayFilter = true;
+            }
+        }
+
+        if (isTotalDayFilter) {
+            forbiddenChars = /[^0-9]/g;
+        } else {
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        }
+
+        if (forbiddenChars.test(currentValue)) {
+            el.val(currentValue.replace(forbiddenChars, ''));
+            
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+            
+            if (el.hasClass('filter-search-input')) {
+                filterList(this);
+            }
+        }
+    });
+	
+    $(document).on('paste', '#reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
+        var el = $(this);
+        // Ambil data teks dari clipboard (apa yang sedang di-copas)
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+        var forbiddenChars;
+        var isTotalDayFilter = false;
+
+        // 1. CEK: Apakah ini kotak pencarian di filter Total Day?
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'total_day') {
+                isTotalDayFilter = true;
+            }
+        }
+
+        // 2. TENTUKAN ATURAN REGEX (Sesuai logika input kamu)
+        if (isTotalDayFilter) {
+            // Hanya boleh Angka (0-9)
+            forbiddenChars = /[^0-9]/g;
+        } else {
+            // Umum: Huruf, Angka, Spasi, Titik, Koma, Strip, Underscore
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
+        }
+
+        // 3. EKSEKUSI BLOKIR JIKA MENGANDUNG KARAKTER TERLARANG
+        if (forbiddenChars.test(pasteData)) {
+            // Batalkan proses paste secara total
+            e.preventDefault();
+            
+            // Beri feedback visual border merah berkedip
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
 </script>
 
 </body>

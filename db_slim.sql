@@ -1,1303 +1,1187 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Generation Time: Feb 23, 2026 at 05:18 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+/*
+ Navicat Premium Data Transfer
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+ Source Server         : localhost_3306
+ Source Server Type    : MySQL
+ Source Server Version : 100419
+ Source Host           : localhost:3306
+ Source Schema         : db_slim
 
+ Target Server Type    : MySQL
+ Target Server Version : 100419
+ File Encoding         : 65001
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+ Date: 31/03/2026 16:11:39
+*/
 
---
--- Database: `db_slim`
---
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Table structure for tbl_app_type
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_app_type`;
+CREATE TABLE `tbl_app_type`  (
+  `app_type_id` int(5) NOT NULL AUTO_INCREMENT,
+  `app_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`app_type_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Table structure for table `tbl_apps_approval`
---
+-- ----------------------------
+-- Records of tbl_app_type
+-- ----------------------------
+INSERT INTO `tbl_app_type` VALUES (1, 'Custom-built', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_app_type` VALUES (2, 'Off the shelf', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_app_type` VALUES (3, 'Off the shelf with customization', 1, NULL, NULL, NULL, NULL);
 
-CREATE TABLE `tbl_apps_approval` (
-  `approval_id` int(11) NOT NULL,
-  `apps_id` int(11) DEFAULT NULL,
-  `user_role_id` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT 0,
-  `current` int(1) DEFAULT 0,
-  `remarks` varchar(255) DEFAULT NULL,
-  `submit_date` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ----------------------------
+-- Table structure for tbl_apps_approval
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_approval`;
+CREATE TABLE `tbl_apps_approval`  (
+  `approval_id` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` int(11) NULL DEFAULT NULL,
+  `user_role_id` int(11) NULL DEFAULT NULL,
+  `status` int(11) NULL DEFAULT 0,
+  `current` int(1) NULL DEFAULT 0,
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `submit_date` datetime(0) NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`approval_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 315 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_apps_approval`
---
+-- ----------------------------
+-- Records of tbl_apps_approval
+-- ----------------------------
+INSERT INTO `tbl_apps_approval` VALUES (284, 72, 2, 1, 0, '- Application Name : \'Group Financial Management Systems\' -> \'Group Financial Management System\'\r\n- Short Name : \'GFMSs\' -> \'GFMS\'\r\n- Module Name : \'Group Financial Management Systems\' -> \'Group Financial Management System\'\r\n- Description : \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup..\' -> \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup.\'\r\n- IT Department Head : \'IT Department Heads\' -> \'IT Department Head\'\r\n- IT Group Head : \'IT Group Heads\' -> \'IT Group Head\'', '2026-03-27 11:02:58', 2, '2026-03-27 09:28:02', 2, '2026-03-27 11:02:58');
+INSERT INTO `tbl_apps_approval` VALUES (296, 72, 3, 1, 0, '- Resilience : \'L2\' -> \'L1\'', '2026-03-27 11:12:12', 2, '2026-03-27 10:02:25', 3, '2026-03-27 11:12:12');
+INSERT INTO `tbl_apps_approval` VALUES (297, 72, 1, 1, 0, '- Standard Category (%) : \'99.00\' -> \'98\'\r\n- Application Type : \'Off the shelf\' -> \'Custom-built\'\r\n- LOB Directorate : \'Directorates\' -> \'Directorate\'\r\n- LOB Sub-Directorate : \'Sub-Directorates\' -> \'Sub-Directorate\'\r\n- LOB Department Head : \'Department Heads\' -> \'Department Head\'\r\n- LOB Group : \'Groups\' -> \'Group\'\r\n- LOB Group Head : \'Group Heads\' -> \'Group Head\'\r\n- IT Sub-Directorate : \'IT Sub-Directorates\' -> \'IT Sub-Directorate\'\r\n- IT Support Group : \'IT Support Groups\' -> \'IT Support Group\'\r\n- IT Support Division : \'IT Support Divisions\' -> \'IT Support Division\'\r\n- IT Division Head : \'IT Division Heads\' -> \'IT Division Head\'\r\n- App Version : \'s\' -> \'(kosong)\'\r\n- Dev Language : \'s\' -> \'(kosong)\'\r\n- App Developer : \'s\' -> \'(kosong)\'\r\n- Supporting Web Server : \'s\' -> \'(kosong)\'\r\n- Supporting App Server : \'s\' -> \'(kosong)\'\r\n- Supporting Others : \'s\' -> \'(kosong)\'\r\n- Network : \'Internal User (Include Branches)\' -> \'Internal User (Exclude Branches)\'\r\n- Operational Day : \'Monday - Saturday\' -> \'Monday - Sunday\'\r\n- Operational Hour : \'00:00:00 - 23:59:00\' -> \'08:00:00 - 23:59:00\'\r\n- Source Code Owned : \'No\' -> \'Yes\'\r\n- Database : \'DB2, Oracle\' -> \'Oracle\'\r\n- Server Type : \'Physical, VM, GCM\' -> \'Physical, VM\'', '2026-03-27 11:13:31', 3, '2026-03-27 10:03:00', 1, '2026-03-27 11:13:31');
+INSERT INTO `tbl_apps_approval` VALUES (302, 86, 2, 1, 0, '', '2026-03-27 16:31:03', 2, '2026-03-27 16:22:36', 2, '2026-03-27 16:31:03');
+INSERT INTO `tbl_apps_approval` VALUES (303, 86, 3, 1, 0, '', '2026-03-30 13:38:35', 2, '2026-03-27 16:23:53', 3, '2026-03-30 13:38:35');
+INSERT INTO `tbl_apps_approval` VALUES (304, 86, 1, 1, 0, '', '2025-02-01 13:44:11', 3, '2026-03-27 16:25:25', 1, '2026-03-30 13:38:49');
+INSERT INTO `tbl_apps_approval` VALUES (305, 87, 2, 1, 0, '', '2026-03-30 14:09:16', 2, '2026-03-30 11:58:02', 2, '2026-03-30 14:09:16');
+INSERT INTO `tbl_apps_approval` VALUES (306, 87, 3, 1, 0, '', '2026-03-30 14:09:41', 2, '2026-03-30 14:09:16', 3, '2026-03-30 14:09:41');
+INSERT INTO `tbl_apps_approval` VALUES (307, 87, 1, 1, 0, '- Application Name : \'as\' -> \'asaaaa\'\r\n- Short Name : \'a\' -> \'aaaaa\'\r\n- Module Name : \'a\' -> \'aaaa\'\r\n- Operational Day : \'Monday - Saturday\' -> \'Wednesday - Saturday\'\r\n- Operational Hour : \'09:00:00 - 09:30:00\' -> \'00:00:00 - 23:59:00\'', '2026-03-31 16:07:05', 3, '2026-03-30 14:09:41', 1, '2026-03-31 16:07:05');
+INSERT INTO `tbl_apps_approval` VALUES (308, 88, 2, 1, 0, '', '2026-03-31 16:08:47', 2, '2026-03-30 14:17:10', 2, '2026-03-31 16:08:47');
+INSERT INTO `tbl_apps_approval` VALUES (309, 89, 2, 1, 0, '- Category : \'Necessary\' -> \'Very Important\'', '2026-03-31 15:49:53', 2, '2026-03-30 16:38:12', 2, '2026-03-31 15:49:53');
+INSERT INTO `tbl_apps_approval` VALUES (311, 89, 3, 1, 0, '- Description : \'a\' -> \'aa\'\r\n- Deployment Model : \'On-Premises\' -> \'IaaS\'\r\n- Database : \'DB2, Oracle\' -> \'DB2, Oracle, Ms SQL Server\'\r\n- Server Type : \'GCM\' -> \'VM, GCM\'', '2026-03-31 15:51:02', 2, '2026-03-31 15:42:38', 3, '2026-03-31 15:51:02');
+INSERT INTO `tbl_apps_approval` VALUES (312, 89, 1, 1, 0, '- Standard Category (%) : \'98.50\' -> \'99\'', '2026-03-31 15:51:36', 3, '2026-03-31 15:46:12', 1, '2026-03-31 15:51:36');
+INSERT INTO `tbl_apps_approval` VALUES (313, 88, 3, 1, 0, '- Resilience : \'L2\' -> \'L3\'\r\n- Source Code Owned : \'Yes\' -> \'No\'', '2026-03-31 16:09:10', 2, '2026-03-31 16:08:47', 3, '2026-03-31 16:09:10');
+INSERT INTO `tbl_apps_approval` VALUES (314, 88, 1, 1, 0, '- Standard Category (%) : \'(kosong)\' -> \'100\'\r\n- Operational Day : \'(kosong)\' -> \'Tuesday - Friday\'\r\n- Operational Hour : \'(kosong)\' -> \'00:00:00 - 23:59:00\'', '2026-03-31 16:10:16', 3, '2026-03-31 16:09:10', 1, '2026-03-31 16:10:16');
 
-INSERT INTO `tbl_apps_approval` (`approval_id`, `apps_id`, `user_role_id`, `status`, `current`, `remarks`, `submit_date`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(187, 35, 2, 1, 0, 'a', '2026-02-18 15:12:41', 2, '2026-02-18 15:12:41', 2, '2026-02-18 15:12:41'),
-(188, 35, 3, 1, 0, 'aaa', '2026-02-18 15:13:45', 2, '2026-02-18 15:12:41', 3, '2026-02-18 15:13:45'),
-(189, 35, 4, 1, 0, 'a', '2026-02-19 14:16:58', 4, '2026-02-19 14:16:58', 4, '2026-02-19 14:16:58'),
-(190, 35, 5, 1, 0, 'loke', '2026-02-19 14:52:53', 4, '2026-02-19 14:16:58', 5, '2026-02-19 14:52:53'),
-(191, 35, 6, 1, 0, 'oke', '2026-02-20 10:04:01', 6, '2026-02-20 10:04:01', 6, '2026-02-20 10:04:01'),
-(192, 35, 7, 1, 0, 'oke', '2026-02-20 10:21:10', 6, '2026-02-20 10:04:01', 7, '2026-02-20 10:21:10'),
-(193, 35, 8, 1, 0, 'o', '2026-02-20 10:22:41', 8, '2026-02-20 10:22:41', 8, '2026-02-20 10:22:41'),
-(194, 36, 2, 1, 0, 'test', '2026-02-22 21:18:42', 2, '2026-02-22 21:18:42', 2, '2026-02-22 21:18:42'),
-(195, 36, 3, 1, 0, 'test', '2026-02-22 21:29:36', 2, '2026-02-22 21:18:42', 3, '2026-02-22 21:29:36'),
-(196, 36, 4, 1, 0, 'test', '2026-02-23 11:01:02', 4, '2026-02-23 11:01:02', 4, '2026-02-23 11:01:02'),
-(197, 36, 5, 0, 1, NULL, NULL, 4, '2026-02-23 11:01:02', NULL, NULL),
-(198, 36, 6, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL),
-(199, 36, 7, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL),
-(200, 36, 8, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_apps_audit_trail
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_audit_trail`;
+CREATE TABLE `tbl_apps_audit_trail`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `action` enum('SUBMIT','RENEWAL','DEACTIVATE','CANCEL') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `remarks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `created_by` int(11) NOT NULL,
+  `created_at` datetime(0) NOT NULL DEFAULT current_timestamp(0),
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 136 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_apps_audit_trail
+-- ----------------------------
+INSERT INTO `tbl_apps_audit_trail` VALUES (82, 72, 2, 'SUBMIT', '-', 0, '2026-03-27 10:02:25');
+INSERT INTO `tbl_apps_audit_trail` VALUES (83, 72, 3, 'SUBMIT', 'Application Approved', 0, '2026-03-27 10:03:00');
+INSERT INTO `tbl_apps_audit_trail` VALUES (84, 72, 1, 'SUBMIT', '- Standard Category (%) : \'(kosong)\' -> \'98\'', 0, '2026-03-27 10:05:39');
+INSERT INTO `tbl_apps_audit_trail` VALUES (85, 72, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan(Renewal)', 0, '2026-03-27 10:16:04');
+INSERT INTO `tbl_apps_audit_trail` VALUES (86, 72, 2, 'SUBMIT', '-', 0, '2026-03-27 10:16:11');
+INSERT INTO `tbl_apps_audit_trail` VALUES (87, 72, 3, 'SUBMIT', '- Application Type : \'Custom-built\' -> \'Off the shelf\'', 0, '2026-03-27 10:18:04');
+INSERT INTO `tbl_apps_audit_trail` VALUES (88, 72, 1, 'SUBMIT', 'Application Approved', 0, '2026-03-27 10:18:55');
+INSERT INTO `tbl_apps_audit_trail` VALUES (89, 72, 1, 'SUBMIT', '- Standard Category (%) : \'98.00\' -> \'99.00\'', 0, '2026-03-27 10:20:07');
+INSERT INTO `tbl_apps_audit_trail` VALUES (90, 72, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan(Renewal)', 0, '2026-03-27 10:26:01');
+INSERT INTO `tbl_apps_audit_trail` VALUES (91, 72, 2, 'SUBMIT', '-', 0, '2026-03-27 10:38:21');
+INSERT INTO `tbl_apps_audit_trail` VALUES (92, 72, 3, 'SUBMIT', '- Application Name : \'Group Financial Management System\' -> \'Group Financial Management Systems\'\r\n- Short Name : \'GFMS\' -> \'GFMSs\'\r\n- Module Name : \'Group Financial Management System\' -> \'Group Financial Management Systems\'\r\n- Description : \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup.\' -> \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup..\'\r\n- Category : \'Important\' -> \'Very Important\'\r\n- Application Type : \'Off the shelf\' -> \'Custom-built\'\r\n- Solution Vendor : \'Oracle\' -> \'Oracles\'\r\n- Services Vendor : \'Mitra Integrasi Informatika\' -> \'Mitra Integrasi Informatikas\'\r\n- Live Year : \'2025\' -> \'2026\'\r\n- Deployment Model : \'On-Premises\' -> \'IaaS\'\r\n- Deployment Provider : \'CIMB\' -> \'GCP\'\r\n- Deployment Site : \'Bintaro\' -> \'Asia-southeast2 (Jakarta)\'\r\n- LOB Directorate : \'Directorate\' -> \'Directorates\'\r\n- LOB Sub-Directorate : \'Sub-Directorate\' -> \'Sub-Directorates\'\r\n- LOB Department Head : \'Department Head\' -> \'Department Heads\'\r\n- LOB Group : \'Group\' -> \'Groups\'\r\n- LOB Group Head : \'Group Head\' -> \'Group Heads\'\r\n- IT Sub-Directorate : \'IT Sub-Directorate\' -> \'IT Sub-Directorates\'\r\n- IT Department Head : \'IT Department Head\' -> \'IT Department Heads\'\r\n- IT Support Group : \'IT Support Group\' -> \'IT Support Groups\'\r\n- IT Group Head : \'IT Group Head\' -> \'IT Group Heads\'\r\n- IT Support Division : \'IT Support Division\' -> \'IT Support Divisions\'\r\n- IT Division Head : \'IT Division Head\' -> \'IT Division Heads\'\r\n- App Version : \'(kosong)\' -> \'s\'\r\n- Dev Language : \'(kosong)\' -> \'s\'\r\n- App Developer : \'(kosong)\' -> \'s\'\r\n- Supporting Web Server : \'(kosong)\' -> \'s\'\r\n- Supporting App Server : \'(kosong)\' -> \'s\'\r\n- Supporting Others : \'(kosong)\' -> \'s\'\r\n- Resilience : \'L1\' -> \'L2\'\r\n- Network : \'Internal User (Exclude Branches)\' -> \'Internal User (Include Branches)\'\r\n- Source Code Owned : \'Yes\' -> \'No\'\r\n- Operating Software : \'Ms Windows Server, Solaris\' -> \'Ms Windows Server\'\r\n- Database : \'Oracle\' -> \'DB2, Oracle\'\r\n- Server Type : \'Physical, VM\' -> \'Physical, VM, GCM\'', 0, '2026-03-27 10:39:16');
+INSERT INTO `tbl_apps_audit_trail` VALUES (93, 72, 1, 'SUBMIT', '- Category : \'Very Important\' -> \'Important\'\r\n- Application Type : \'Custom-built\' -> \'Off the shelf\'\r\n- Solution Vendor : \'Oracles\' -> \'Oracle\'\r\n- Services Vendor : \'Mitra Integrasi Informatikas\' -> \'Mitra Integrasi Informatika\'\r\n- Live Year : \'2026\' -> \'2025\'\r\n- Deployment Model : \'IaaS\' -> \'On-Premises\'\r\n- Deployment Provider : \'GCP\' -> \'CIMB\'\r\n- Deployment Site : \'Asia-southeast2 (Jakarta)\' -> \'Bintaro\'', 0, '2026-03-27 10:52:59');
+INSERT INTO `tbl_apps_audit_trail` VALUES (94, 72, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-27 11:02:08');
+INSERT INTO `tbl_apps_audit_trail` VALUES (95, 72, 2, 'SUBMIT', '- Application Name : \'Group Financial Management Systems\' -> \'Group Financial Management System\'\r\n- Short Name : \'GFMSs\' -> \'GFMS\'\r\n- Module Name : \'Group Financial Management Systems\' -> \'Group Financial Management System\'\r\n- Description : \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup..\' -> \'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup.\'\r\n- IT Department Head : \'IT Department Heads\' -> \'IT Department Head\'\r\n- IT Group Head : \'IT Group Heads\' -> \'IT Group Head\'', 0, '2026-03-27 11:02:58');
+INSERT INTO `tbl_apps_audit_trail` VALUES (96, 72, 3, 'SUBMIT', '- Resilience : \'L2\' -> \'L1\'', 0, '2026-03-27 11:12:12');
+INSERT INTO `tbl_apps_audit_trail` VALUES (97, 72, 1, 'SUBMIT', '- Standard Category (%) : \'99.00\' -> \'98\'\r\n- Application Type : \'Off the shelf\' -> \'Custom-built\'\r\n- LOB Directorate : \'Directorates\' -> \'Directorate\'\r\n- LOB Sub-Directorate : \'Sub-Directorates\' -> \'Sub-Directorate\'\r\n- LOB Department Head : \'Department Heads\' -> \'Department Head\'\r\n- LOB Group : \'Groups\' -> \'Group\'\r\n- LOB Group Head : \'Group Heads\' -> \'Group Head\'\r\n- IT Sub-Directorate : \'IT Sub-Directorates\' -> \'IT Sub-Directorate\'\r\n- IT Support Group : \'IT Support Groups\' -> \'IT Support Group\'\r\n- IT Support Division : \'IT Support Divisions\' -> \'IT Support Division\'\r\n- IT Division Head : \'IT Division Heads\' -> \'IT Division Head\'\r\n- App Version : \'s\' -> \'(kosong)\'\r\n- Dev Language : \'s\' -> \'(kosong)\'\r\n- App Developer : \'s\' -> \'(kosong)\'\r\n- Supporting Web Server : \'s\' -> \'(kosong)\'\r\n- Supporting App Server : \'s\' -> \'(kosong)\'\r\n- Supporting Others : \'s\' -> \'(kosong)\'\r\n- Network : \'Internal User (Include Branches)\' -> \'Internal User (Exclude Branches)\'\r\n- Operational Day : \'Monday - Saturday\' -> \'Monday - Sunday\'\r\n- Operational Hour : \'00:00:00 - 23:59:00\' -> \'08:00:00 - 23:59:00\'\r\n- Source Code Owned : \'No\' -> \'Yes\'\r\n- Database : \'DB2, Oracle\' -> \'Oracle\'\r\n- Server Type : \'Physical, VM, GCM\' -> \'Physical, VM\'', 0, '2026-03-27 11:13:31');
+INSERT INTO `tbl_apps_audit_trail` VALUES (98, 72, 2, 'DEACTIVATE', 'Application Deactivated', 0, '2026-03-27 11:15:13');
+INSERT INTO `tbl_apps_audit_trail` VALUES (109, 86, 2, 'SUBMIT', '-', 0, '2026-03-27 16:23:53');
+INSERT INTO `tbl_apps_audit_trail` VALUES (110, 86, 3, 'SUBMIT', 'Application Approved', 0, '2026-03-27 16:25:25');
+INSERT INTO `tbl_apps_audit_trail` VALUES (111, 86, 1, 'SUBMIT', '- Description : \'sss\' -> \'sssa\'\r\n- Standard Category (%) : \'(kosong)\' -> \'12\'', 0, '2026-03-27 16:27:17');
+INSERT INTO `tbl_apps_audit_trail` VALUES (112, 86, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-27 16:28:30');
+INSERT INTO `tbl_apps_audit_trail` VALUES (113, 86, 2, 'CANCEL', 'Renewal Cancelled', 0, '2026-03-27 16:28:58');
+INSERT INTO `tbl_apps_audit_trail` VALUES (114, 86, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-27 16:30:57');
+INSERT INTO `tbl_apps_audit_trail` VALUES (115, 86, 2, 'SUBMIT', '-', 0, '2026-03-27 16:31:03');
+INSERT INTO `tbl_apps_audit_trail` VALUES (116, 86, 3, 'SUBMIT', 'Application Approved', 0, '2026-03-30 13:38:35');
+INSERT INTO `tbl_apps_audit_trail` VALUES (117, 86, 1, 'SUBMIT', 'Application Approved', 0, '2026-03-30 13:38:49');
+INSERT INTO `tbl_apps_audit_trail` VALUES (118, 87, 2, 'SUBMIT', '-', 0, '2026-03-30 14:09:16');
+INSERT INTO `tbl_apps_audit_trail` VALUES (119, 87, 3, 'SUBMIT', 'Application Approved', 0, '2026-03-30 14:09:41');
+INSERT INTO `tbl_apps_audit_trail` VALUES (120, 87, 1, 'SUBMIT', '- Standard Category (%) : \'(kosong)\' -> \'99\'', 0, '2026-03-30 14:13:48');
+INSERT INTO `tbl_apps_audit_trail` VALUES (121, 86, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-31 13:19:00');
+INSERT INTO `tbl_apps_audit_trail` VALUES (122, 86, 2, 'CANCEL', 'Renewal Cancelled', 0, '2026-03-31 13:19:10');
+INSERT INTO `tbl_apps_audit_trail` VALUES (123, 86, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-31 15:30:59');
+INSERT INTO `tbl_apps_audit_trail` VALUES (124, 86, 2, 'CANCEL', 'Renewal Cancelled', 0, '2026-03-31 15:31:09');
+INSERT INTO `tbl_apps_audit_trail` VALUES (125, 89, 2, 'SUBMIT', '-', 0, '2026-03-31 15:42:38');
+INSERT INTO `tbl_apps_audit_trail` VALUES (126, 89, 3, 'SUBMIT', '- Short Name : \'a\' -> \'aaa\'', 0, '2026-03-31 15:46:12');
+INSERT INTO `tbl_apps_audit_trail` VALUES (127, 89, 1, 'SUBMIT', '- Standard Category (%) : \'(kosong)\' -> \'98.50\'\r\n- URL : \'pokemon.com\' -> \'pokemons.com\'', 0, '2026-03-31 15:47:29');
+INSERT INTO `tbl_apps_audit_trail` VALUES (128, 89, 2, 'RENEWAL', 'Aplikasi masuk masa perpanjangan (Renewal)', 0, '2026-03-31 15:49:02');
+INSERT INTO `tbl_apps_audit_trail` VALUES (129, 89, 2, 'SUBMIT', '- Category : \'Necessary\' -> \'Very Important\'', 0, '2026-03-31 15:49:53');
+INSERT INTO `tbl_apps_audit_trail` VALUES (130, 89, 3, 'SUBMIT', '- Description : \'a\' -> \'aa\'\r\n- Deployment Model : \'On-Premises\' -> \'IaaS\'\r\n- Database : \'DB2, Oracle\' -> \'DB2, Oracle, Ms SQL Server\'\r\n- Server Type : \'GCM\' -> \'VM, GCM\'', 0, '2026-03-31 15:51:02');
+INSERT INTO `tbl_apps_audit_trail` VALUES (131, 89, 1, 'SUBMIT', '- Standard Category (%) : \'98.50\' -> \'99\'', 0, '2026-03-31 15:51:36');
+INSERT INTO `tbl_apps_audit_trail` VALUES (132, 87, 1, 'SUBMIT', '- Application Name : \'as\' -> \'asaaaa\'\r\n- Short Name : \'a\' -> \'aaaaa\'\r\n- Module Name : \'a\' -> \'aaaa\'\r\n- Operational Day : \'Monday - Saturday\' -> \'Wednesday - Saturday\'\r\n- Operational Hour : \'09:00:00 - 09:30:00\' -> \'00:00:00 - 23:59:00\'', 0, '2026-03-31 16:07:05');
+INSERT INTO `tbl_apps_audit_trail` VALUES (133, 88, 2, 'SUBMIT', '-', 0, '2026-03-31 16:08:47');
+INSERT INTO `tbl_apps_audit_trail` VALUES (134, 88, 3, 'SUBMIT', '- Resilience : \'L2\' -> \'L3\'\r\n- Source Code Owned : \'Yes\' -> \'No\'', 0, '2026-03-31 16:09:10');
+INSERT INTO `tbl_apps_audit_trail` VALUES (135, 88, 1, 'SUBMIT', '- Standard Category (%) : \'(kosong)\' -> \'100\'\r\n- Operational Day : \'(kosong)\' -> \'Tuesday - Friday\'\r\n- Operational Hour : \'(kosong)\' -> \'00:00:00 - 23:59:00\'', 0, '2026-03-31 16:10:16');
 
---
--- Table structure for table `tbl_apps_category`
---
-
-CREATE TABLE `tbl_apps_category` (
-  `category_id` int(10) NOT NULL,
-  `category_name` varchar(25) NOT NULL,
-  `standard_category` decimal(25,2) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_apps_category`
---
-
-INSERT INTO `tbl_apps_category` (`category_id`, `category_name`, `standard_category`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Important', '98.50', 1, NULL, NULL, 2, '2026-01-20 14:18:45'),
-(2, 'Very Important', '99.00', 1, NULL, NULL, NULL, NULL),
-(3, 'Critical', '99.50', 1, NULL, NULL, NULL, NULL),
-(4, 'Necessary', '100.00', 1, NULL, NULL, 2, '2026-02-12 09:05:07'),
-(5, 'Others', '0.00', 1, NULL, NULL, 2, '2026-02-12 09:05:21'),
-(16, 'Test', '99.50', 0, 2, '2026-02-01 10:19:43', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_apps_database`
---
-
-CREATE TABLE `tbl_apps_database` (
-  `id_apps_database` int(11) NOT NULL,
-  `apps_id` varchar(255) DEFAULT NULL,
-  `database_id` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_apps_database`
---
-
-INSERT INTO `tbl_apps_database` (`id_apps_database`, `apps_id`, `database_id`) VALUES
-(52, '35', '1'),
-(53, '35', '2'),
-(55, '36', '1'),
-(56, '36', '2');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_apps_deployment`
---
-
-CREATE TABLE `tbl_apps_deployment` (
-  `deployment_id` int(11) NOT NULL,
-  `deployment_model` varchar(25) DEFAULT NULL,
-  `deployment_provider` varchar(25) DEFAULT NULL,
-  `main_deployment_site` varchar(25) DEFAULT NULL,
+-- ----------------------------
+-- Table structure for tbl_apps_category
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_category`;
+CREATE TABLE `tbl_apps_category`  (
+  `category_id` int(10) NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `standard_category` decimal(25, 2) NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`category_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_apps_deployment`
---
+-- ----------------------------
+-- Records of tbl_apps_category
+-- ----------------------------
+INSERT INTO `tbl_apps_category` VALUES (1, 'Critical', 99.50, NULL, NULL, 2, '2026-01-20 14:18:45', 1);
+INSERT INTO `tbl_apps_category` VALUES (2, 'Very Important', 99.00, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_category` VALUES (3, 'Important', 98.50, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_category` VALUES (4, 'Necessary', NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_category` VALUES (5, 'Others', NULL, NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `tbl_apps_deployment` (`deployment_id`, `deployment_model`, `deployment_provider`, `main_deployment_site`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'On-Premises', 'CIMB', 'Bintaro', 1, NULL, NULL, NULL, NULL),
-(2, 'IaaS', 'GCP', 'Asia-southeast2 (Jakarta)', 1, NULL, NULL, NULL, NULL),
-(3, 'On-Premises', 'CIMB', 'NTT', 1, NULL, NULL, NULL, NULL),
-(13, 'Iaas', 'CIMB', 'Bintaro', 1, 2, '2026-02-01 13:54:50', NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_apps_database
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_database`;
+CREATE TABLE `tbl_apps_database`  (
+  `id_apps_database` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `database_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id_apps_database`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 258 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_apps_database
+-- ----------------------------
+INSERT INTO `tbl_apps_database` VALUES (227, '72', '2');
+INSERT INTO `tbl_apps_database` VALUES (231, '85', '1');
+INSERT INTO `tbl_apps_database` VALUES (236, '86', '2');
+INSERT INTO `tbl_apps_database` VALUES (251, '89', '1');
+INSERT INTO `tbl_apps_database` VALUES (252, '89', '2');
+INSERT INTO `tbl_apps_database` VALUES (253, '89', '3');
+INSERT INTO `tbl_apps_database` VALUES (254, '87', '2');
+INSERT INTO `tbl_apps_database` VALUES (257, '88', '3');
 
---
--- Table structure for table `tbl_apps_infra`
---
-
-CREATE TABLE `tbl_apps_infra` (
-  `apps_infra_id` int(255) NOT NULL,
-  `apps_id` int(255) DEFAULT NULL,
-  `infra_id` int(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_apps_infra`
---
-
-INSERT INTO `tbl_apps_infra` (`apps_infra_id`, `apps_id`, `infra_id`) VALUES
-(36, 34, 1),
-(41, 35, 18),
-(42, 35, 19),
-(44, 36, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_apps_network`
---
-
-CREATE TABLE `tbl_apps_network` (
-  `network_id` int(11) NOT NULL,
-  `network_name` varchar(50) NOT NULL,
+-- ----------------------------
+-- Table structure for tbl_apps_deployment
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_deployment`;
+CREATE TABLE `tbl_apps_deployment`  (
+  `deployment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `deployment_model` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`deployment_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_apps_network`
---
+-- ----------------------------
+-- Records of tbl_apps_deployment
+-- ----------------------------
+INSERT INTO `tbl_apps_deployment` VALUES (1, 'On-Premises', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment` VALUES (2, 'IaaS', 1, NULL, NULL, NULL, NULL);
 
-INSERT INTO `tbl_apps_network` (`network_id`, `network_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Customer Facing', 1, NULL, NULL, 2, '2026-01-20 14:12:36'),
-(2, 'Internal User (Include Branches)', 1, NULL, NULL, NULL, NULL),
-(3, 'Internal User (Exclude Branches)', 1, NULL, NULL, NULL, NULL),
-(15, 'tes', 0, 2, '2026-02-09 08:54:32', NULL, NULL),
-(16, '-', 0, 3, '2026-02-10 11:13:47', NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_apps_deployment_model
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_deployment_model`;
+CREATE TABLE `tbl_apps_deployment_model`  (
+  `deployment_provider_id` int(5) NOT NULL AUTO_INCREMENT,
+  `deployment_provider_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`deployment_provider_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_apps_deployment_model
+-- ----------------------------
+INSERT INTO `tbl_apps_deployment_model` VALUES (1, 'CIMB', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment_model` VALUES (2, 'GCP', 1, NULL, NULL, NULL, NULL);
 
---
--- Table structure for table `tbl_apps_operating_software`
---
+-- ----------------------------
+-- Table structure for tbl_apps_deployment_site
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_deployment_site`;
+CREATE TABLE `tbl_apps_deployment_site`  (
+  `deployment_site_id` int(5) NOT NULL AUTO_INCREMENT,
+  `deployment_site_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`deployment_site_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-CREATE TABLE `tbl_apps_operating_software` (
-  `id_apps_operating_software` int(11) NOT NULL,
-  `apps_id` varchar(255) DEFAULT NULL,
-  `operating_software_id` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ----------------------------
+-- Records of tbl_apps_deployment_site
+-- ----------------------------
+INSERT INTO `tbl_apps_deployment_site` VALUES (1, 'Bintaro', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment_site` VALUES (2, 'Asia-southeast2 (Jakarta)', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment_site` VALUES (3, 'NTT', 1, NULL, NULL, NULL, NULL);
 
---
--- Dumping data for table `tbl_apps_operating_software`
---
-
-INSERT INTO `tbl_apps_operating_software` (`id_apps_operating_software`, `apps_id`, `operating_software_id`) VALUES
-(44, '31', '1'),
-(45, '32', '1'),
-(46, '33', '3'),
-(51, '34', '1'),
-(52, '34', '2'),
-(53, '35', '1'),
-(54, '35', '2'),
-(55, '36', '1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_apps_operational_day`
---
-
-CREATE TABLE `tbl_apps_operational_day` (
-  `operational_day_id` int(10) NOT NULL,
-  `start_day` varchar(10) DEFAULT NULL,
-  `end_day` varchar(10) DEFAULT NULL,
-  `total_day` int(11) GENERATED ALWAYS AS ((field(`end_day`,'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') - field(`start_day`,'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') + 7) MOD 7 + 1) STORED,
+-- ----------------------------
+-- Table structure for tbl_apps_network
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_network`;
+CREATE TABLE `tbl_apps_network`  (
+  `network_id` int(11) NOT NULL AUTO_INCREMENT,
+  `network_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`network_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_apps_operational_day`
---
+-- ----------------------------
+-- Records of tbl_apps_network
+-- ----------------------------
+INSERT INTO `tbl_apps_network` VALUES (1, 'Customer Facing', 1, NULL, NULL, 2, '2026-01-20 14:12:36');
+INSERT INTO `tbl_apps_network` VALUES (2, 'Internal User (Include Branches)', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_network` VALUES (3, 'Internal User (Exclude Branches)', 1, NULL, NULL, NULL, NULL);
 
-INSERT INTO `tbl_apps_operational_day` (`operational_day_id`, `start_day`, `end_day`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Monday', 'Sunday', 1, NULL, NULL, 2, '2026-01-20 14:03:18'),
-(2, 'Monday', 'Saturday', 1, NULL, NULL, NULL, NULL),
-(3, 'Tuesday', 'Saturday', 1, NULL, NULL, 2, '2026-01-29 13:38:09'),
-(19, 'Monday', 'Wednesday', 1, 2, '2026-02-01 15:03:18', NULL, NULL),
-(20, 'Monday', 'Thursday', 1, 2, '2026-02-02 09:18:36', NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_apps_operating_software
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_operating_software`;
+CREATE TABLE `tbl_apps_operating_software`  (
+  `id_apps_operating_software` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `operating_software_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id_apps_operating_software`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_apps_operating_software
+-- ----------------------------
+INSERT INTO `tbl_apps_operating_software` VALUES (248, '72', '2');
+INSERT INTO `tbl_apps_operating_software` VALUES (252, '85', '2');
+INSERT INTO `tbl_apps_operating_software` VALUES (261, '86', '1');
+INSERT INTO `tbl_apps_operating_software` VALUES (262, '86', '2');
+INSERT INTO `tbl_apps_operating_software` VALUES (276, '89', '2');
+INSERT INTO `tbl_apps_operating_software` VALUES (277, '89', '4');
+INSERT INTO `tbl_apps_operating_software` VALUES (278, '87', '1');
+INSERT INTO `tbl_apps_operating_software` VALUES (281, '88', '2');
 
---
--- Table structure for table `tbl_apps_operational_hour`
---
-
-CREATE TABLE `tbl_apps_operational_hour` (
-  `operational_hour_id` int(10) NOT NULL,
-  `start_time` time DEFAULT NULL,
-  `end_time` time DEFAULT NULL,
-  `total_hour` decimal(10,1) DEFAULT NULL,
+-- ----------------------------
+-- Table structure for tbl_apps_operational_day
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_operational_day`;
+CREATE TABLE `tbl_apps_operational_day`  (
+  `operational_day_id` int(10) NOT NULL AUTO_INCREMENT,
+  `start_day` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `end_day` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `total_day` int(11) NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`operational_day_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_apps_operational_hour`
---
+-- ----------------------------
+-- Records of tbl_apps_operational_day
+-- ----------------------------
+INSERT INTO `tbl_apps_operational_day` VALUES (1, 'Monday', 'Sunday', 7, NULL, NULL, 2, '2026-01-20 14:03:18', 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (2, 'Monday', 'Saturday', 6, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (3, 'Tuesday', 'Saturday', 5, NULL, NULL, 2, '2026-01-29 13:38:09', 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (19, 'Monday', 'Tuesday', 2, 2, '2026-02-02 09:24:58', NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (22, 'Wednesday', 'Saturday', 4, 2, '2026-02-02 10:40:21', NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (24, 'Tuesday', 'Friday', 4, 1, '2026-03-30 16:00:09', NULL, NULL, 1);
 
-INSERT INTO `tbl_apps_operational_hour` (`operational_hour_id`, `start_time`, `end_time`, `total_hour`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, '00:00:00', '23:59:00', '24.0', 1, NULL, NULL, 2, '2026-01-20 07:59:46'),
-(2, '08:00:00', '18:00:00', '10.0', 1, NULL, NULL, NULL, NULL),
-(3, '08:00:00', '22:00:00', '14.0', 1, NULL, NULL, NULL, NULL),
-(18, '09:00:00', '10:30:00', '1.5', 1, 2, '2026-01-20 00:00:00', 2, '2026-02-01 14:44:10');
+-- ----------------------------
+-- Table structure for tbl_apps_operational_hour
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_operational_hour`;
+CREATE TABLE `tbl_apps_operational_hour`  (
+  `operational_hour_id` int(10) NOT NULL AUTO_INCREMENT,
+  `start_time` time(0) NULL DEFAULT NULL,
+  `end_time` time(0) NULL DEFAULT NULL,
+  `total_hour` decimal(10, 1) NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`operational_hour_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_apps_operational_hour
+-- ----------------------------
+INSERT INTO `tbl_apps_operational_hour` VALUES (1, '00:00:00', '23:59:00', 24.0, NULL, NULL, 2, '2026-01-20 07:59:46', 1);
+INSERT INTO `tbl_apps_operational_hour` VALUES (2, '08:00:00', '18:00:00', 10.0, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_hour` VALUES (3, '08:00:00', '22:00:00', 14.0, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_hour` VALUES (18, '09:00:00', '09:30:00', 0.5, 2, '2026-01-20 00:00:00', NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_hour` VALUES (31, '08:00:00', '23:59:00', 16.0, 1, '2026-03-27 10:05:11', NULL, NULL, 1);
 
---
--- Table structure for table `tbl_audit_trail`
---
+-- ----------------------------
+-- Table structure for tbl_apps_server
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_server`;
+CREATE TABLE `tbl_apps_server`  (
+  `apps_server_id` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` int(11) NULL DEFAULT NULL,
+  `server_id` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`apps_server_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 232 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-CREATE TABLE `tbl_audit_trail` (
-  `audit_id` int(11) NOT NULL,
-  `timestamp` datetime DEFAULT current_timestamp(),
-  `username` varchar(100) NOT NULL,
-  `action` enum('ADD','EDIT','DEACTIVATE','ACTIVATE','EXPORT') DEFAULT NULL,
-  `table_name` varchar(50) NOT NULL,
+-- ----------------------------
+-- Records of tbl_apps_server
+-- ----------------------------
+INSERT INTO `tbl_apps_server` VALUES (191, 72, 1);
+INSERT INTO `tbl_apps_server` VALUES (192, 72, 2);
+INSERT INTO `tbl_apps_server` VALUES (196, 85, 1);
+INSERT INTO `tbl_apps_server` VALUES (205, 86, 1);
+INSERT INTO `tbl_apps_server` VALUES (206, 86, 2);
+INSERT INTO `tbl_apps_server` VALUES (219, 89, 2);
+INSERT INTO `tbl_apps_server` VALUES (220, 89, 3);
+INSERT INTO `tbl_apps_server` VALUES (221, 87, 1);
+INSERT INTO `tbl_apps_server` VALUES (222, 87, 3);
+INSERT INTO `tbl_apps_server` VALUES (229, 88, 1);
+INSERT INTO `tbl_apps_server` VALUES (230, 88, 4);
+INSERT INTO `tbl_apps_server` VALUES (231, 88, 5);
+
+-- ----------------------------
+-- Table structure for tbl_apps_sla_history
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_apps_sla_history`;
+CREATE TABLE `tbl_apps_sla_history`  (
+  `sla_id` int(11) NOT NULL AUTO_INCREMENT,
+  `apps_id` int(11) NULL DEFAULT NULL,
+  `version` int(11) NULL DEFAULT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`sla_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_apps_sla_history
+-- ----------------------------
+INSERT INTO `tbl_apps_sla_history` VALUES (29, 72, 1, 'SLA_Group_Financial_Management_System_20260327_100542.pdf', 1, '2026-03-27 10:05:42', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (30, 72, 2, 'SLA_Group_Financial_Management_System_20260327_101855.pdf', 1, '2026-03-27 10:18:55', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (31, 72, 3, 'SLA_Group_Financial_Management_System_20260327_102010.pdf', 1, '2026-03-27 10:20:10', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (32, 72, 4, 'SLA_Group_Financial_Management_Systems_20260327_105259.pdf', 1, '2026-03-27 10:52:59', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (33, 72, 5, 'SLA_Group_Financial_Management_System_20260327_111331.pdf', 1, '2026-03-27 11:13:31', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (35, 86, 1, 'SLA_tes_20260327_162717.pdf', 1, '2026-03-27 16:27:17', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (36, 86, 2, 'SLA_tes_20260330_133851.pdf', 1, '2026-03-30 13:38:51', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (37, 87, 1, 'SLA_as_20260330_141348.pdf', 1, '2026-03-30 14:13:48', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (38, 89, 1, 'SLA_as_20260331_154732.pdf', 1, '2026-03-31 15:47:32', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (39, 89, 2, 'SLA_as_20260331_155136.pdf', 1, '2026-03-31 15:51:36', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (40, 87, 2, 'SLA_asaaaa_20260331_160705.pdf', 1, '2026-03-31 16:07:05', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (41, 88, 1, 'SLA_x_20260331_161017.pdf', 1, '2026-03-31 16:10:17', 'Auto-Generated SLA on Final Approval');
+
+-- ----------------------------
+-- Table structure for tbl_audit_trail
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_audit_trail`;
+CREATE TABLE `tbl_audit_trail`  (
+  `audit_id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime(0) NULL DEFAULT current_timestamp(0),
+  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `action` enum('ADD','EDIT','DEACTIVATE','ACTIVATE','EXPORT','DELETE') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `table_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `foreign_id` int(11) NOT NULL,
-  `field_name` varchar(50) DEFAULT NULL,
-  `old_value` text DEFAULT NULL,
-  `new_value` text DEFAULT NULL,
-  `reason` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `field_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `old_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `new_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`audit_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_audit_trail`
---
+-- ----------------------------
+-- Records of tbl_audit_trail
+-- ----------------------------
+INSERT INTO `tbl_audit_trail` VALUES (1, '2026-01-20 13:53:37', 'Vicken', 'ADD', 'tbl_database', 44, '-', '-', 'DB23', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (2, '2026-01-20 13:53:54', 'Vicken', 'EDIT', 'tbl_database', 44, 'database_name', 'DB23', 'DB234', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (3, '2026-01-21 02:46:14', 'Tes', 'EDIT', 'tbl_deployment', 13, 'deployment_model', 'On-Premises', 'On-Premises Test', 'No reason provided');
+INSERT INTO `tbl_audit_trail` VALUES (4, '2026-01-21 02:59:11', 'Tes', 'EDIT', 'tbl_deployment', 13, 'deployment_model', 'On-Premises Test', 'On-Premises Test1', 'Test');
+INSERT INTO `tbl_audit_trail` VALUES (5, '2026-01-21 02:59:11', 'Tes', 'EDIT', 'tbl_deployment', 13, 'deployment_provider', 'CIMB TEST 1', 'CIMB TEST 12', 'Test');
+INSERT INTO `tbl_audit_trail` VALUES (6, '2026-01-21 02:59:11', 'Tes', 'EDIT', 'tbl_deployment', 13, 'main_deployment_site', 'Bintaro Test 2 ', 'Bintaro Test 2 3', 'Test');
+INSERT INTO `tbl_audit_trail` VALUES (7, '2026-01-22 09:39:00', 'Tes', 'EDIT', 'tbl_operational_day', 3, 'Start Day', 'Monday', 'Tuesday', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (8, '2026-01-22 09:39:00', 'Tes', 'EDIT', 'tbl_operational_day', 3, 'End Day', 'Friday', 'Saturday', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (9, '2026-01-22 03:44:47', 'Tes', 'ADD', 'tbl_database', 46, '-', '-', 'DB22', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (10, '2026-01-22 03:44:53', 'Tes', 'EDIT', 'tbl_database', 46, 'database_name', 'DB22', 'DB222', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (11, '2026-01-22 03:54:31', 'Tes', 'ADD', 'tbl_network', 14, '-', '-', 'Tes', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (12, '2026-01-22 05:11:08', 'Tes', 'ADD', 'tbl_operational_hour', 20, 'Start Time', '-', '12:11', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (13, '2026-01-22 05:11:08', 'Tes', 'ADD', 'tbl_operational_hour', 20, 'End Time', '-', '15:11', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (14, '2026-01-22 05:11:34', 'Tes', 'EDIT', 'tbl_operational_hour', 20, 'End Time', '15:11:00', '18:11', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (15, '2026-01-22 05:11:56', 'Tes', '', 'tbl_operational_hour', 20, 'Operational Hour', '12:11:00 - 18:11:00', '-', 'Data deleted by user');
+INSERT INTO `tbl_audit_trail` VALUES (16, '2026-01-22 11:13:32', 'Tes', 'ADD', 'tbl_operational_hour', 21, 'Start Time', '-', '15:13', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (17, '2026-01-22 11:13:32', 'Tes', 'ADD', 'tbl_operational_hour', 21, 'End Time', '-', '17:13', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (18, '2026-01-22 11:13:41', 'Tes', 'ADD', 'tbl_operational_day', 16, 'Start Day', '-', 'Wednesday', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (19, '2026-01-22 11:13:41', 'Tes', 'ADD', 'tbl_operational_day', 16, 'End Day', '-', 'Saturday', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (20, '2026-01-22 11:13:46', 'Tes', '', 'tbl_operational_day', 16, '-', 'Wednesday - Saturday', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (21, '2026-01-22 05:16:08', 'Tes', '', 'tbl_operational_hour', 21, 'Operational Hour', '15:13:00 - 17:13:00', '-', 'Data deleted by user');
+INSERT INTO `tbl_audit_trail` VALUES (22, '2026-01-22 05:16:23', 'Tes', 'ADD', 'tbl_operational_hour', 22, 'Start Time', '-', '14:16', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (23, '2026-01-22 05:16:23', 'Tes', 'ADD', 'tbl_operational_hour', 22, 'End Time', '-', '17:16', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (24, '2026-01-22 05:16:28', 'Tes', '', 'tbl_operational_hour', 22, 'Operational Hour', '14:16:00 - 17:16:00', '-', 'Data deleted by user');
+INSERT INTO `tbl_audit_trail` VALUES (25, '2026-01-22 11:18:20', 'Tes', 'ADD', 'tbl_operational_day', 17, 'Start Day', '-', 'Thursday', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (26, '2026-01-22 11:18:20', 'Tes', 'ADD', 'tbl_operational_day', 17, 'End Day', '-', 'Saturday', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (27, '2026-01-22 11:18:26', 'Tes', '', 'tbl_operational_day', 17, 'operational_day', 'Thursday - Saturday', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (31, '2026-01-26 03:30:31', 'Tes', 'ADD', 'tbl_network_product', 10, 'All Fields', '-', 'tes | SLA: 12 | Net: Internal User (Include Branches)', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (33, '2026-01-26 03:34:41', 'Tes', 'ADD', 'tbl_network_product', 11, 'Product Name', '-', 'tres', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (34, '2026-01-26 03:34:41', 'Tes', 'ADD', 'tbl_network_product', 11, 'Product SLA', '-', '12', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (35, '2026-01-26 03:34:41', 'Tes', 'ADD', 'tbl_network_product', 11, 'Network Name', '-', 'Customer Facing', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (36, '2026-01-26 03:35:08', 'Tes', 'EDIT', 'tbl_network_product', 11, 'Network Name', 'Customer Facing', 'Internal User (Exclude Branches)', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (37, '2026-01-26 03:35:28', 'Tes', '', 'tbl_network_product', 11, 'product_name', 'tres', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (38, '2026-01-26 03:40:57', 'Tes', 'ADD', 'tbl_network_product', 12, 'Product Name', '-', 'tres', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (39, '2026-01-26 03:40:57', 'Tes', 'ADD', 'tbl_network_product', 12, 'Product SLA', '-', '11', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (40, '2026-01-26 03:40:57', 'Tes', 'ADD', 'tbl_network_product', 12, 'Network Name', '-', 'Customer Facing', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (41, '2026-01-26 03:41:05', 'Tes', '', 'tbl_network_product', 12, 'Product Detail', 'tres 11.00 Customer Facing', '-', 'tesss');
+INSERT INTO `tbl_audit_trail` VALUES (42, '2026-01-26 04:07:45', 'Tes', 'ADD', 'tbl_network_provider', 8, 'Provider Name', '-', 'pokemon', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (43, '2026-01-26 04:07:45', 'Tes', 'ADD', 'tbl_network_provider', 8, 'Network Name', '-', 'Customer Facing', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (44, '2026-01-26 04:08:13', 'Tes', 'EDIT', 'tbl_network_provider', 8, 'Network Name', 'Customer Facing', 'Internal User (Exclude Branches)', 'tes\r\n');
+INSERT INTO `tbl_audit_trail` VALUES (45, '2026-01-26 04:08:37', 'Tes', '', 'tbl_network_provider', 8, 'Provider Detail', 'pokemon Internal User (Exclude Branches)', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (61, '2026-01-26 13:45:36', 'Tes', 'EXPORT', 'tbl_infra_server', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (63, '2026-01-26 14:18:01', 'Tes', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (64, '2026-01-27 10:37:24', 'Tes', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (65, '2026-01-27 13:42:45', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data Portofolio');
+INSERT INTO `tbl_audit_trail` VALUES (66, '2026-01-27 13:42:46', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data Portofolio');
+INSERT INTO `tbl_audit_trail` VALUES (67, '2026-01-27 15:15:44', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (68, '2026-01-27 15:19:18', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (69, '2026-01-27 15:20:03', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (70, '2026-01-27 15:21:09', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, NULL, NULL, 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (71, '2026-01-28 14:28:56', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (72, '2026-01-29 10:03:28', 'Tes', 'ADD', 'tbl_apps_operational_hour', 23, 'Start Time', '-', '08:03', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (73, '2026-01-29 10:03:28', 'Tes', 'ADD', 'tbl_apps_operational_hour', 23, 'End Time', '-', '10:05', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (74, '2026-01-29 10:04:04', 'Tes', '', 'tbl_apps_operational_hour', 23, 'Operational Hour', '08:03:00 - 10:05:00', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (75, '2026-01-29 10:04:19', 'Tes', 'ADD', 'tbl_apps_operational_hour', 24, 'Start Time', '-', '10:00', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (76, '2026-01-29 10:04:19', 'Tes', 'ADD', 'tbl_apps_operational_hour', 24, 'End Time', '-', '11:04', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (77, '2026-01-29 10:04:29', 'Tes', '', 'tbl_apps_operational_hour', 24, 'Operational Hour', '10:00:00 - 11:04:00', '-', 'yes');
+INSERT INTO `tbl_audit_trail` VALUES (78, '2026-01-29 10:04:47', 'Tes', 'ADD', 'tbl_apps_operational_day', 18, 'Start Day', '-', 'Tuesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (79, '2026-01-29 10:04:47', 'Tes', 'ADD', 'tbl_apps_operational_day', 18, 'End Day', '-', 'Thursday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (80, '2026-01-29 10:04:53', 'Tes', '', 'tbl_apps_operational_day', 18, 'Operational Day', 'Tuesday - Thursday', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (81, '2026-01-29 10:08:21', 'Tes', 'ADD', 'tbl_apps_operational_hour', 25, 'Start Time', '-', '10:08', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (82, '2026-01-29 10:08:21', 'Tes', 'ADD', 'tbl_apps_operational_hour', 25, 'End Time', '-', '11:08', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (83, '2026-01-29 10:08:21', 'Tes', 'ADD', 'tbl_apps_operational_hour', 25, 'Total Hour', '-', '1.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (84, '2026-01-29 10:08:27', 'Tes', '', 'tbl_apps_operational_hour', 25, 'Operational Hour', '10:08:00 - 11:08:00 (1.0 Hrs)', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (85, '2026-01-29 10:10:17', 'Tes', 'ADD', 'tbl_user_role', 6, 'New Assignment', '-', 'User: Vicken | Role: Inputer', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (86, '2026-01-29 10:10:27', 'Tes', '', 'tbl_user_role', 6, 'Assignment Detail', 'User: Vicken | Role: Inputer', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (87, '2026-01-29 10:10:46', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export All Data');
+INSERT INTO `tbl_audit_trail` VALUES (88, '2026-01-29 10:22:32', 'Tes', '', 'tbl_user_role', 7, 'Assignment Detail', 'User: Vicken | Role: Inputer', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (89, '2026-01-29 10:26:47', 'Tes', '', 'tbl_user_role', 8, 'Assignment Detail', 'User: Vicken | Role: Inputer', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (90, '2026-01-29 10:34:35', 'Tes', 'ADD', 'tbl_user_role', 9, 'Assigned User', '-', 'Vicken', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (91, '2026-01-29 10:34:35', 'Tes', 'ADD', 'tbl_user_role', 9, 'Role', '-', 'Inputer', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (92, '2026-01-29 10:36:24', 'Tes', 'ADD', 'tbl_user_role', 10, 'Assigned User', '-', 'Tes', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (93, '2026-01-29 10:36:24', 'Tes', 'ADD', 'tbl_user_role', 10, 'Role', '-', 'Admin', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (94, '2026-01-29 10:36:32', 'Tes', 'EDIT', 'tbl_user_role', 10, 'Role', 'Admin', 'Approver', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (95, '2026-01-29 10:37:51', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export All Data');
+INSERT INTO `tbl_audit_trail` VALUES (96, '2026-01-29 10:50:29', 'Tes', 'EDIT', 'tbl_holiday', 13, 'Holiday_Description', '-', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (97, '2026-01-29 11:15:47', 'Tes', 'ADD', 'tbl_holiday', 16, 'Holiday Name', '-', 'Tessss', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (98, '2026-01-29 11:15:47', 'Tes', 'ADD', 'tbl_holiday', 16, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (99, '2026-01-29 11:15:47', 'Tes', 'ADD', 'tbl_holiday', 16, 'Holiday Description', '-', '-', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (100, '2026-01-29 11:16:12', 'Tes', 'EDIT', 'tbl_holiday', 16, 'Holiday_Description', '-', '-aa', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (101, '2026-01-29 11:17:58', 'Tes', '', 'tbl_holiday', 16, 'Holiday_Date', '2026-01-30', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (102, '2026-01-29 11:21:00', 'Tes', 'ADD', 'tbl_holiday', 17, 'Holiday Name', '-', 'Libur Testss', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (103, '2026-01-29 11:21:00', 'Tes', 'ADD', 'tbl_holiday', 17, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (104, '2026-01-29 11:21:00', 'Tes', 'ADD', 'tbl_holiday', 17, 'Holiday Description', '-', 'tes', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (105, '2026-01-29 11:21:12', 'Tes', 'EDIT', 'tbl_holiday', 17, 'Holiday Description', 'tes', 'tess', 'rews');
+INSERT INTO `tbl_audit_trail` VALUES (106, '2026-01-29 11:21:17', 'Tes', '', 'tbl_holiday', 17, 'Holiday Date', '2026-01-30 (Libur Testss)', '-', 'res');
+INSERT INTO `tbl_audit_trail` VALUES (107, '2026-01-29 11:22:41', 'Tes', 'ADD', 'tbl_holiday', 18, 'Holiday Name', '-', 'Libur Test', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (108, '2026-01-29 11:22:41', 'Tes', 'ADD', 'tbl_holiday', 18, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (109, '2026-01-29 11:22:41', 'Tes', 'ADD', 'tbl_holiday', 18, 'Holiday Description', '-', '-', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (110, '2026-01-29 11:22:47', 'Tes', '', 'tbl_holiday', 18, 'Holiday Date', '2026-01-30 $old->Holiday_Name', '-', 'rs');
+INSERT INTO `tbl_audit_trail` VALUES (111, '2026-01-29 11:23:42', 'Tes', 'ADD', 'tbl_holiday', 19, 'Holiday Name', '-', 'Libur Test', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (112, '2026-01-29 11:23:42', 'Tes', 'ADD', 'tbl_holiday', 19, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (113, '2026-01-29 11:23:42', 'Tes', 'ADD', 'tbl_holiday', 19, 'Holiday Description', '-', 'as', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (114, '2026-01-29 11:23:46', 'Tes', '', 'tbl_holiday', 19, 'Holiday Date', '2026-01-30$old->Holiday_Name', '-', 'as');
+INSERT INTO `tbl_audit_trail` VALUES (115, '2026-01-29 11:24:44', 'Tes', 'ADD', 'tbl_holiday', 20, 'Holiday Name', '-', 'aaa', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (116, '2026-01-29 11:24:44', 'Tes', 'ADD', 'tbl_holiday', 20, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (117, '2026-01-29 11:24:44', 'Tes', 'ADD', 'tbl_holiday', 20, 'Holiday Description', '-', '-', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (118, '2026-01-29 11:24:49', 'Tes', '', 'tbl_holiday', 20, 'Holiday Date', '2026-01-30 . $old->Holiday_Name', '-', 'ad');
+INSERT INTO `tbl_audit_trail` VALUES (119, '2026-01-29 11:26:24', 'Tes', 'ADD', 'tbl_holiday', 21, 'Holiday Name', '-', 'as', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (120, '2026-01-29 11:26:24', 'Tes', 'ADD', 'tbl_holiday', 21, 'Holiday Date', '-', '2026-01-30', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (121, '2026-01-29 11:26:24', 'Tes', 'ADD', 'tbl_holiday', 21, 'Holiday Description', '-', '-', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (122, '2026-01-29 11:26:30', 'Tes', '', 'tbl_holiday', 21, 'Holiday Date', '2026-01-30 - as', '-', 'a');
+INSERT INTO `tbl_audit_trail` VALUES (123, '2026-01-29 11:28:00', 'Tes', 'ADD', 'tbl_apps_operational_hour', 26, 'Start Time', '-', '12:27', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (124, '2026-01-29 11:28:00', 'Tes', 'ADD', 'tbl_apps_operational_hour', 26, 'End Time', '-', '13:27', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (125, '2026-01-29 11:28:00', 'Tes', 'ADD', 'tbl_apps_operational_hour', 26, 'Total Hour', '-', '1.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (126, '2026-01-29 11:28:04', 'Tes', '', 'tbl_apps_operational_hour', 26, 'Operational Hour', '12:27:00 - 13:27:00 (1.0 Hrs)', '-', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (127, '2026-01-29 13:37:58', 'Tes', 'EDIT', 'tbl_apps_operational_day', 3, 'End Day', 'Saturday', 'Sunday', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (128, '2026-01-29 13:38:09', 'Tes', 'EDIT', 'tbl_apps_operational_day', 3, 'End Day', 'Sunday', 'Saturday', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (129, '2026-01-30 11:07:54', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (130, '2026-01-30 11:08:16', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (131, '2026-01-30 11:09:02', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (132, '2026-01-30 11:11:50', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (133, '2026-01-30 11:12:11', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (134, '2026-01-30 11:15:04', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (135, '2026-01-30 11:16:11', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (136, '2026-01-30 11:16:24', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (137, '2026-01-30 11:18:20', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (138, '2026-01-30 11:53:21', 'Tes', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (139, '2026-01-30 11:55:55', 'Tes', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (140, '2026-01-30 12:00:31', 'Tes', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (141, '2026-01-30 12:52:04', 'Tes', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (142, '2026-01-30 14:00:19', 'Tes', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (143, '2026-01-30 14:14:33', 'Tes', 'EXPORT', 'tbl_apps_network', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (144, '2026-01-30 14:38:14', 'Tes', 'EXPORT', 'tbl_network_product', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (145, '2026-01-30 14:42:26', 'Tes', 'EXPORT', 'tbl_network_provider', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (146, '2026-01-30 15:07:19', 'Tes', 'EXPORT', 'tbl_operating_software', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (147, '2026-01-30 15:12:46', 'Tes', 'EXPORT', 'tbl_apps_deployment', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (148, '2026-02-02 09:24:58', 'Tes', 'ADD', 'tbl_apps_operational_day', 19, 'Start Day', '-', 'Monday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (149, '2026-02-02 09:24:58', 'Tes', 'ADD', 'tbl_apps_operational_day', 19, 'End Day', '-', 'Tuesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (150, '2026-02-02 09:59:41', 'Tes', '', 'tbl_apps_operational_day', 19, 'status', '1', '0', 'ttes');
+INSERT INTO `tbl_audit_trail` VALUES (151, '2026-02-02 09:59:51', 'Tes', '', 'tbl_apps_operational_day', 19, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (152, '2026-02-02 10:34:20', 'Tes', 'ADD', 'tbl_apps_operational_hour', 27, 'Start Time', '-', '10:34', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (153, '2026-02-02 10:34:20', 'Tes', 'ADD', 'tbl_apps_operational_hour', 27, 'End Time', '-', '11:34', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (154, '2026-02-02 10:34:20', 'Tes', 'ADD', 'tbl_apps_operational_hour', 27, 'Total Hour', '-', '1.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (155, '2026-02-02 10:34:48', 'Tes', 'ADD', 'tbl_apps_operational_day', 20, 'Start Day', '-', 'Tuesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (156, '2026-02-02 10:34:48', 'Tes', 'ADD', 'tbl_apps_operational_day', 20, 'End Day', '-', 'Wednesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (157, '2026-02-02 10:39:05', 'Tes', 'ADD', 'tbl_apps_operational_day', 21, 'Start Day', '-', 'Monday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (158, '2026-02-02 10:39:05', 'Tes', 'ADD', 'tbl_apps_operational_day', 21, 'End Day', '-', 'Wednesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (159, '2026-02-02 10:40:21', 'Tes', 'ADD', 'tbl_apps_operational_day', 22, 'Start Day', '-', 'Wednesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (160, '2026-02-02 10:40:21', 'Tes', 'ADD', 'tbl_apps_operational_day', 22, 'End Day', '-', 'Saturday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (161, '2026-02-02 10:41:12', 'Tes', 'ADD', 'tbl_apps_operational_hour', 28, 'Start Time', '-', '12:41', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (162, '2026-02-02 10:41:12', 'Tes', 'ADD', 'tbl_apps_operational_hour', 28, 'End Time', '-', '14:41', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (163, '2026-02-02 10:41:12', 'Tes', 'ADD', 'tbl_apps_operational_hour', 28, 'Total Hour', '-', '2.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (164, '2026-02-02 10:41:32', 'Tes', 'ADD', 'tbl_apps_operational_hour', 29, 'Start Time', '-', '14:41', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (165, '2026-02-02 10:41:32', 'Tes', 'ADD', 'tbl_apps_operational_hour', 29, 'End Time', '-', '15:41', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (166, '2026-02-02 10:41:32', 'Tes', 'ADD', 'tbl_apps_operational_hour', 29, 'Total Hour', '-', '1.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (167, '2026-02-02 10:42:02', 'Tes', 'ADD', 'tbl_apps_operational_hour', 30, 'Start Time', '-', '11:41', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (168, '2026-02-02 10:42:02', 'Tes', 'ADD', 'tbl_apps_operational_hour', 30, 'End Time', '-', '12:42', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (169, '2026-02-02 10:42:02', 'Tes', 'ADD', 'tbl_apps_operational_hour', 30, 'Total Hour', '-', '1.02 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (170, '2026-02-02 10:58:14', 'Tes', 'ADD', 'tbl_database_master', 47, 'database_name', '-', 'tess', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (171, '2026-02-02 10:58:50', 'Tes', '', 'tbl_apps_operational_day', 22, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (172, '2026-02-02 10:58:56', 'Tes', '', 'tbl_apps_operational_day', 22, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (173, '2026-02-02 11:00:13', 'Tes', '', 'tbl_apps_operational_hour', 18, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (174, '2026-02-02 11:00:18', 'Tes', '', 'tbl_apps_operational_hour', 18, 'status', '0', '1', 'aas');
+INSERT INTO `tbl_audit_trail` VALUES (175, '2026-02-02 11:04:42', 'Tes', 'EDIT', 'tbl_database_master', 47, 'database_name', 'tess', 'tesss', 'aa');
+INSERT INTO `tbl_audit_trail` VALUES (176, '2026-02-02 11:09:51', 'Tes', 'DEACTIVATE', 'tbl_database_master', 47, 'status', '1', '0', 'aaa');
+INSERT INTO `tbl_audit_trail` VALUES (177, '2026-02-02 11:10:46', 'Tes', 'ADD', 'tbl_database_master', 48, 'database_name', '-', 'asasa', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (178, '2026-02-02 11:20:44', 'Tes', 'ADD', 'tbl_apps_network', 15, 'network_name', '-', 'aaaa', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (204, '2026-02-02 16:40:37', 'Tes', 'DEACTIVATE', 'tbl_database_master', 47, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (205, '2026-02-02 16:59:32', 'Tes', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (206, '2026-02-02 16:59:37', 'Tes', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (207, '2026-02-02 16:59:40', 'Tes', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (208, '2026-02-02 16:59:42', 'Tes', 'EXPORT', 'tbl_apps_network', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (209, '2026-02-02 16:59:44', 'Tes', 'EXPORT', 'tbl_network_product', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (210, '2026-02-02 16:59:46', 'Tes', 'EXPORT', 'tbl_apps_category', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (211, '2026-02-02 16:59:48', 'Tes', 'EXPORT', 'tbl_operating_software', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (212, '2026-02-02 16:59:50', 'Tes', 'EXPORT', 'tbl_apps_deployment', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (213, '2026-02-02 17:03:40', 'Tes', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (214, '2026-02-02 17:05:19', 'Tes', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (215, '2026-02-02 17:06:08', 'Tes', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (216, '2026-02-02 17:06:43', 'Tes', 'DEACTIVATE', 'tbl_apps_deployment', 3, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (217, '2026-02-02 17:06:56', 'Tes', 'ACTIVATE', 'tbl_apps_deployment', 3, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (218, '2026-02-02 17:08:38', 'Tes', 'DEACTIVATE', 'tbl_apps_deployment', 1, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (219, '2026-02-02 17:08:56', 'Tes', 'ACTIVATE', 'tbl_apps_deployment', 1, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (220, '2026-02-03 17:16:39', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (221, '2026-02-04 10:04:40', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (222, '2026-02-04 10:05:11', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (223, '2026-02-20 15:12:30', 'role1', 'EXPORT', 'tbl_infra_module', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (224, '2026-02-20 15:12:36', 'role1', 'EXPORT', 'tbl_apps_network', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (225, '2026-02-25 13:45:55', 'role1', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (226, '2026-03-12 10:12:01', 'role1', 'EXPORT', 'tbl_app_type', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (227, '2026-03-12 10:15:43', 'role1', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (228, '2026-03-17 09:35:10', 'role1', 'EXPORT', 'tbl_app_type', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (229, '2026-03-17 09:35:45', 'role1', 'DEACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '1', '0', 'AA');
+INSERT INTO `tbl_audit_trail` VALUES (230, '2026-03-17 09:36:21', 'role1', 'ACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '0', '1', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (231, '2026-03-17 09:37:09', 'role1', 'DEACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '1', '0', 'aa');
+INSERT INTO `tbl_audit_trail` VALUES (232, '2026-03-17 09:40:05', 'role1', 'ACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '0', '1', 'res');
+INSERT INTO `tbl_audit_trail` VALUES (233, '2026-03-17 09:40:17', 'role1', 'DEACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '1', '0', 'res');
+INSERT INTO `tbl_audit_trail` VALUES (234, '2026-03-17 09:40:22', 'role1', 'ACTIVATE', 'tbl_apps_operational_hour', 18, 'status', '0', '1', 'test');
+INSERT INTO `tbl_audit_trail` VALUES (235, '2026-03-17 09:56:35', 'role1', 'DEACTIVATE', 'tbl_apps_deployment_model', 2, 'status', '1', '0', 'AA');
+INSERT INTO `tbl_audit_trail` VALUES (236, '2026-03-27 10:05:11', 'role1', 'ADD', 'tbl_apps_operational_hour', 31, 'Start Time', '-', '08:00', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (237, '2026-03-27 10:05:11', 'role1', 'ADD', 'tbl_apps_operational_hour', 31, 'End Time', '-', '23:59', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (238, '2026-03-27 10:05:11', 'role1', 'ADD', 'tbl_apps_operational_hour', 31, 'Total Hour', '-', '15.98 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (239, '2026-03-27 17:13:46', 'role1', 'DEACTIVATE', 'tbl_app_type', 2, 'status', '1', '0', 'tess aja');
+INSERT INTO `tbl_audit_trail` VALUES (240, '2026-03-27 17:16:58', 'role1', 'ACTIVATE', 'tbl_app_type', 2, 'status', '0', '1', 'a');
+INSERT INTO `tbl_audit_trail` VALUES (241, '2026-03-30 09:45:02', 'role1', 'ACTIVATE', 'tbl_apps_deployment_model', 2, 'status', '0', '1', 't');
+INSERT INTO `tbl_audit_trail` VALUES (242, '2026-03-30 15:31:30', 'role1', 'EXPORT', 'tbl_app_type', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (243, '2026-03-30 15:31:34', 'role1', 'EXPORT', 'tbl_apps_category', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (244, '2026-03-30 15:31:52', 'role1', 'EXPORT', 'tbl_app_type', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (245, '2026-03-30 15:32:01', 'role1', 'EXPORT', 'tbl_apps_category', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (246, '2026-03-30 15:32:08', 'role1', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (247, '2026-03-30 15:32:22', 'role1', 'EXPORT', 'tbl_apps_deployment', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (248, '2026-03-30 15:32:44', 'role1', 'EXPORT', 'tbl_apps_deployment_model', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (249, '2026-03-30 15:33:05', 'role1', 'EXPORT', 'tbl_apps_deployment_site', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (250, '2026-03-30 15:33:12', 'role1', 'EXPORT', 'tbl_apps_network', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (251, '2026-03-30 15:33:19', 'role1', 'EXPORT', 'tbl_network_product', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (252, '2026-03-30 15:33:30', 'role1', 'EXPORT', 'tbl_network_provider', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (253, '2026-03-30 15:33:39', 'role1', 'EXPORT', 'tbl_operating_software', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (254, '2026-03-30 15:33:56', 'role1', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (255, '2026-03-30 15:34:12', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (256, '2026-03-30 15:34:19', 'role1', 'EXPORT', 'tbl_server', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (257, '2026-03-30 15:35:04', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (258, '2026-03-30 15:35:17', 'role1', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (259, '2026-03-30 15:37:20', 'role1', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (260, '2026-03-30 15:47:59', 'role1', 'ADD', 'tbl_apps_operational_day', 23, 'Start Day', '-', 'Tuesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (261, '2026-03-30 15:47:59', 'role1', 'ADD', 'tbl_apps_operational_day', 23, 'End Day', '-', 'Wednesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (262, '2026-03-30 16:00:09', 'role1', 'ADD', 'tbl_apps_operational_day', 24, 'Start Day', '-', 'Tuesday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (263, '2026-03-30 16:00:09', 'role1', 'ADD', 'tbl_apps_operational_day', 24, 'End Day', '-', 'Friday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (264, '2026-03-30 16:01:18', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (265, '2026-03-30 16:01:54', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (266, '2026-03-30 16:05:19', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data (Keyword: 4)');
+INSERT INTO `tbl_audit_trail` VALUES (267, '2026-03-30 16:08:50', 'role1', 'EXPORT', 'tbl_apps_category', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (268, '2026-03-30 16:09:08', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (269, '2026-03-30 16:10:20', 'role1', 'EXPORT', 'tbl_apps_deployment', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (270, '2026-03-30 16:19:03', 'role1', 'EXPORT', 'tbl_apps_operational_hour', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (271, '2026-03-31 08:48:09', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (272, '2026-03-31 08:49:09', 'role1', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (273, '2026-03-31 08:51:40', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (274, '2026-03-31 08:52:27', 'role1', 'EXPORT', 'tbl_app_type', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (275, '2026-03-31 08:52:52', 'role1', 'EXPORT', 'tbl_apps_operational_day', 0, '-', '-', '-', 'Export Data (Keyword: 7)');
+INSERT INTO `tbl_audit_trail` VALUES (276, '2026-03-31 09:00:48', 'role1', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (277, '2026-03-31 09:01:32', 'role1', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (278, '2026-03-31 13:23:35', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (279, '2026-03-31 14:43:21', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (280, '2026-03-31 14:43:30', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (281, '2026-03-31 14:43:36', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
 
-INSERT INTO `tbl_audit_trail` (`audit_id`, `timestamp`, `username`, `action`, `table_name`, `foreign_id`, `field_name`, `old_value`, `new_value`, `reason`) VALUES
-(233, '2026-02-08 12:20:27', 'Tes', 'ACTIVATE', 'tbl_database_master', 47, 'status', '0', '1', 'test'),
-(234, '2026-02-08 12:20:35', 'Tes', 'DEACTIVATE', 'tbl_database_master', 47, 'status', '1', '0', 'test'),
-(235, '2026-02-08 12:20:47', 'Tes', 'ACTIVATE', 'tbl_network_product_junc', 1, 'status', '0', '1', 'test'),
-(236, '2026-02-08 12:25:16', 'Tes', 'DEACTIVATE', 'tbl_network_product_junc', 7, 'status', '1', '0', 'test'),
-(237, '2026-02-08 12:28:11', 'Tes', 'ACTIVATE', 'tbl_network_product_junc', 7, 'status', '0', '1', 'TEST'),
-(238, '2026-02-08 12:28:51', 'Tes', 'DEACTIVATE', 'tbl_network_product_junc', 7, 'status', '1', '0', 'TEST'),
-(239, '2026-02-08 12:28:59', 'Tes', 'ACTIVATE', 'tbl_database_master', 47, 'status', '0', '1', 'TEST'),
-(240, '2026-02-08 12:30:05', 'Tes', 'ADD', 'tbl_network_provider', 10, 'Provider Name', '-', 'test', 'Initial Creation'),
-(241, '2026-02-08 12:30:05', 'Tes', 'ADD', 'tbl_network_provider', 10, 'Network Name', '-', 'Internal User (Exclude Branches)', 'Initial Creation'),
-(242, '2026-02-08 12:30:44', 'Tes', 'DEACTIVATE', 'tbl_network_provider_junc', 34, 'status', '1', '0', 'test'),
-(243, '2026-02-08 12:31:05', 'Tes', 'ACTIVATE', 'tbl_network_provider_junc', 33, 'status', '0', '1', 'test'),
-(244, '2026-02-08 13:45:39', 'Tes', 'EDIT', 'tbl_database_master', 47, 'database_name', 'DB234', 'DB2345', 'test'),
-(245, '2026-02-08 13:50:15', 'Tes', 'ADD', 'tbl_network_product', 13, 'Product Name', '-', 'test', 'Initial Creation'),
-(246, '2026-02-08 13:50:15', 'Tes', 'ADD', 'tbl_network_product', 13, 'Product SLA', '-', '98.50', 'Initial Creation'),
-(247, '2026-02-08 13:50:15', 'Tes', 'ADD', 'tbl_network_product', 13, 'Network Name', '-', 'Customer Facing', 'Initial Creation'),
-(248, '2026-02-08 13:51:35', 'Tes', 'DEACTIVATE', 'tbl_network_product_junc', 36, 'status', '1', '0', 'test'),
-(249, '2026-02-08 13:58:45', 'Tes', 'ACTIVATE', 'tbl_network_product', 13, 'Status', 'Non Active', 'Active', 'test'),
-(250, '2026-02-08 13:58:55', 'Tes', 'DEACTIVATE', 'tbl_network_product', 13, 'Status', 'Active', 'Non Active', 'test'),
-(251, '2026-02-08 14:02:23', 'Tes', 'ADD', 'tbl_network_provider', 11, 'Provider Name', '-', 'test', 'Initial Creation'),
-(252, '2026-02-08 14:02:23', 'Tes', 'ADD', 'tbl_network_provider', 11, 'Network Name', '-', 'Customer Facing', 'Initial Creation'),
-(253, '2026-02-08 14:02:39', 'Tes', 'DEACTIVATE', 'tbl_network_provider', 11, 'Status', 'Active', 'Non Active', 'TEST'),
-(254, '2026-02-08 14:02:50', 'Tes', 'ACTIVATE', 'tbl_network_provider', 11, 'Status', 'Non Active', 'Active', 'TEST'),
-(255, '2026-02-09 08:54:32', 'Tes', 'ADD', 'tbl_apps_network', 15, 'network_name', '-', 'tes', 'Initial Creation'),
-(256, '2026-02-09 08:54:42', 'Tes', 'DEACTIVATE', 'tbl_apps_network', 15, 'status', '1', '0', 'test'),
-(257, '2026-02-09 08:54:56', 'Tes', 'ACTIVATE', 'tbl_apps_network', 1, 'status', '0', '1', 'tes'),
-(258, '2026-02-09 08:55:12', 'Tes', 'ACTIVATE', 'tbl_network_product', 6, 'Status', 'Non Active', 'Active', 'test'),
-(259, '2026-02-09 13:54:00', 'Tes', 'DEACTIVATE', 'users', 4, 'status', '1', '0', 'TEST'),
-(260, '2026-02-09 13:54:13', 'Tes', 'ACTIVATE', 'users', 4, 'status', '0', '1', 'TEST'),
-(261, '2026-02-10 11:13:47', 'Dinda Aulia', 'ADD', 'tbl_apps_network', 16, 'network_name', '-', '-', 'Initial Creation'),
-(262, '2026-02-10 13:30:51', 'Dinda Aulia', 'DEACTIVATE', 'tbl_apps_category', 16, 'status', '1', '0', 'test'),
-(263, '2026-02-11 15:26:09', 'Tes', 'ADD', 'tbl_database_master', 49, 'database_name', '-', 'test', 'Initial Creation'),
-(264, '2026-02-11 15:26:18', 'Tes', 'DEACTIVATE', 'tbl_database_master', 49, 'status', '1', '0', 'test'),
-(265, '2026-02-12 09:05:07', 'Tes', 'EDIT', 'tbl_apps_category', 4, 'Standard Category', NULL, '0', 'ubah standard category'),
-(266, '2026-02-12 09:05:21', 'Tes', 'EDIT', 'tbl_apps_category', 5, 'Standard Category', NULL, '0', 'ubah standard category'),
-(267, '2026-02-12 09:47:32', 'Tes', 'DEACTIVATE', 'tbl_database_master', 47, 'status', '1', '0', 'test'),
-(268, '2026-02-12 09:47:37', 'Tes', 'ACTIVATE', 'tbl_database_master', 4, 'status', '0', '1', 'tets'),
-(269, '2026-02-12 10:35:17', 'Tes', 'EXPORT', 'tbl_database_master', 0, '-', '-', '-', 'Export Data'),
-(270, '2026-02-13 09:07:26', 'Tes', 'ADD', 'tbl_holiday', 22, 'Holiday Name', '-', 'Imlek', 'Initial creation'),
-(271, '2026-02-13 09:07:26', 'Tes', 'ADD', 'tbl_holiday', 22, 'Holiday Date', '-', '2026-02-17', 'Initial creation'),
-(272, '2026-02-13 09:07:26', 'Tes', 'ADD', 'tbl_holiday', 22, 'Holiday Description', '-', 'test', 'Initial creation'),
-(273, '2026-02-13 09:45:00', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data'),
-(274, '2026-02-13 09:53:13', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data'),
-(275, '2026-02-13 09:55:22', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data'),
-(276, '2026-02-13 10:00:40', 'Tes', 'EXPORT', 'tbl_user_role', 0, '-', '-', '-', 'Export Data'),
-(277, '2026-02-13 13:55:32', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data'),
-(278, '2026-02-13 13:57:51', 'Tes', 'EXPORT', 'tbl_portofolio_apps_master', 0, NULL, '-', '-', 'Export Data'),
-(279, '2026-02-19 15:37:40', 'Tes', 'ADD', 'tbl_infra_module', 11, 'module_name', '-', 'tes', 'Initial Creation'),
-(280, '2026-02-19 15:37:56', 'Tes', 'DEACTIVATE', 'tbl_infra_module', 11, 'status', '1', '0', 'tes'),
-(281, '2026-02-19 20:48:33', 'Tes', 'ACTIVATE', 'tbl_infra_module', 11, 'status', '0', '1', 'test'),
-(282, '2026-02-19 20:48:46', 'Tes', 'DEACTIVATE', 'tbl_infra_module', 11, 'status', '1', '0', 'test'),
-(283, '2026-02-19 20:59:22', 'Tes', 'DEACTIVATE', 'tbl_apps_network', 16, 'status', '1', '0', 'TEST'),
-(284, '2026-02-19 20:59:57', 'Tes', 'EDIT', 'tbl_service', 1, 'service_name', 'Actimize', 'Actimize', 'test'),
-(285, '2026-02-19 21:09:47', 'Tes', 'EDIT', 'tbl_service', 1, 'service_name', 'Actimize', 'ALM', 'TEST'),
-(286, '2026-02-19 21:10:11', 'Tes', 'EDIT', 'tbl_service', 1, 'service_name', 'ALM', 'Actimize', 'test'),
-(287, '2026-02-20 08:20:05', 'Tes', 'ADD', 'tbl_infra_module', 12, 'module_name', '-', 'TEST', 'Initial Creation'),
-(288, '2026-02-20 08:20:31', 'Tes', 'ADD', 'tbl_service', 16, 'service_name', '-', 'TEST', 'Initial Creation'),
-(289, '2026-02-20 08:21:11', 'Tes', 'DEACTIVATE', 'tbl_service', 16, 'status', '1', '0', 'TEST'),
-(290, '2026-02-20 15:12:09', 'role1', 'EXPORT', 'tbl_infra_module', 0, '-', '-', '-', 'Export Data'),
-(291, '2026-02-20 15:12:46', 'Tes', 'EXPORT', 'tbl_apps_network', 0, '-', '-', '-', 'Export Data');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_database_master`
---
-
-CREATE TABLE `tbl_database_master` (
-  `database_id` int(5) NOT NULL,
-  `database_name` varchar(50) NOT NULL,
+-- ----------------------------
+-- Table structure for tbl_database_master
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_database_master`;
+CREATE TABLE `tbl_database_master`  (
+  `database_id` int(5) NOT NULL AUTO_INCREMENT,
+  `database_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`database_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_database_master`
---
+-- ----------------------------
+-- Records of tbl_database_master
+-- ----------------------------
+INSERT INTO `tbl_database_master` VALUES (1, 'DB2', 1, NULL, NULL, 2, '2026-01-20 00:00:00');
+INSERT INTO `tbl_database_master` VALUES (2, 'Oracle', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_database_master` VALUES (3, 'Ms SQL Server', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_database_master` VALUES (4, 'CloudSQL for MySQL 8.0', 1, NULL, NULL, NULL, NULL);
 
-INSERT INTO `tbl_database_master` (`database_id`, `database_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'DB2', 1, NULL, NULL, 2, '2026-01-20 00:00:00'),
-(2, 'Oracle', 1, NULL, NULL, NULL, NULL),
-(3, 'Ms SQL Server', 1, NULL, NULL, NULL, NULL),
-(4, 'CloudSQL for MySQL 8.0', 1, NULL, NULL, NULL, NULL),
-(47, 'DB2345', 0, 2, '2026-01-29 19:42:27', 2, '2026-02-08 13:45:39'),
-(48, 'DB24', 0, 2, '2026-01-29 20:48:39', NULL, NULL),
-(49, 'test', 0, 2, '2026-02-11 15:26:09', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_holiday`
---
-
-CREATE TABLE `tbl_holiday` (
-  `Holiday_ID` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for tbl_holiday
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_holiday`;
+CREATE TABLE `tbl_holiday`  (
+  `Holiday_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Holiday_Date` date NOT NULL,
-  `Holiday_Description` varchar(50) DEFAULT NULL,
-  `Holiday_Name` varchar(25) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_at` int(11) DEFAULT NULL,
-  `modified_by` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Holiday_Description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `Holiday_Name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_at` int(11) NULL DEFAULT NULL,
+  `modified_by` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`Holiday_ID`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_holiday`
---
+-- ----------------------------
+-- Records of tbl_holiday
+-- ----------------------------
+INSERT INTO `tbl_holiday` VALUES (1, '2026-02-16', 'Tahun Baru Imlek', 'Cuti Bersama', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (5, '1970-01-01', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (6, '1970-01-01', 'Test', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (7, '2026-01-24', 'TEST', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (8, '2026-01-22', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (9, '2026-01-31', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (10, '2026-02-11', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (11, '2026-01-28', 'test', 'test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (13, '2026-01-29', '-', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (14, '2026-02-13', 'tEST', 'Libur Test', NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_holiday` VALUES (15, '2026-03-13', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
 
-INSERT INTO `tbl_holiday` (`Holiday_ID`, `Holiday_Date`, `Holiday_Description`, `Holiday_Name`, `created_by`, `created_at`, `modified_at`, `modified_by`) VALUES
-(1, '2026-02-16', 'Tahun Baru Imlek', 'Cuti Bersama', NULL, NULL, NULL, NULL),
-(5, '1970-01-01', 'test', 'Libur Test', NULL, NULL, NULL, NULL),
-(6, '1970-01-01', 'Test', 'Libur Test', NULL, NULL, NULL, NULL),
-(7, '2026-01-24', 'TEST', 'Libur Test', NULL, NULL, NULL, NULL),
-(8, '2026-01-22', 'test', 'Libur Test', NULL, NULL, NULL, NULL),
-(9, '2026-01-31', 'test', 'Libur Test', NULL, NULL, NULL, NULL),
-(10, '2026-02-11', 'test', 'Libur Test', NULL, NULL, NULL, NULL),
-(11, '2026-01-28', 'test', 'test', NULL, NULL, NULL, NULL),
-(13, '2026-01-29', '-', 'Libur Test', NULL, NULL, NULL, NULL),
-(14, '2026-02-13', 'tEST', 'Libur Test', NULL, NULL, NULL, NULL),
-(15, '2026-03-13', 'test', 'Libur Test', NULL, NULL, NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_module
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_module`;
+CREATE TABLE `tbl_module`  (
+  `module_id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`module_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_module
+-- ----------------------------
+INSERT INTO `tbl_module` VALUES (1, 'Actimize', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (2, 'ALM', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (3, 'AML', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (4, 'GatotKaca', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (5, 'CREDIT', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (6, 'ETP', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (7, 'Trade', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (8, 'BERPESTA', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (9, 'FAST', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_module` VALUES (10, 'BIZ', NULL, NULL, NULL, NULL, NULL);
 
---
--- Table structure for table `tbl_infra_server`
---
-
-CREATE TABLE `tbl_infra_server` (
-  `infra_server_id` int(11) NOT NULL,
-  `infra_id` int(11) DEFAULT NULL,
-  `server_id` int(11) DEFAULT NULL,
-  `server_web_prod_count` varchar(255) DEFAULT NULL,
-  `server_app_prod_count` varchar(255) DEFAULT NULL,
-  `server_db_prod_count` varchar(255) DEFAULT NULL,
-  `server_web_dr_count` varchar(255) DEFAULT NULL,
-  `server_app_dr_count` varchar(255) DEFAULT NULL,
-  `server_db_dr_count` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_infra_server`
---
-
-INSERT INTO `tbl_infra_server` (`infra_server_id`, `infra_id`, `server_id`, `server_web_prod_count`, `server_app_prod_count`, `server_db_prod_count`, `server_web_dr_count`, `server_app_dr_count`, `server_db_dr_count`) VALUES
-(3, 7, 0, '0', '0', '0', '0', '0', '0'),
-(4, 18, 1, '0', '1', '0', '0', '1', '0'),
-(5, 19, 2, '0', '1', '0', '0', '1', '0'),
-(6, 1, 1, '2', '0', '1', '1', '0', '1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_module`
---
-
-CREATE TABLE `tbl_module` (
-  `module_id` int(11) NOT NULL,
-  `module_name` varchar(100) NOT NULL,
+-- ----------------------------
+-- Table structure for tbl_network_product
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_network_product`;
+CREATE TABLE `tbl_network_product`  (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Network Produk',
+  `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Nama Network Produk',
+  `product_sla` decimal(10, 2) NULL DEFAULT NULL COMMENT 'SLA Network',
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `modified_by` varchar(100) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`product_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_module`
---
+-- ----------------------------
+-- Records of tbl_network_product
+-- ----------------------------
+INSERT INTO `tbl_network_product` VALUES (1, 'Internet_SDWAN', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (2, 'DWDM', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (3, 'MPLS', 98.50, 1, NULL, NULL, 2, '2026-01-26 03:05:18');
+INSERT INTO `tbl_network_product` VALUES (4, 'Metro-E', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (5, 'Mobil-KAS', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (6, 'PaymentPoint', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (7, 'CallCenter', 98.50, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_product` VALUES (8, 'NAC', 98.50, 1, NULL, NULL, NULL, NULL);
 
-INSERT INTO `tbl_module` (`module_id`, `module_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Actimize', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(2, 'ALM', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(3, 'AML', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(4, 'GatotKaca', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(5, 'CREDIT', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(6, 'ETP', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(7, 'Trade', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(8, 'BERPESTA', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(9, 'FAST', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(10, 'BIZ', 1, NULL, '2026-02-18 10:28:53', NULL, NULL),
-(11, 'tes', 0, '2', '2026-02-19 15:37:40', NULL, '2026-02-19 20:48:46'),
-(12, 'TEST', 1, '2', '2026-02-20 08:20:05', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_network_product`
---
-
-CREATE TABLE `tbl_network_product` (
-  `product_id` int(11) NOT NULL COMMENT 'Id Network Produk',
-  `product_name` varchar(255) DEFAULT NULL COMMENT 'Nama Network Produk',
-  `product_sla` decimal(10,2) DEFAULT NULL COMMENT 'SLA Network',
+-- ----------------------------
+-- Table structure for tbl_network_product_junc
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_network_product_junc`;
+CREATE TABLE `tbl_network_product_junc`  (
+  `network_product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NULL DEFAULT NULL,
+  `network_id` int(11) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`network_product_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_network_product`
---
+-- ----------------------------
+-- Records of tbl_network_product_junc
+-- ----------------------------
+INSERT INTO `tbl_network_product_junc` VALUES (1, 1, 1, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (2, 1, 2, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (3, 2, 3, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (5, 4, NULL, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (6, 5, NULL, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (7, 6, NULL, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (8, 7, NULL, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (9, 8, NULL, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (30, 3, 2, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (31, 9, 1, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (32, 10, 2, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (34, 11, 3, 1);
+INSERT INTO `tbl_network_product_junc` VALUES (35, 12, 1, 1);
 
-INSERT INTO `tbl_network_product` (`product_id`, `product_name`, `product_sla`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Internet_SDWAN', '98.50', 1, NULL, NULL, NULL, NULL),
-(2, 'DWDM', '98.50', 1, NULL, NULL, NULL, NULL),
-(3, 'MPLS', '98.50', 1, NULL, NULL, 2, '2026-01-26 03:05:18'),
-(4, 'Metro-E', '98.50', 1, NULL, NULL, NULL, NULL),
-(5, 'Mobil-KAS', '98.50', 1, NULL, NULL, NULL, NULL),
-(6, 'PaymentPoint', '98.50', 1, NULL, NULL, NULL, NULL),
-(7, 'CallCenter', '98.50', 1, NULL, NULL, NULL, NULL),
-(8, 'NAC', '98.50', 1, NULL, NULL, NULL, NULL);
+-- ----------------------------
+-- Table structure for tbl_network_provider
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_network_provider`;
+CREATE TABLE `tbl_network_provider`  (
+  `provider_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Network Provider',
+  `provider_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Nama Network Provider',
+  `status` tinyint(1) NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`provider_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_network_provider
+-- ----------------------------
+INSERT INTO `tbl_network_provider` VALUES (1, 'FiberStar', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (2, 'iForte', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (3, 'Indosat', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (4, 'LinkNet', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (5, 'Lintasarta', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (6, 'Telkom', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_network_provider` VALUES (7, 'XL', 1, NULL, NULL, NULL, NULL);
 
---
--- Table structure for table `tbl_network_product_junc`
---
+-- ----------------------------
+-- Table structure for tbl_network_provider_junc
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_network_provider_junc`;
+CREATE TABLE `tbl_network_provider_junc`  (
+  `network_provider_id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider_id` int(11) NULL DEFAULT NULL,
+  `network_id` int(11) NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`network_provider_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-CREATE TABLE `tbl_network_product_junc` (
-  `network_product_id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `network_id` int(11) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- ----------------------------
+-- Records of tbl_network_provider_junc
+-- ----------------------------
+INSERT INTO `tbl_network_provider_junc` VALUES (1, 1, 1, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (2, 2, 3, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (3, 2, 1, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (4, 2, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (5, 3, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (6, 3, 3, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (7, 3, 1, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (10, 4, 3, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (11, 4, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (12, 4, NULL, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (13, 5, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (14, 5, 3, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (17, 5, NULL, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (18, 6, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (19, 6, NULL, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (20, 6, 3, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (23, 6, 1, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (26, 7, 2, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (27, 7, 1, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (29, 7, NULL, 1);
+INSERT INTO `tbl_network_provider_junc` VALUES (31, 8, 3, 1);
 
---
--- Dumping data for table `tbl_network_product_junc`
---
-
-INSERT INTO `tbl_network_product_junc` (`network_product_id`, `product_id`, `network_id`, `status`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 2, 3, 1),
-(5, 4, NULL, 1),
-(6, 5, NULL, 1),
-(7, 6, NULL, 1),
-(8, 7, NULL, 1),
-(9, 8, NULL, 1),
-(30, 3, 2, 1),
-(31, 9, 1, 1),
-(32, 10, 2, 1),
-(34, 11, 3, 1),
-(35, 12, 1, 1),
-(36, 13, 1, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_network_provider`
---
-
-CREATE TABLE `tbl_network_provider` (
-  `provider_id` int(11) NOT NULL COMMENT 'Id Network Provider',
-  `provider_name` varchar(255) DEFAULT NULL COMMENT 'Nama Network Provider',
-  `status` tinyint(1) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_network_provider`
---
-
-INSERT INTO `tbl_network_provider` (`provider_id`, `provider_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'FiberStar', 1, NULL, NULL, NULL, NULL),
-(2, 'iForte', 1, NULL, NULL, NULL, NULL),
-(3, 'Indosat', 1, NULL, NULL, NULL, NULL),
-(4, 'LinkNet', 1, NULL, NULL, NULL, NULL),
-(5, 'Lintasarta', 1, NULL, NULL, NULL, NULL),
-(6, 'Telkom', 1, NULL, NULL, NULL, NULL),
-(7, 'XL', 1, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_network_provider_junc`
---
-
-CREATE TABLE `tbl_network_provider_junc` (
-  `network_provider_id` int(11) NOT NULL,
-  `provider_id` int(11) DEFAULT NULL,
-  `network_id` int(11) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_network_provider_junc`
---
-
-INSERT INTO `tbl_network_provider_junc` (`network_provider_id`, `provider_id`, `network_id`, `status`) VALUES
-(1, 1, 1, 1),
-(5, 3, 2, 1),
-(6, 3, 3, 1),
-(7, 3, 1, 1),
-(10, 4, 3, 1),
-(11, 4, 2, 1),
-(12, 4, NULL, 1),
-(13, 5, 2, 1),
-(14, 5, 3, 1),
-(17, 5, NULL, 1),
-(18, 6, 2, 1),
-(19, 6, NULL, 1),
-(20, 6, 3, 1),
-(23, 6, 1, 1),
-(26, 7, 2, 1),
-(27, 7, 1, 1),
-(29, 7, NULL, 1),
-(31, 8, 3, 1),
-(32, 2, 3, 1),
-(35, 11, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_operating_software`
---
-
-CREATE TABLE `tbl_operating_software` (
-  `operating_software_id` int(5) NOT NULL,
-  `operating_software_name` varchar(50) NOT NULL,
-  `status` tinyint(1) DEFAULT 1,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_operating_software`
---
-
-INSERT INTO `tbl_operating_software` (`operating_software_id`, `operating_software_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'OS400', 1, NULL, NULL, 2, '2026-01-20 14:25:48'),
-(2, 'Ms Windows Server', 1, NULL, NULL, NULL, NULL),
-(3, 'Solaris', 1, NULL, NULL, NULL, NULL),
-(4, 'RHEL', 1, NULL, NULL, NULL, NULL),
-(15, 'OS401', 1, 2, '2026-02-01 11:22:26', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_portofolio_apps_master`
---
-
-CREATE TABLE `tbl_portofolio_apps_master` (
-  `apps_id` int(255) NOT NULL,
-  `network_id` int(255) DEFAULT NULL,
-  `deployment_id` int(255) DEFAULT NULL,
-  `category_id` int(255) DEFAULT NULL,
-  `operational_hour_id` int(255) DEFAULT NULL,
-  `operational_day_id` int(255) DEFAULT NULL,
-  `resilience_id` int(255) DEFAULT NULL,
-  `short_name` varchar(255) DEFAULT NULL,
-  `application_name` varchar(255) DEFAULT NULL,
-  `module` varchar(255) DEFAULT NULL,
-  `apps_description` varchar(255) DEFAULT NULL,
-  `application_type` varchar(255) DEFAULT NULL,
-  `live_year` varchar(255) DEFAULT NULL,
-  `decommission_year` varchar(255) DEFAULT NULL,
-  `principle_name` varchar(255) DEFAULT NULL,
-  `principle_solution_name` varchar(255) DEFAULT NULL,
-  `nik_owner_head` varchar(255) DEFAULT NULL,
-  `nik_owner` varchar(255) DEFAULT NULL,
-  `nik_it_department` varchar(255) DEFAULT NULL,
-  `owner_directorate` varchar(255) DEFAULT NULL,
-  `owner_subdirectorate` varchar(255) DEFAULT NULL,
-  `it_group_name` varchar(255) DEFAULT NULL,
-  `it_division_name` varchar(255) DEFAULT NULL,
-  `owner_title` varchar(255) DEFAULT NULL,
-  `flash_copy` varchar(255) DEFAULT NULL,
-  `end_of_day` varchar(255) DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL,
-  `approved_by` int(11) DEFAULT NULL,
-  `approved_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_portofolio_apps_master`
---
-
-INSERT INTO `tbl_portofolio_apps_master` (`apps_id`, `network_id`, `deployment_id`, `category_id`, `operational_hour_id`, `operational_day_id`, `resilience_id`, `short_name`, `application_name`, `module`, `apps_description`, `application_type`, `live_year`, `decommission_year`, `principle_name`, `principle_solution_name`, `nik_owner_head`, `nik_owner`, `nik_it_department`, `owner_directorate`, `owner_subdirectorate`, `it_group_name`, `it_division_name`, `owner_title`, `flash_copy`, `end_of_day`, `created_by`, `created_at`, `modified_by`, `modified_at`, `approved_by`, `approved_at`) VALUES
-(35, 1, 1, 4, 3, 1, 4, 'a', 'a', NULL, 'a', 'Off the shelf', '2111', '2222', 'tes', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'Y', 'Y', 2, '2026-02-18 15:12:41', 6, '2026-02-20 10:04:01', NULL, NULL),
-(36, 2, 2, 1, NULL, NULL, 2, 'T', 'Test', NULL, 'test', 'Off the shelf', '2025', '2030', 'TEST', 'TEST', NULL, NULL, NULL, 'TEST', 'TEST', 'TEST', 'TEST', 'TEST', 'Y', 'Y', 2, '2026-02-22 21:07:41', 2, '2026-02-22 21:18:42', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_portofolio_infra_master`
---
-
-CREATE TABLE `tbl_portofolio_infra_master` (
-  `infra_id` varchar(255) NOT NULL,
-  `module_id` int(11) NOT NULL,
-  `service_id` int(11) DEFAULT NULL,
-  `resilience_id` int(11) DEFAULT NULL,
-  `created_by` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `modified_by` varchar(100) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_portofolio_infra_master`
---
-
-INSERT INTO `tbl_portofolio_infra_master` (`infra_id`, `module_id`, `service_id`, `resilience_id`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-('1', 1, 1, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('10', 2, 2, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('11', 3, 3, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('12', 3, 4, 3, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('13', 4, 5, 3, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('14', 5, 6, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('15', 5, 7, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('2', 6, 8, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('3', 6, 9, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('4', 7, 10, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('5', 8, 11, 4, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('6', 9, 12, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('7', 9, 13, 3, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('8', 10, 14, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17'),
-('9', 10, 15, 2, NULL, '2026-02-18 10:27:40', NULL, '2026-02-20 08:43:17');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_product_provider_junc`
---
-
-CREATE TABLE `tbl_product_provider_junc` (
-  `produk_provider_id` int(11) NOT NULL,
-  `produk_id` int(11) DEFAULT NULL,
-  `provider_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_product_provider_junc`
---
-
-INSERT INTO `tbl_product_provider_junc` (`produk_provider_id`, `produk_id`, `provider_id`) VALUES
-(1, 1, 1),
-(2, 2, 2),
-(3, 2, 1),
-(4, 3, 3),
-(5, 3, 2),
-(6, 3, 1),
-(7, 4, 3),
-(8, 4, 4),
-(9, 4, 2),
-(10, 4, 1),
-(11, 4, 5),
-(12, 5, 3),
-(13, 5, 2),
-(14, 5, 6),
-(15, 5, 1),
-(16, 5, 5),
-(17, 6, 3),
-(18, 6, 4),
-(19, 6, 2),
-(20, 6, 6),
-(21, 6, 7),
-(22, 6, 1),
-(23, 6, 8),
-(24, 7, 3),
-(25, 7, 1),
-(26, 7, 9);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_resilience`
---
-
-CREATE TABLE `tbl_resilience` (
-  `resilience_id` int(11) NOT NULL,
-  `resilience_category` varchar(10) NOT NULL,
-  `dr` varchar(5) DEFAULT NULL,
-  `ha` varchar(5) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_resilience`
---
-
-INSERT INTO `tbl_resilience` (`resilience_id`, `resilience_category`, `dr`, `ha`) VALUES
-(1, 'L0', 'N', ''),
-(2, 'L1', 'Y', 'N'),
-(3, 'L2', 'Y', 'Y'),
-(4, 'L3', 'Y', 'Y');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_role`
---
-
-CREATE TABLE `tbl_role` (
-  `role_id` int(11) NOT NULL,
-  `role_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_role`
---
-
-INSERT INTO `tbl_role` (`role_id`, `role_name`) VALUES
-(1, 'IT SLM'),
-(2, 'EA Apps Inputter'),
-(3, 'EA Apps Approver'),
-(4, 'EA Infra Inputter'),
-(5, 'EA Infra Approver'),
-(6, 'BU Inputter'),
-(7, 'BU Approver'),
-(8, 'IT Dev');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_server`
---
-
-CREATE TABLE `tbl_server` (
-  `server_id` int(11) NOT NULL,
-  `server_name` varchar(25) NOT NULL,
-  `server_sla` decimal(10,2) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_server`
---
-
-INSERT INTO `tbl_server` (`server_id`, `server_name`, `server_sla`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Physical', '99.00', NULL, NULL, NULL, NULL),
-(2, 'VM', '99.42', NULL, NULL, NULL, NULL),
-(3, 'GCM', '99.50', NULL, NULL, NULL, NULL),
-(4, 'AWS', '99.50', NULL, NULL, NULL, NULL),
-(5, 'Azure', '99.50', NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_service`
---
-
-CREATE TABLE `tbl_service` (
-  `service_id` int(10) NOT NULL,
-  `service_name` varchar(250) NOT NULL,
+-- ----------------------------
+-- Table structure for tbl_operating_software
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_operating_software`;
+CREATE TABLE `tbl_operating_software`  (
+  `operating_software_id` int(5) NOT NULL AUTO_INCREMENT,
+  `operating_software_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_by` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `modified_by` varchar(100) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`operating_software_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
---
--- Dumping data for table `tbl_service`
---
+-- ----------------------------
+-- Records of tbl_operating_software
+-- ----------------------------
+INSERT INTO `tbl_operating_software` VALUES (1, 'OS400', NULL, NULL, 2, '2026-01-20 14:25:48', 1);
+INSERT INTO `tbl_operating_software` VALUES (2, 'Ms Windows Server', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_operating_software` VALUES (3, 'Solaris', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_operating_software` VALUES (4, 'RHEL', NULL, NULL, NULL, NULL, 1);
 
-INSERT INTO `tbl_service` (`service_id`, `service_name`, `status`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 'Actimize', 1, NULL, '2026-02-18 10:29:02', '2', '2026-02-19 21:10:11'),
-(2, 'Trade', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(3, 'BERPESTA', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(4, 'FAST-CONV', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(5, 'FAS-SYARIA', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(6, 'BIZ-MOBILE', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(7, 'BIZ-VM', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(8, 'ALM', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(9, 'AML DB', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(10, 'AML APPS', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(11, 'GatotKaca', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(12, 'CREDIT-CORE', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(13, 'CREDIT-CORE-IM-ASP', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(14, 'ETP-CONV', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(15, 'ETP-SYARIA', 1, NULL, '2026-02-18 10:29:02', NULL, '2026-02-19 09:23:30'),
-(16, 'TEST', 0, '2', '2026-02-20 08:20:31', NULL, '2026-02-20 08:21:11');
+-- ----------------------------
+-- Table structure for tbl_penanganan_dr
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_penanganan_dr`;
+CREATE TABLE `tbl_penanganan_dr`  (
+  `penanganan_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
+  `recovery_time_dr` int(11) NOT NULL,
+  PRIMARY KEY (`penanganan_id`) USING BTREE,
+  INDEX `FK_CategoryPenanganan`(`category_id`) USING BTREE,
+  CONSTRAINT `tbl_penanganan_dr_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_apps_category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
--- --------------------------------------------------------
+-- ----------------------------
+-- Records of tbl_penanganan_dr
+-- ----------------------------
+INSERT INTO `tbl_penanganan_dr` VALUES (1, 1, 5);
+INSERT INTO `tbl_penanganan_dr` VALUES (2, 2, 3);
+INSERT INTO `tbl_penanganan_dr` VALUES (3, 3, 2);
+INSERT INTO `tbl_penanganan_dr` VALUES (4, 4, 5);
+INSERT INTO `tbl_penanganan_dr` VALUES (5, 5, 4);
 
---
--- Table structure for table `tbl_user_role`
---
+-- ----------------------------
+-- Table structure for tbl_penanganan_insiden
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_penanganan_insiden`;
+CREATE TABLE `tbl_penanganan_insiden`  (
+  `Penanganan_insiden_id` int(11) NOT NULL,
+  `Category_id` int(11) NOT NULL,
+  `response_time` int(11) NOT NULL,
+  `response_time_sat` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `recovery_time` int(11) NOT NULL,
+  `recovery_time_sat` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`Penanganan_insiden_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-CREATE TABLE `tbl_user_role` (
-  `user_role_id` int(11) NOT NULL,
+-- ----------------------------
+-- Records of tbl_penanganan_insiden
+-- ----------------------------
+INSERT INTO `tbl_penanganan_insiden` VALUES (1, 1, 50, 'Menit', 5, 'Jam');
+INSERT INTO `tbl_penanganan_insiden` VALUES (2, 2, 40, 'Menit', 9, 'Jam');
+INSERT INTO `tbl_penanganan_insiden` VALUES (3, 3, 1, 'Jam', 9, 'Hari Kerja');
+INSERT INTO `tbl_penanganan_insiden` VALUES (4, 4, 1, 'Hari Kerja', 9, 'Hari Kerja');
+
+-- ----------------------------
+-- Table structure for tbl_portofolio_apps_master
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_portofolio_apps_master`;
+CREATE TABLE `tbl_portofolio_apps_master`  (
+  `apps_id` int(5) NOT NULL AUTO_INCREMENT,
+  `resilience_id` int(5) NULL DEFAULT NULL,
+  `deployment_id` int(5) NULL DEFAULT NULL,
+  `network_id` int(5) NULL DEFAULT NULL,
+  `category_id` int(5) NULL DEFAULT NULL,
+  `operational_hour_id` int(5) NULL DEFAULT NULL,
+  `operational_day_id` int(5) NULL DEFAULT NULL,
+  `deployment_provider_id` int(5) NULL DEFAULT NULL,
+  `deployment_site_id` int(5) NULL DEFAULT NULL,
+  `app_type_id` int(5) NULL DEFAULT NULL,
+  `short_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `application_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `module` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `apps_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `solution_vendor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `services_vendor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `standard_category` decimal(10, 2) NULL DEFAULT NULL,
+  `live_year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `decommission_year` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `lob_directorate` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `lob_subdirectorate` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `lob_department_head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `lob_group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `lob_group_head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_subdirectorate` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_department_head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_support_group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_group_head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_support_divison` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `it_division_head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `application_version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `development_language` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `application_developer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `supporting_web_server` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `supporting_application_server` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `supporting_others` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `source_code_owned` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `Url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `attached_document` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  `approved_by` int(11) NULL DEFAULT NULL,
+  `approved_at` datetime(0) NULL DEFAULT NULL,
+  `status` bigint(1) NULL DEFAULT 1,
+  PRIMARY KEY (`apps_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 91 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_portofolio_apps_master
+-- ----------------------------
+INSERT INTO `tbl_portofolio_apps_master` VALUES (72, 2, 1, 3, 3, 31, 1, 1, 1, 1, 'GFMS', 'Group Financial Management System', 'Group Financial Management System', 'Group Financial Management System &#40;GFMS&#41; adalah Platform regional untuk Sistem Keuangan Terintegrasi Grup.', 'Oracle', 'Mitra Integrasi Informatika', 98.00, '2025', '2026', 'Directorate', 'Sub-Directorate', 'Department Head', 'Group', 'Group Head', 'IT Sub-Directorate', 'IT Department Head', 'IT Support Group', 'IT Group Head', 'IT Support Division', 'IT Division Head', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'https://www.cimbniaga.co.id/', '7cb4e9a865ae6fa46c97e2942364b0d9.pdf', 2, '2026-03-27 09:28:02', 1, '2026-03-27 11:13:31', NULL, NULL, 0);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (85, 3, 2, 1, 3, 2, 2, 1, 2, 1, 'a', 'tes', 'asas', 'a', 'er', 'ttess', 99.00, '1000', NULL, '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'pokemon.com', 'SLA_tes_20260327_155606.pdf', 2, '2026-03-27 15:36:34', 1, '2026-03-27 15:56:05', NULL, NULL, 1);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (86, 3, 1, 2, 4, 2, 2, 1, 2, 2, 'a', 'tes', 'ada', 'sssa', 's', 's', 12.00, '1212', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'pokemon.com', 'SLA_tes_20260330_133851.pdf', 2, '2026-03-27 16:22:36', 1, '2026-03-30 13:38:49', NULL, NULL, 1);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (87, 3, 2, 2, 3, 1, 22, 2, 2, 2, 'aaaaa', 'asaaaa', 'aaaa', 'as', 'as', 'a', 99.00, '1111', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'apatu.com', 'SLA_asaaaa_20260331_160705.pdf', 2, '2026-03-30 11:58:02', 1, '2026-03-31 16:07:05', NULL, NULL, 1);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (88, 4, 1, 2, 1, 1, 24, 1, 2, 2, 'a', 'x', 'x', 'a', 'a', 'a', 100.00, '12121', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'No', 'https://www.cimbniaga.co.id/', 'SLA_x_20260331_161017.pdf', 2, '2026-03-30 14:17:10', 1, '2026-03-31 16:10:16', NULL, NULL, 1);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (89, 4, 2, 2, 2, 3, 19, 1, 1, 1, 'aaa', 'as', 'sss', 'aa', 'a', 'a', 99.00, '1111', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'pokemons.com', 'SLA_as_20260331_155136.pdf', 2, '2026-03-30 16:38:12', 1, '2026-03-31 15:51:36', NULL, NULL, 1);
+
+-- ----------------------------
+-- Table structure for tbl_product_provider_junc
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_product_provider_junc`;
+CREATE TABLE `tbl_product_provider_junc`  (
+  `produk_provider_id` int(11) NOT NULL AUTO_INCREMENT,
+  `produk_id` int(11) NULL DEFAULT NULL,
+  `provider_id` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`produk_provider_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_product_provider_junc
+-- ----------------------------
+INSERT INTO `tbl_product_provider_junc` VALUES (1, 1, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (2, 2, 2);
+INSERT INTO `tbl_product_provider_junc` VALUES (3, 2, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (4, 3, 3);
+INSERT INTO `tbl_product_provider_junc` VALUES (5, 3, 2);
+INSERT INTO `tbl_product_provider_junc` VALUES (6, 3, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (7, 4, 3);
+INSERT INTO `tbl_product_provider_junc` VALUES (8, 4, 4);
+INSERT INTO `tbl_product_provider_junc` VALUES (9, 4, 2);
+INSERT INTO `tbl_product_provider_junc` VALUES (10, 4, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (11, 4, 5);
+INSERT INTO `tbl_product_provider_junc` VALUES (12, 5, 3);
+INSERT INTO `tbl_product_provider_junc` VALUES (13, 5, 2);
+INSERT INTO `tbl_product_provider_junc` VALUES (14, 5, 6);
+INSERT INTO `tbl_product_provider_junc` VALUES (15, 5, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (16, 5, 5);
+INSERT INTO `tbl_product_provider_junc` VALUES (17, 6, 3);
+INSERT INTO `tbl_product_provider_junc` VALUES (18, 6, 4);
+INSERT INTO `tbl_product_provider_junc` VALUES (19, 6, 2);
+INSERT INTO `tbl_product_provider_junc` VALUES (20, 6, 6);
+INSERT INTO `tbl_product_provider_junc` VALUES (21, 6, 7);
+INSERT INTO `tbl_product_provider_junc` VALUES (22, 6, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (23, 6, 8);
+INSERT INTO `tbl_product_provider_junc` VALUES (24, 7, 3);
+INSERT INTO `tbl_product_provider_junc` VALUES (25, 7, 1);
+INSERT INTO `tbl_product_provider_junc` VALUES (26, 7, 9);
+
+-- ----------------------------
+-- Table structure for tbl_resilience
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_resilience`;
+CREATE TABLE `tbl_resilience`  (
+  `resilience_id` int(11) NOT NULL AUTO_INCREMENT,
+  `resilience_category` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `dr` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `ha` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`resilience_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_resilience
+-- ----------------------------
+INSERT INTO `tbl_resilience` VALUES (1, 'L0', 'No', '');
+INSERT INTO `tbl_resilience` VALUES (2, 'L1', 'Yes', 'No');
+INSERT INTO `tbl_resilience` VALUES (3, 'L2', 'Yes', 'Yes');
+INSERT INTO `tbl_resilience` VALUES (4, 'L3', 'Yes', 'Yes');
+
+-- ----------------------------
+-- Table structure for tbl_role
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_role`;
+CREATE TABLE `tbl_role`  (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`role_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_role
+-- ----------------------------
+INSERT INTO `tbl_role` VALUES (1, 'IT SLM');
+INSERT INTO `tbl_role` VALUES (2, 'EA');
+INSERT INTO `tbl_role` VALUES (3, 'IT Dev');
+
+-- ----------------------------
+-- Table structure for tbl_server
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_server`;
+CREATE TABLE `tbl_server`  (
+  `server_id` int(11) NOT NULL AUTO_INCREMENT,
+  `server_name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `server_sla` decimal(10, 2) NOT NULL,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  PRIMARY KEY (`server_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_server
+-- ----------------------------
+INSERT INTO `tbl_server` VALUES (1, 'Physical', 99.00, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_server` VALUES (2, 'VM', 99.42, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_server` VALUES (3, 'GCM', 99.50, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_server` VALUES (4, 'AWS', 99.50, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_server` VALUES (5, 'Azure', 99.50, NULL, NULL, NULL, NULL, 1);
+
+-- ----------------------------
+-- Table structure for tbl_service
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_service`;
+CREATE TABLE `tbl_service`  (
+  `service_id` int(11) NOT NULL AUTO_INCREMENT,
+  `service_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` tinyint(1) NULL DEFAULT 1,
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`service_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_service
+-- ----------------------------
+INSERT INTO `tbl_service` VALUES (1, 'Actimize', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (2, 'ALM', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (3, 'AML DB', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (4, 'AML APPS', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (5, 'GatotKaca', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (6, 'CREDIT-CORE', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (7, 'CREDIT-CORE-IM-ASP', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (8, 'ETP-CONV', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (9, 'ETP-SYARIA', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (10, 'Trade', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (11, 'BERPESTA', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (12, 'FAST-CONV', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (13, 'FAS-SYARIA', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (14, 'BIZ-MOBILE', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_service` VALUES (15, 'BIZ-VM', 1, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for tbl_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_user_role`;
+CREATE TABLE `tbl_user_role`  (
+  `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_user_role`
---
-
-INSERT INTO `tbl_user_role` (`user_role_id`, `id`, `role_id`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
-(1, 1, 1, NULL, NULL, NULL, NULL),
-(2, 2, 2, NULL, NULL, NULL, NULL),
-(3, 3, 3, NULL, NULL, 2, '2026-01-23 04:55:10'),
-(4, 4, 4, 2, '2026-01-26 08:42:51', NULL, NULL),
-(5, 5, 5, 2, '2026-01-26 09:20:01', NULL, NULL),
-(9, 6, 6, 2, '2026-01-29 10:34:35', NULL, NULL),
-(11, 7, 7, NULL, NULL, NULL, NULL),
-(12, 8, 8, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'role1', 'role1@gmail.com', '11111', 1, '2025-12-29 20:52:45', '2026-02-19 19:16:05'),
-(2, 'role2', 'role2@gmail.com', '11111', 1, '2025-12-30 02:11:58', '2026-02-19 19:16:06'),
-(3, 'role3', 'role3@gmail.com', '11111', 1, '2026-01-22 19:27:33', '2026-02-19 19:16:06'),
-(4, 'role4', 'role4@gmail.com', '11111', 1, '2026-02-06 00:26:11', '2026-02-19 19:16:10'),
-(5, 'role5', 'role5@gmail.com', '11111', 1, '2026-02-06 00:26:21', '2026-02-19 19:16:06'),
-(6, 'role6', 'role6@gmail.com', '11111', 1, '2026-02-12 02:53:04', '2026-02-19 19:16:09'),
-(7, 'role7', 'role7@gmail.com', '11111', 1, '2026-02-12 02:55:13', '2026-02-19 20:07:13'),
-(8, 'role8', 'role8@gmail.com', '11111', 1, '2026-02-12 02:59:23', '2026-02-19 20:07:15');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `tbl_apps_approval`
---
-ALTER TABLE `tbl_apps_approval`
-  ADD PRIMARY KEY (`approval_id`) USING BTREE;
-
---
--- Indexes for table `tbl_apps_category`
---
-ALTER TABLE `tbl_apps_category`
-  ADD PRIMARY KEY (`category_id`);
-
---
--- Indexes for table `tbl_apps_database`
---
-ALTER TABLE `tbl_apps_database`
-  ADD PRIMARY KEY (`id_apps_database`);
-
---
--- Indexes for table `tbl_apps_deployment`
---
-ALTER TABLE `tbl_apps_deployment`
-  ADD PRIMARY KEY (`deployment_id`);
-
---
--- Indexes for table `tbl_apps_infra`
---
-ALTER TABLE `tbl_apps_infra`
-  ADD PRIMARY KEY (`apps_infra_id`);
-
---
--- Indexes for table `tbl_apps_network`
---
-ALTER TABLE `tbl_apps_network`
-  ADD PRIMARY KEY (`network_id`);
-
---
--- Indexes for table `tbl_apps_operating_software`
---
-ALTER TABLE `tbl_apps_operating_software`
-  ADD PRIMARY KEY (`id_apps_operating_software`);
-
---
--- Indexes for table `tbl_apps_operational_day`
---
-ALTER TABLE `tbl_apps_operational_day`
-  ADD PRIMARY KEY (`operational_day_id`) USING BTREE;
-
---
--- Indexes for table `tbl_apps_operational_hour`
---
-ALTER TABLE `tbl_apps_operational_hour`
-  ADD PRIMARY KEY (`operational_hour_id`);
-
---
--- Indexes for table `tbl_audit_trail`
---
-ALTER TABLE `tbl_audit_trail`
-  ADD PRIMARY KEY (`audit_id`);
-
---
--- Indexes for table `tbl_database_master`
---
-ALTER TABLE `tbl_database_master`
-  ADD PRIMARY KEY (`database_id`);
-
---
--- Indexes for table `tbl_holiday`
---
-ALTER TABLE `tbl_holiday`
-  ADD PRIMARY KEY (`Holiday_ID`);
-
---
--- Indexes for table `tbl_infra_server`
---
-ALTER TABLE `tbl_infra_server`
-  ADD PRIMARY KEY (`infra_server_id`);
-
---
--- Indexes for table `tbl_module`
---
-ALTER TABLE `tbl_module`
-  ADD PRIMARY KEY (`module_id`);
-
---
--- Indexes for table `tbl_network_product`
---
-ALTER TABLE `tbl_network_product`
-  ADD PRIMARY KEY (`product_id`) USING BTREE;
-
---
--- Indexes for table `tbl_network_product_junc`
---
-ALTER TABLE `tbl_network_product_junc`
-  ADD PRIMARY KEY (`network_product_id`) USING BTREE;
-
---
--- Indexes for table `tbl_network_provider`
---
-ALTER TABLE `tbl_network_provider`
-  ADD PRIMARY KEY (`provider_id`);
-
---
--- Indexes for table `tbl_network_provider_junc`
---
-ALTER TABLE `tbl_network_provider_junc`
-  ADD PRIMARY KEY (`network_provider_id`);
-
---
--- Indexes for table `tbl_operating_software`
---
-ALTER TABLE `tbl_operating_software`
-  ADD PRIMARY KEY (`operating_software_id`);
-
---
--- Indexes for table `tbl_portofolio_apps_master`
---
-ALTER TABLE `tbl_portofolio_apps_master`
-  ADD PRIMARY KEY (`apps_id`);
-
---
--- Indexes for table `tbl_portofolio_infra_master`
---
-ALTER TABLE `tbl_portofolio_infra_master`
-  ADD PRIMARY KEY (`infra_id`),
-  ADD KEY `fk_infra_resilience` (`resilience_id`);
-
---
--- Indexes for table `tbl_product_provider_junc`
---
-ALTER TABLE `tbl_product_provider_junc`
-  ADD PRIMARY KEY (`produk_provider_id`);
-
---
--- Indexes for table `tbl_resilience`
---
-ALTER TABLE `tbl_resilience`
-  ADD PRIMARY KEY (`resilience_id`);
-
---
--- Indexes for table `tbl_role`
---
-ALTER TABLE `tbl_role`
-  ADD PRIMARY KEY (`role_id`);
-
---
--- Indexes for table `tbl_server`
---
-ALTER TABLE `tbl_server`
-  ADD PRIMARY KEY (`server_id`) USING BTREE;
-
---
--- Indexes for table `tbl_service`
---
-ALTER TABLE `tbl_service`
-  ADD PRIMARY KEY (`service_id`);
-
---
--- Indexes for table `tbl_user_role`
---
-ALTER TABLE `tbl_user_role`
-  ADD PRIMARY KEY (`user_role_id`),
-  ADD KEY `user_id` (`id`),
-  ADD KEY `role_id` (`role_id`),
-  ADD KEY `id` (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_email` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tbl_apps_approval`
---
-ALTER TABLE `tbl_apps_approval`
-  MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
-
---
--- AUTO_INCREMENT for table `tbl_apps_category`
---
-ALTER TABLE `tbl_apps_category`
-  MODIFY `category_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `tbl_apps_database`
---
-ALTER TABLE `tbl_apps_database`
-  MODIFY `id_apps_database` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
-
---
--- AUTO_INCREMENT for table `tbl_apps_deployment`
---
-ALTER TABLE `tbl_apps_deployment`
-  MODIFY `deployment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `tbl_apps_infra`
---
-ALTER TABLE `tbl_apps_infra`
-  MODIFY `apps_infra_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
-
---
--- AUTO_INCREMENT for table `tbl_apps_network`
---
-ALTER TABLE `tbl_apps_network`
-  MODIFY `network_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `tbl_apps_operating_software`
---
-ALTER TABLE `tbl_apps_operating_software`
-  MODIFY `id_apps_operating_software` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
-
---
--- AUTO_INCREMENT for table `tbl_apps_operational_day`
---
-ALTER TABLE `tbl_apps_operational_day`
-  MODIFY `operational_day_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT for table `tbl_apps_operational_hour`
---
-ALTER TABLE `tbl_apps_operational_hour`
-  MODIFY `operational_hour_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `tbl_audit_trail`
---
-ALTER TABLE `tbl_audit_trail`
-  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
-
---
--- AUTO_INCREMENT for table `tbl_database_master`
---
-ALTER TABLE `tbl_database_master`
-  MODIFY `database_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
-
---
--- AUTO_INCREMENT for table `tbl_holiday`
---
-ALTER TABLE `tbl_holiday`
-  MODIFY `Holiday_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
-
---
--- AUTO_INCREMENT for table `tbl_infra_server`
---
-ALTER TABLE `tbl_infra_server`
-  MODIFY `infra_server_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `tbl_module`
---
-ALTER TABLE `tbl_module`
-  MODIFY `module_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `tbl_network_product`
---
-ALTER TABLE `tbl_network_product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Network Produk', AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `tbl_network_product_junc`
---
-ALTER TABLE `tbl_network_product_junc`
-  MODIFY `network_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
-
---
--- AUTO_INCREMENT for table `tbl_network_provider`
---
-ALTER TABLE `tbl_network_provider`
-  MODIFY `provider_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Network Provider', AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `tbl_network_provider_junc`
---
-ALTER TABLE `tbl_network_provider_junc`
-  MODIFY `network_provider_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
-
---
--- AUTO_INCREMENT for table `tbl_operating_software`
---
-ALTER TABLE `tbl_operating_software`
-  MODIFY `operating_software_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `tbl_portofolio_apps_master`
---
-ALTER TABLE `tbl_portofolio_apps_master`
-  MODIFY `apps_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
-
---
--- AUTO_INCREMENT for table `tbl_product_provider_junc`
---
-ALTER TABLE `tbl_product_provider_junc`
-  MODIFY `produk_provider_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `tbl_resilience`
---
-ALTER TABLE `tbl_resilience`
-  MODIFY `resilience_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `tbl_role`
---
-ALTER TABLE `tbl_role`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `tbl_server`
---
-ALTER TABLE `tbl_server`
-  MODIFY `server_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT for table `tbl_service`
---
-ALTER TABLE `tbl_service`
-  MODIFY `service_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `tbl_user_role`
---
-ALTER TABLE `tbl_user_role`
-  MODIFY `user_role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `tbl_portofolio_infra_master`
---
-ALTER TABLE `tbl_portofolio_infra_master`
-  ADD CONSTRAINT `fk_infra_resilience` FOREIGN KEY (`resilience_id`) REFERENCES `tbl_resilience` (`resilience_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  `created_by` int(11) NULL DEFAULT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
+  `modified_by` int(11) NULL DEFAULT NULL,
+  `modified_at` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`user_role_id`) USING BTREE,
+  INDEX `user_id`(`id`) USING BTREE,
+  INDEX `role_id`(`role_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_user_role
+-- ----------------------------
+INSERT INTO `tbl_user_role` VALUES (1, 1, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_user_role` VALUES (2, 2, 2, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_user_role` VALUES (3, 3, 3, NULL, NULL, 2, '2026-01-23 04:55:10');
+
+-- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` tinyint(1) NULL DEFAULT NULL,
+  `created_at` timestamp(0) NOT NULL DEFAULT current_timestamp(0),
+  `updated_at` timestamp(0) NOT NULL DEFAULT current_timestamp(0) ON UPDATE CURRENT_TIMESTAMP(0),
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `unique_email`(`email`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (1, 'role1', 'role1@gmail.com', '11111', 1, '2025-12-30 10:52:45', '2026-02-20 09:16:05');
+INSERT INTO `users` VALUES (2, 'role2', 'role2@gmail.com', '11111', 1, '2025-12-30 16:11:58', '2026-02-20 09:16:06');
+INSERT INTO `users` VALUES (3, 'role3', 'role3@gmail.com', '11111', 1, '2026-01-23 09:27:33', '2026-02-20 09:16:06');
+
+SET FOREIGN_KEY_CHECKS = 1;

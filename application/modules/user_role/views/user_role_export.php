@@ -29,11 +29,11 @@
         <tbody>
             <?php $no = 1; foreach($user_roles as $role): ?>
             <tr>
-                <td class="text-center"><?= $no++ ?></td>
+                <td style="text-align: center;"><?= $no++ ?></td>
                 <td><?= isset($role['username']) ? $role['username'] : '-' ?></td>
                 <td><?= isset($role['email']) ? $role['email'] : '-' ?></td>
-                <td><?= isset($role['password']) ? $role['password'] : '-' ?></td>
-                <td class="text-center">
+                <td style="text-align: center;">********</td>
+                <td style="text-align: center;">
                     <?= isset($role['role_name']) ? strtoupper($role['role_name']) : '-' ?>
                 </td>
                 <td class="text-center">
@@ -47,7 +47,7 @@
                 </td>
                 <td><?= isset($role['creator_name']) ? $role['creator_name'] : '-' ?></td>
                 <td class="text-center"><?= isset($role['created_at']) ? $role['created_at'] : '-' ?></td>
-                <td><?= isset($role['modifier_name']) ? $role['modifier_name'] : '-' ?></td>
+                <td><?= isset($role['modified_by']) ? $role['modified_by'] : '-' ?></td>
                 <td class="text-center"><?= isset($role['modified_at']) ? $role['modified_at'] : '-' ?></td>
             </tr>
             <?php endforeach; ?>

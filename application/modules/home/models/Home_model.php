@@ -9,8 +9,12 @@ class Home_model extends CI_Model {
     }
 
     protected $_filter_map = [
-        'app_status'         => "(CASE WHEN a.status = 1 THEN 'Active' ELSE 'Not Active' END)", // <--- TAMBAHAN BARU
-        'status'             => "(CASE WHEN ad.is_done = 1 THEN 'DONE' ELSE tr.role_name END)",
+        'app_status'         => "(CASE WHEN a.status = 1 THEN 'Active' ELSE 'Not Active' END)", 
+        'status'             => "(CASE 
+                                    WHEN a.status = 1 AND ad.is_done = 1 AND (SELECT CASE WHEN submit_date IS NOT NULL THEN submit_date ELSE modified_at END FROM tbl_apps_approval WHERE apps_id = a.apps_id AND user_role_id = 1 AND status = 1 ORDER BY modified_at DESC LIMIT 1) <= DATE_SUB(NOW(), INTERVAL 1 YEAR) THEN 'NEED RENEWAL'
+                                    WHEN ad.is_done = 1 THEN 'DONE' 
+                                    ELSE tr.role_name 
+                                 END)",
         'category'           => 'c.category_name',
         'app_name'           => 'a.application_name',
         'short_name'         => 'a.short_name',
@@ -91,13 +95,25 @@ class Home_model extends CI_Model {
                         $col = $this->_filter_map[$key];
                         $this->db->group_start();
                         $first = true;
+                        
                         foreach ($valid_values as $val) {
                             $val_esc = $this->db->escape(trim($val));
+
+                            if ($key == 'os_name') {
+                                $cond = "EXISTS(SELECT 1 FROM tbl_apps_operating_software sub_aos JOIN tbl_operating_software sub_os ON sub_os.operating_software_id = sub_aos.operating_software_id WHERE sub_aos.apps_id = a.apps_id AND TRIM(sub_os.operating_software_name) = $val_esc)";
+                            } elseif ($key == 'db_name') {
+                                $cond = "EXISTS(SELECT 1 FROM tbl_apps_database sub_adb JOIN tbl_database_master sub_dbm ON sub_dbm.database_id = sub_adb.database_id WHERE sub_adb.apps_id = a.apps_id AND TRIM(sub_dbm.database_name) = $val_esc)";
+                            } elseif ($key == 'server_name') {
+                                $cond = "EXISTS(SELECT 1 FROM tbl_apps_server sub_asr JOIN tbl_server sub_srv ON sub_srv.server_id = sub_asr.server_id WHERE sub_asr.apps_id = a.apps_id AND TRIM(sub_srv.server_name) = $val_esc)";
+                            } else {
+                                $cond = "TRIM($col) = $val_esc";
+                            }
+
                             if($first){ 
-                                $this->db->where("TRIM($col) = $val_esc", NULL, FALSE); 
+                                $this->db->where($cond, NULL, FALSE); 
                                 $first = false; 
                             } else { 
-                                $this->db->or_where("TRIM($col) = $val_esc", NULL, FALSE); 
+                                $this->db->or_where($cond, NULL, FALSE); 
                             }
                         }
                         $this->db->group_end();
@@ -174,18 +190,27 @@ class Home_model extends CI_Model {
 
             // 4. DATA DARI TABEL JOIN (STATUS & INFRA)
             $this->db->or_like('c.category_name', $keyword);
-            $this->db->or_like('srv.server_name', $keyword);
             $this->db->or_like('tr.role_name', $keyword);
-            $this->db->or_like('dbm.database_name', $keyword);
-            $this->db->or_like('os.operating_software_name', $keyword);
             $this->db->or_like('r.resilience_category', $keyword);
             $this->db->or_like('n.network_name', $keyword);
             $this->db->or_like('d.deployment_model', $keyword);
             $this->db->or_like('dp.deployment_provider_name', $keyword);
             $this->db->or_like('ds.deployment_site_name', $keyword);
 
-            // --- TAMBAHAN: OPERATIONAL DAY & HOUR ---
-            // Mencari berdasarkan format "Day - Day"
+            $esc_key = $this->db->escape_like_str($keyword);
+            
+            // Subquery Pencarian Database
+            $db_sub = "EXISTS(SELECT 1 FROM tbl_apps_database sub_adb JOIN tbl_database_master sub_dbm ON sub_dbm.database_id = sub_adb.database_id WHERE sub_adb.apps_id = a.apps_id AND sub_dbm.database_name LIKE '%$esc_key%' ESCAPE '!')";
+            $this->db->or_where($db_sub, NULL, FALSE);
+
+            // Subquery Pencarian OS
+            $os_sub = "EXISTS(SELECT 1 FROM tbl_apps_operating_software sub_aos JOIN tbl_operating_software sub_os ON sub_os.operating_software_id = sub_aos.operating_software_id WHERE sub_aos.apps_id = a.apps_id AND sub_os.operating_software_name LIKE '%$esc_key%' ESCAPE '!')";
+            $this->db->or_where($os_sub, NULL, FALSE);
+
+            // Subquery Pencarian Server
+            $srv_sub = "EXISTS(SELECT 1 FROM tbl_apps_server sub_asr JOIN tbl_server sub_srv ON sub_srv.server_id = sub_asr.server_id WHERE sub_asr.apps_id = a.apps_id AND sub_srv.server_name LIKE '%$esc_key%' ESCAPE '!')";
+            $this->db->or_where($srv_sub, NULL, FALSE);
+
             $day_concat = "CONCAT(od.start_day, ' - ', od.end_day)";
             $this->db->or_where("$day_concat LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
 
@@ -205,6 +230,26 @@ class Home_model extends CI_Model {
             
             $status_cond = "(CASE WHEN a.status = 1 THEN 'Active' ELSE 'Not Active' END)";
             $this->db->or_where("$status_cond LIKE '%".$this->db->escape_like_str($keyword)."%' ESCAPE '!'", NULL, FALSE);
+            
+            $keyword_clean = strtolower(trim($keyword));
+            
+            // Daftar kata ajaib yang diizinkan untuk memancing status Need Renewal
+            $kata_kunci_renewal = ['need', 'renew', 'renewal', 'need renew', 'need renewal'];
+            
+            // Cek apakah kata yang diketik user ada di dalam daftar ajaib di atas
+            if (in_array($keyword_clean, $kata_kunci_renewal)) {
+                
+                // Cari tanggal submit terakhir Role 1 (IT SLM)
+                $r1_date_sql = "(SELECT CASE WHEN submit_date IS NOT NULL THEN submit_date ELSE modified_at END FROM tbl_apps_approval WHERE apps_id = a.apps_id AND user_role_id = 1 AND status = 1 ORDER BY modified_at DESC LIMIT 1)";
+                
+                // Pastikan tidak ada Workflow yang sedang menggantung/berjalan
+                $no_pending_sql = "(SELECT COUNT(*) FROM tbl_apps_approval WHERE apps_id = a.apps_id AND status = 0) = 0";
+                
+                // Gabungkan logika: Active + Tidak Ada Pending + Umur >= 1 Tahun
+                $need_renewal_sql = "(a.status = 1 AND $no_pending_sql AND $r1_date_sql <= DATE_SUB(NOW(), INTERVAL 1 YEAR))";
+                
+                $this->db->or_where($need_renewal_sql, NULL, FALSE);
+            }
             
             $this->db->group_end();
         }
@@ -239,23 +284,56 @@ class Home_model extends CI_Model {
 
         // 1. Group by Status: Active (1) selalu di atas Not Active (0)
         $this->db->order_by("a.status", "DESC");
+        
+        // Subquery untuk mencari kapan Role 1 (IT SLM) melakukan Submit (DONE)
+        $r1_date_sql = "(SELECT CASE WHEN submit_date IS NOT NULL THEN submit_date ELSE modified_at END FROM tbl_apps_approval WHERE apps_id = a.apps_id AND user_role_id = 1 AND status = 1 ORDER BY modified_at DESC LIMIT 1)";
+        
+        // Deteksi "NEED RENEWAL" (Active, DONE, dan umur submit >= 1 tahun)
+        $is_need_renewal = "(a.status = 1 AND MAX(ad.is_done) = 1 AND $r1_date_sql <= DATE_SUB(NOW(), INTERVAL 1 YEAR))";
 
-        // 2. Workflow Status: Role user saat ini paling atas, lalu IT SLM(1) -> IT Dev(3) -> EA(2) -> DONE
-        $this->db->order_by("CASE 
-            WHEN MAX(s.current_stage_role) = $safe_role THEN 0 
-            WHEN MAX(s.current_stage_role) = 1 THEN 1
-            WHEN MAX(s.current_stage_role) = 3 THEN 2
-            WHEN MAX(s.current_stage_role) = 2 THEN 3
-            WHEN MAX(ad.is_done) = 1 THEN 4
-            ELSE 5 
-        END", "ASC", FALSE);
+        if ($safe_role == 2) {
+            // ROLE 2 (EA)
+            // Prioritas: 1. Need Renewal, 2. Tugas EA, 3. Sisa urutan normal, dst
+            $this->db->order_by("CASE 
+                WHEN $is_need_renewal THEN 1 
+                WHEN MAX(s.current_stage_role) = 2 THEN 2 
+                WHEN MAX(s.current_stage_role) = 1 THEN 3
+                WHEN MAX(s.current_stage_role) = 3 THEN 4
+                WHEN MAX(ad.is_done) = 1 THEN 5
+                ELSE 6 END", "ASC", FALSE);
+                
+            // Khusus Role 2: Matikan auto-escape (FALSE) agar CI tidak merusak query sub-select
+			$this->db->order_by($r1_date_sql . " ASC", "", FALSE);
+            
+        } else if ($safe_role == 3) {
+            // ROLE 3 (IT DEV)
+            // Prioritas: 1. IT Dev, 2. IT SLM, 3. EA, 4. Need Renewal, 5. DONE
+            $this->db->order_by("CASE 
+                WHEN MAX(s.current_stage_role) = 3 THEN 1 
+                WHEN MAX(s.current_stage_role) = 1 THEN 2
+                WHEN MAX(s.current_stage_role) = 2 THEN 3
+                WHEN $is_need_renewal THEN 4 
+                WHEN MAX(ad.is_done) = 1 THEN 5
+                ELSE 6 END", "ASC", FALSE);
+                
+        } else if ($safe_role == 1) {
+            // ROLE 1 (IT SLM)
+            // Prioritas: 1. IT SLM, 2. IT Dev, 3. EA, 4. Need Renewal, 5. DONE
+            $this->db->order_by("CASE 
+                WHEN MAX(s.current_stage_role) = 1 THEN 1 
+                WHEN MAX(s.current_stage_role) = 3 THEN 2
+                WHEN MAX(s.current_stage_role) = 2 THEN 3
+                WHEN $is_need_renewal THEN 4 
+                WHEN MAX(ad.is_done) = 1 THEN 5
+                ELSE 6 END", "ASC", FALSE);
+        }
 
         // 3. Category: NECESSARY -> CRITICAL -> VERY IMPORTANT -> IMPORTANT -> OTHERS
         $this->db->order_by("CASE
-            WHEN LOWER(c.category_name) = 'critical' THEN 1
-            WHEN LOWER(c.category_name) = 'very important' THEN 2
-            WHEN LOWER(c.category_name) = 'important' THEN 3
-            WHEN LOWER(c.category_name) = 'necessary' THEN 4
+            WHEN LOWER(MAX(c.category_name)) = 'critical' THEN 1
+            WHEN LOWER(MAX(c.category_name)) = 'very important' THEN 2
+            WHEN LOWER(MAX(c.category_name)) = 'important' THEN 3
+            WHEN LOWER(MAX(c.category_name)) = 'necessary' THEN 4
             ELSE 5
         END", 'ASC', FALSE);
 
@@ -302,6 +380,8 @@ class Home_model extends CI_Model {
 
         $this->_apply_rbac($user_id, $role_id);
 
+        $this->db->group_by('a.apps_id, val');
+
         $this->db->where("$column IS NOT NULL", NULL, FALSE);
         $this->db->where("TRIM($column) != ''", NULL, FALSE); 
         $this->db->order_by("val", 'ASC');
@@ -309,6 +389,7 @@ class Home_model extends CI_Model {
         $query = $this->db->get();
         $results = [];
         foreach ($query->result_array() as $row) { if(!empty($row['val'])) $results[] = $row['val']; }
+        
         return array_unique($results);
     }
     
@@ -602,7 +683,12 @@ class Home_model extends CI_Model {
     }
 
     public function get_master_data($table) {
-        if ($this->db->table_exists($table)) { return $this->db->get($table)->result_array(); }
+        if ($this->db->table_exists($table)) { 
+            if ($this->db->field_exists('status', $table)) {
+                $this->db->where('status', 1);
+            }
+            return $this->db->get($table)->result_array(); 
+        }
         return [];
     }
     
@@ -625,7 +711,7 @@ class Home_model extends CI_Model {
         $this->db->where('ap.status', 0);
     }
     
-    public function get_my_tasks($user_id, $role_id) {
+    public function get_my_tasks($user_id, $role_id, $include_renewal = true) {
         $this->db->select('ap.approval_id, ap.apps_id, ap.user_role_id, ap.status, ap.current, ap.submit_date, ap.modified_by, ap.modified_at');
         $this->db->select('a.application_name, a.short_name, a.created_at, a.created_by');
         $this->db->select('c.category_name, a.module as module_name, a.apps_description');
@@ -664,13 +750,68 @@ class Home_model extends CI_Model {
                 $row['btn_label'] = 'Take Action';
             }
         }
+
+        $need_renewal_list = []; 
+
+        if ($role_id == 2 && $include_renewal) {
+            $r1_date_sql = "(SELECT CASE WHEN submit_date IS NOT NULL THEN submit_date ELSE modified_at END FROM tbl_apps_approval WHERE apps_id = a.apps_id AND user_role_id = 1 AND status = 1 ORDER BY modified_at DESC LIMIT 1)";
+            
+            $this->db->select("0 as approval_id, a.apps_id, 2 as user_role_id, 0 as status, 1 as current, $r1_date_sql as submit_date, a.modified_by, a.modified_at", FALSE);
+            $this->db->select('a.application_name, a.short_name, a.created_at, a.created_by');
+            $this->db->select('c.category_name, a.module as module_name, a.apps_description');
+            
+            $this->db->from('tbl_portofolio_apps_master a');
+            $this->db->join('tbl_apps_category c', 'c.category_id = a.category_id', 'left');
+            $this->db->join('(SELECT apps_id, 1 as is_done FROM tbl_apps_approval WHERE user_role_id = 1 AND status = 1) ad', 'ad.apps_id = a.apps_id', 'left');
+            
+            $this->db->where('a.status', 1);
+            $this->db->where('ad.is_done', 1);
+            $this->db->where("$r1_date_sql <= DATE_SUB(NOW(), INTERVAL 1 YEAR)", NULL, FALSE);
+            
+            $this->db->order_by($r1_date_sql, "ASC", FALSE); 
+            
+            $need_renewal_tasks = $this->db->get()->result_array();
+            
+            foreach ($need_renewal_tasks as $nr) {
+                $start_time = !empty($nr['submit_date']) ? $nr['submit_date'] : $nr['created_at'];
+                
+                // Ubah menjadi format waktu elapsed
+                $nr['time_elapsed'] = $this->time_elapsed_string($start_time);
+                
+                $nr['task_status_label'] = 'Waiting Renewal';
+                $nr['task_color'] = 'red';
+                $nr['btn_label'] = 'Take Action';
+                $nr['is_need_renewal'] = true; 
+                
+                $need_renewal_list[] = $nr;
+            }
+        }
+        
+        if (!empty($need_renewal_list)) {
+            $query = array_merge($need_renewal_list, $query);
+        }
+
         return $query;
     }
     
-    public function count_my_tasks($user_id, $role_id) {
+    public function count_my_tasks($user_id, $role_id, $include_renewal = true) {
         $this->_build_task_query($user_id, $role_id);
         $this->db->group_by('ap.approval_id');
-        return $this->db->get()->num_rows();
+        $count = $this->db->get()->num_rows();
+
+        if ($role_id == 2 && $include_renewal) {
+            $r1_date_sql = "(SELECT CASE WHEN submit_date IS NOT NULL THEN submit_date ELSE modified_at END FROM tbl_apps_approval WHERE apps_id = a.apps_id AND user_role_id = 1 AND status = 1 ORDER BY modified_at DESC LIMIT 1)";
+            
+            $this->db->from('tbl_portofolio_apps_master a');
+            $this->db->join('(SELECT apps_id, 1 as is_done FROM tbl_apps_approval WHERE user_role_id = 1 AND status = 1) ad', 'ad.apps_id = a.apps_id', 'left');
+            $this->db->where('a.status', 1);
+            $this->db->where('ad.is_done', 1);
+            $this->db->where("$r1_date_sql <= DATE_SUB(NOW(), INTERVAL 1 YEAR)", NULL, FALSE);
+            
+            $count += $this->db->count_all_results();
+        }
+
+        return $count;
     }
     
     private function check_is_revision($apps_id, $mod_by, $mod_at) {
@@ -834,38 +975,90 @@ class Home_model extends CI_Model {
         $this->db->update('tbl_portofolio_apps_master', ['attached_document' => $filename]);
     }
     
-    // Tambahkan fungsi ini ke Home_model.php
     public function process_renewal($apps_id, $user_id, $role_id) {
-        $this->db->trans_start(); // Mulai transaksi DB
+        $this->db->trans_start();
 
-        // 1. Reset Semua Workflow (Jadikan pending dan bukan current)
-        // Kosongkan remarks dan submit_date untuk siklus renewal
+        // 1. Reset Semua Workflow (Jadikan pending)
         $this->db->where('apps_id', $apps_id);
         $this->db->update('tbl_apps_approval', [
-            'status'      => 0,
-            'current'     => 0,
-            'remarks'     => NULL, 
-            'submit_date' => NULL
+            'status'  => 0,
+            'current' => 0
         ]);
 
-        // 2. Set EA (Role 2) sebagai tahap yang aktif saat ini
+        // 2. Set EA (Role 2) sebagai aktif (TANPA merusak modified_at lama)
         $this->db->where('apps_id', $apps_id);
         $this->db->where('user_role_id', 2);
         $this->db->update('tbl_apps_approval', [
             'current' => 1
         ]);
 
-        // 3. TAMBAHKAN/PASTIKAN BAGIAN INI: Simpan log "RENEWAL"
+        // 3. Simpan log "RENEWAL"
         $this->db->insert('tbl_apps_audit_trail', [
             'apps_id'    => $apps_id,
             'role_id'    => $role_id,
-            'action'     => 'RENEWAL', // Ini yang akan jadi badge RENEWAL
-            'remarks'    => 'Aplikasi masuk masa perpanjangan(Renewal)',
+            'action'     => 'RENEWAL',
+            'remarks'    => 'Aplikasi masuk masa perpanjangan (Renewal)',
             'created_at' => date('Y-m-d H:i:s')
-         ]);
+        ]);
 
-        $this->db->trans_complete(); // Selesai transaksi
-
+        $this->db->trans_complete();
         return $this->db->trans_status();
     }
+
+    public function cancel_renewal($apps_id, $user_id, $role_id, $remarks) {
+        $this->db->trans_start();
+
+        // 1. Kembalikan semua tahapan workflow menjadi DONE (TANPA merusak modified_at lama)
+        $this->db->where('apps_id', $apps_id);
+        $this->db->where_in('user_role_id', [1, 2, 3]);
+        $this->db->update('tbl_apps_approval', [
+            'status'  => 1,
+            'current' => 0
+        ]);
+
+        // 2. Simpan jejak pembatalan ke Audit Trail
+        $final_remarks = !empty(trim($remarks)) ? trim($remarks) : 'Renewal Cancelled';
+        
+        $this->db->insert('tbl_apps_audit_trail', [
+            'apps_id'    => $apps_id,
+            'role_id'    => $role_id,
+            'action'     => 'CANCEL',
+            'remarks'    => $final_remarks,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $this->db->trans_complete();
+        return $this->db->trans_status();
+    }
+	
+	// Taruh di Home_model.php
+    public function check_master_usage($master_table, $id_value) {
+        $reference_map = [
+            'tbl_apps_category'          => ['table' => 'tbl_portofolio_apps_master', 'col' => 'category_id'],
+            'tbl_app_type'               => ['table' => 'tbl_portofolio_apps_master', 'col' => 'app_type_id'],
+            'tbl_apps_deployment'        => ['table' => 'tbl_portofolio_apps_master', 'col' => 'deployment_id'],
+            'tbl_apps_deployment_model'  => ['table' => 'tbl_portofolio_apps_master', 'col' => 'deployment_provider_id'],
+            'tbl_apps_deployment_site'   => ['table' => 'tbl_portofolio_apps_master', 'col' => 'deployment_site_id'],
+            'tbl_apps_network'           => ['table' => 'tbl_portofolio_apps_master', 'col' => 'network_id'],
+            'tbl_apps_operational_day'   => ['table' => 'tbl_portofolio_apps_master', 'col' => 'operational_day_id'],
+            'tbl_apps_operational_hour'  => ['table' => 'tbl_portofolio_apps_master', 'col' => 'operational_hour_id'],
+            'tbl_resilience'             => ['table' => 'tbl_portofolio_apps_master', 'col' => 'resilience_id'],
+            'tbl_database_master'        => ['table' => 'tbl_apps_database',           'col' => 'database_id'],
+            'tbl_operating_software'     => ['table' => 'tbl_apps_operating_software', 'col' => 'operating_software_id'],
+            'tbl_server'                 => ['table' => 'tbl_apps_server',             'col' => 'server_id']
+        ];
+
+        if (!isset($reference_map[$master_table])) return false;
+
+        $target_table  = $reference_map[$master_table]['table'];
+        $target_column = $reference_map[$master_table]['col'];
+
+        $this->db->where($target_column, $id_value);
+        
+        // Opsional: Cek hanya pada aplikasi yang statusnya tidak dihapus (jika ada fitur soft-delete)
+        // if ($target_table == 'tbl_portofolio_apps_master') { $this->db->where('is_deleted', 0); }
+
+        return ($this->db->count_all_results($target_table) > 0);
+    }
 }
+

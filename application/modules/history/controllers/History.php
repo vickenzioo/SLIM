@@ -20,42 +20,77 @@ class History extends CI_Controller {
 
         $config['base_url'] = base_url('history/index');
         
-        // Setup Query String
-        $params = [];
-        if($keyword) $params['keyword'] = $keyword;
-        if($filters) $params['filter'] = $filters;
-        $config['suffix'] = !empty($params) ? '?' . http_build_query($params, '', '&') : '';
-        $config['first_url'] = $config['base_url'] . $config['suffix'];
+        // ... kode di atasnya tetap ...
+        $config['base_url'] = base_url('history/index');
+        $total_rows = $this->History_model->count_all_historys($keyword, $filters);
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = 10; 
+        
+        $config['enable_query_strings'] = TRUE;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'per_page';
+        
+        // KUNCINYA DI SINI: Ini sudah otomatis membawa parameter keyword & filter
+        $config['reuse_query_string'] = TRUE; 
 
-        $config['total_rows'] = $this->History_model->count_all_historys($keyword, $filters);
+        $this->pagination->initialize($config);
+
+        // PERBAIKAN: Tangkap nilai start dan PASTIKAN diubah menjadi angka bulat (Integer)
+        $start_param = $this->input->get('per_page');
+        $start = ($start_param != '') ? (int)$start_param : 0; 
+
+        // Ambil Data Filtered menggunakan $start yang sudah bersih
+        $data['historys'] = $this->History_model->get_historys_paginated($config['per_page'], $start, $keyword, $filters);
+
+        $total_rows = $this->History_model->count_all_historys($keyword, $filters);
+        $config['total_rows'] = $total_rows;
         $config['per_page'] = 10; 
         
         $config['enable_query_strings'] = TRUE;
         $config['page_query_string'] = TRUE;
         $config['query_string_segment'] = 'per_page';
         $config['reuse_query_string'] = TRUE;
-        $config['num_links'] = 5;
 
-        // Pagination Style
+        // --- PENERAPAN STYLE PAGINATION DARI HOME ---
+        $last_page_num = (int)ceil($total_rows / $config['per_page']);
+        $config['num_links'] = 2; // Mengikuti style home (2 angka di kiri/kanan)
+        $config['display_pages'] = TRUE;
+
+        // Tombol angka pertama (1) dan angka terakhir tetap muncul permanen
+        $config['first_link'] = '1';
+        $config['last_link'] = (string)$last_page_num;
+
+        // Mengubah panah menjadi gabungan titik-titik sesuai posisi
+        // Halaman Pertama: angka terakhir + ..... + >
+        $config['next_link'] = '&rsaquo;'; 
+        // Halaman Terakhir: < + ..... + angka pertama
+        $config['prev_link'] = '&lsaquo;';
+
         $config['full_tag_open']    = '<ul class="pagination pagination-sm m-0 float-right">';
         $config['full_tag_close']   = '</ul>';
-        $config['first_link']       = FALSE; 
-        $config['last_link']        = FALSE;
-        $config['next_link']        = '&rsaquo;'; // Simbol >
-        $config['next_tag_open']    = '<li class="page-item">';
-        $config['next_tag_close']   = '</li>';
-        $config['prev_link']        = '&lsaquo;'; // Simbol <
-        $config['prev_tag_open']    = '<li class="page-item">';
-        $config['prev_tag_close']   = '</li>';
-        $config['cur_tag_open']     = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close']    = '</a></li>';
+        
         $config['num_tag_open']     = '<li class="page-item">';
         $config['num_tag_close']    = '</li>';
+        
+        $config['cur_tag_open']     = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close']    = '</a></li>';
+
+        $config['next_tag_open']    = '<li class="page-item">';
+        $config['next_tag_close']   = '</li>';
+        $config['prev_tag_open']    = '<li class="page-item">';
+        $config['prev_tag_close']   = '</li>';
+
+        $config['first_tag_open']   = '<li class="page-item">';
+        $config['first_tag_close']  = '</li>';
+        $config['last_tag_open']    = '<li class="page-item">';
+        $config['last_tag_close']   = '</li>';
+
         $config['attributes']       = array('class' => 'page-link');
+        // --------------------------------------------
+
         $this->pagination->initialize($config);
 
         $start = $this->input->get('per_page');
-        
         // Ambil Data Filtered
         $data['historys'] = $this->History_model->get_historys_paginated($config['per_page'], $start, $keyword, $filters);
         
@@ -72,7 +107,7 @@ class History extends CI_Controller {
         $data['keyword'] = $keyword;
         $data['selected_filters'] = $filters;
         $data['pagination'] = $this->pagination->create_links();
-        $data['total_rows'] = $config['total_rows'];
+        $data['total_rows'] = $total_rows;
 
         $this->load->view('history_view', $data);
     }
@@ -85,6 +120,25 @@ class History extends CI_Controller {
 
         $data['historys'] = $this->History_model->get_all_historys($keyword, $filters);
 
+        $data['table_map'] = [
+            'tbl_portofolio_apps_master' => 'My Portfolio',
+                                        'tbl_server'                 => 'Server Type',
+                                        'tbl_operating_software'     => 'Operating Software',
+                                        'tbl_apps_operational_hour'  => 'Operational Hour',
+                                        'tbl_apps_deployment'        => 'Deployment',
+                                        'tbl_apps_deployment_model'  => 'Deployment Provider',
+                                        'tbl_apps_deployment_site'   => 'Deployment Site',
+                                        'tbl_app_type'               => 'Application Type',
+                                        'tbl_apps_category'          => 'Category',
+                                        'tbl_apps_network'           => 'Network',
+                                        'tbl_network_product'        => 'Network Product',
+                                        'tbl_network_provider'       => 'Network Provider',
+                                        'tbl_apps_operational_day'   => 'Operational Day',
+                                        'tbl_database_master'        => 'Database',
+                                        'tbl_audit_trail'            => 'History',
+                                        'tbl_history'                => 'History'
+        ];
+        
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Audit_Trail_".date('Y-m-d').".xls");
         header("Pragma: no-cache");

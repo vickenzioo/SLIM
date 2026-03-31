@@ -2,7 +2,7 @@
    1. Toolbar & Navigation Buttons (Sejajar & Identik)
    ===================================================== */
 
-/* Base style untuk semua tombol header agar tinggi sama */
+/* Base style untuk semua tombol header agar tinggi sama dengan btn-sm */
 .fc .fc-button {
     height: 31px !important; 
     display: inline-flex !important;
@@ -12,6 +12,7 @@
     border-radius: 4px !important; 
     transition: all 0.2s ease;
     border: 1px solid rgba(0,0,0,0.1) !important;
+    padding: 0.25rem 0.5rem !important; /* Padding standar btn-sm */
 }
 
 /* Tombol Navigasi (Prev/Next) */
@@ -19,26 +20,22 @@
 .fc .fc-next-button {
     background-color: #ffffff !important;
     color: var(--text-dark) !important;
-    width: 34px !important; 
+    width: 31px !important; /* Disamakan dengan tinggi agar kotak sempurna */
 }
 
 /* Tombol Custom (Add & Export) */
 .btn.btn-holiday-add {
-    background-color: #2f50b7 !important;
-    border-color: #2f50b7 !important;
-    color: white !important;
-    padding: 0 12px !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    background-color: #2f50b7 !important; 
+    color: white !important; 
+    border: none !important; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
 }
 
 .btn.btn-holiday-export {
-    background-color: #10B981 !important;
-    border-color: #10B981 !important;
-    color: white !important;
-    padding: 0 12px !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    background: #10B981 !important; 
+    color: white !important; 
+    border: none !important; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
 }
 
 /* Hover Effects */
@@ -51,9 +48,7 @@
 
 .btn.btn-holiday-add:hover, 
 .btn.btn-holiday-export:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    color: white !important;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15); 
 }
 
 /* Toolbar Alignment */

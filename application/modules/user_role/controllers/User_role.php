@@ -170,7 +170,7 @@ class User_role extends CI_Controller {
             $oldData = $this->User_role_model->get_user_role_by_id($id);
             $update_data = [
                 'role_id' => $role_id,
-                'modified_by' => $userId_session,
+                'modified_by' => $userId,
                 'modified_at' => date("Y-m-d H:i:s")
             ];
 

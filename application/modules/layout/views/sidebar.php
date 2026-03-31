@@ -7,11 +7,10 @@
     // Semua menu yang berada di bawah "Apps Master" digabung ke sini
     $apps_group  = [
         'application_type', 'database', 'operating_software', 
-        'operational_day', 'operational_hour', 'network',
-        'network_product', 'network_provider', 'category', 
-        'deployment', 'deployment_model', 'deployment_site'
+        'operational_day', 'operational_hour', 'network', 'category', 
+        'deployment', 'deployment_model', 'deployment_site', 'server_type'
     ];
-    $admin_group = ['user_role', 'history'];
+    $admin_group = ['user_role', 'history', 'holiday'];
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -102,20 +101,6 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="<?= base_url('network_product')?>" class="nav-link <?= ($uri == 'network_product') ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Network Product</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="<?= base_url('network_provider')?>" class="nav-link <?= ($uri == 'network_provider') ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Network Provider</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
                             <a href="<?= base_url('operating_software')?>" class="nav-link <?= ($uri == 'operating_software') ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Operating Software</p>
@@ -135,6 +120,13 @@
                                 <p>Operational Day</p>
                             </a>
                         </li>  
+						
+						<li class="nav-item">
+                            <a href="<?= base_url('server_type')?>" class="nav-link <?= ($uri == 'server_type') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Server Type</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -146,16 +138,24 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= base_url('user_role') ?>" class="nav-link <?= ($uri == 'user_role') ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>User Role</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                           <a href="<?= base_url('history') ?>" class="nav-link <?= ($uri == 'history') ? 'active' : '' ?>">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Audit Trail</p>
                           </a>
+                        </li>
+
+                        <li class="nav-item">
+                          <a href="<?= base_url('holiday') ?>" class="nav-link <?= ($uri == 'holiday') ? 'active' : '' ?>">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Holiday</p>
+                          </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('user_role') ?>" class="nav-link <?= ($uri == 'user_role') ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>User Role</p>
+                            </a>
                         </li>
                     </ul>
                 </li>

@@ -89,78 +89,104 @@
                             <tr class="bg-info text-center">
                                 
                                 <?php 
-									// Helper Render Header with Filter
-									function render_th($label, $key, $options, $selected) {
-										$isActive = isset($selected[$key]) && !empty($selected[$key]);
-										// Class ini mengatur warna jika filter sedang aktif
-										$iconClass = $isActive ? 'filter-active' : ''; 
-										
-										// Sorting options
-										if(!empty($options) && is_array($options)) {
-											$options = array_unique($options);
-											sort($options);
-										}
-										
-										echo '<th style="color: var(--text-dark); vertical-align: middle;">';
-										
-										// [WRAPPER UTAMA]: d-inline-flex membuat kotak ini hanya selebar isinya (Teks + Icon)
-										// align-items-center mensejajarkan teks dan icon secara vertikal
-										echo '<div class="d-inline-flex align-items-center">';
-										
-											// 1. Teks Label
-											echo '<span>' . $label . '</span>';
-											
-											// 2. Icon Wrapper
-											// - Tetap pakai class 'filter-icon-wrapper' agar dapat efek hover/warna lama.
-											// - Tambah 'ml-2' untuk jarak spasi.
-											// - STYLE INLINE PENTING: 'position: static' membatalkan 'absolute' yang bikin dia lari ke pojok.
-											// - 'transform: none' mencegah icon loncat vertikal karena style lama.
-											echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
-											
-												echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
-												
-												// Dropdown Menu
-												echo '<div class="dropdown-menu dropdown-menu-right custom-filter-dropdown" onclick="event.stopPropagation()">';
-													
-													// Search
-													echo '<div class="filter-header">';
-													echo '<input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)">';
-													echo '</div>';
-													
-													// List
-													echo '<div class="filter-body">';
-													if(!empty($options)) {
-														foreach($options as $opt) {
-															if(trim($opt) === '') continue;
-															$checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
-															echo '<label class="filter-item">';
-															echo '<input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> ';
-															echo htmlspecialchars($opt);
-															echo '</label>';
-														}
-													} else {
-														echo '<div class="p-2 text-muted text-center small">No Options</div>';
-													}
-													echo '</div>';
-													
-													// Footer
-													echo '<div class="filter-footer">';
-													echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
-													echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
-													echo '</div>';
-													
-												echo '</div>'; // End Dropdown
-											echo '</div>'; // End Btn Group
 
-										echo '</div>'; // End Flex
-										echo '</th>';
-									}
+                                    $table_map = [
+                                        'tbl_portofolio_apps_master' => 'My Portfolio',
+                                        'tbl_server'                 => 'Server Type',
+                                        'tbl_operating_software'     => 'Operating Software',
+                                        'tbl_apps_operational_hour'  => 'Operational Hour',
+                                        'tbl_apps_deployment'        => 'Deployment',
+                                        'tbl_apps_deployment_model'  => 'Deployment Provider',
+                                        'tbl_apps_deployment_site'   => 'Deployment Site',
+                                        'tbl_app_type'               => 'Application Type',
+                                        'tbl_apps_category'          => 'Category',
+                                        'tbl_apps_network'           => 'Network',
+                                        'tbl_network_product'        => 'Network Product',
+                                        'tbl_network_provider'       => 'Network Provider',
+                                        'tbl_apps_operational_day'   => 'Operational Day',
+                                        'tbl_database_master'        => 'Database',
+                                        'tbl_audit_trail'            => 'History',
+                                        'tbl_history'                => 'History'
+                                    ];
+
+                                    $controller_map = [
+                                        'tbl_portofolio_apps_master' => 'home',
+                                        'tbl_server'                 => 'server_type',          
+                                        'tbl_operating_software'     => 'operating_software',
+                                        'tbl_apps_operational_hour'  => 'operational_hour',
+                                        'tbl_apps_deployment'        => 'deployment',
+                                        'tbl_apps_deployment_model'  => 'deployment_model',
+                                        'tbl_apps_deployment_site'   => 'deployment_site',
+                                        'tbl_app_type'               => 'application_type',
+                                        'tbl_apps_category'          => 'category',
+                                        'tbl_apps_network'           => 'network',
+                                        'tbl_network_product'        => 'network_product',
+                                        'tbl_network_provider'       => 'network_provider',
+                                        'tbl_apps_operational_day'   => 'operational_day',
+                                        'tbl_database_master'        => 'database',
+                                        'tbl_audit_trail'            => 'history',
+                                        'tbl_history'                => 'history'
+                                    ];
+
+                                    function render_th($label, $key, $options, $selected, $map = null) {
+                                        $isActive = isset($selected[$key]) && !empty($selected[$key]);
+                                        $iconClass = $isActive ? 'filter-active' : ''; 
+                                        
+                                        if(!empty($options) && is_array($options)) {
+                                            $options = array_unique($options);
+                                            sort($options);
+                                        }
+                                        
+                                        echo '<th style="color: var(--text-dark); vertical-align: middle;">';
+                                        echo '<div class="d-inline-flex align-items-center">';
+                                            echo '<span>' . $label . '</span>';
+                                            echo '<div class="btn-group ml-2 filter-icon-wrapper '.$iconClass.'" style="position: static; transform: none; padding: 0;">';
+                                                echo '<i class="fas fa-filter fa-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>';
+                                                echo '<div class="dropdown-menu custom-filter-dropdown" onclick="event.stopPropagation()">';
+                                                    echo '<div class="filter-header">';
+                                                    echo '<input type="text" class="filter-search-input" placeholder="Find..." onkeyup="filterList(this)">';
+                                                    echo '</div>';
+                                                    echo '<div class="filter-body">';
+                                                    if(!empty($options)) {
+                                                        foreach($options as $opt) {
+                                                            if(trim($opt) === '') continue;
+                                                            $checked = ($isActive && in_array($opt, $selected[$key])) ? 'checked' : '';
+                                                            
+                                                            // --- LOGIKA MAPPING DISINI ---
+                                                            $display_text = htmlspecialchars($opt);
+                                                            
+                                                            // Pastikan key ada di map
+                                                            if ($map && isset($map[$opt])) {
+                                                                $display_text = $map[$opt];
+                                                            } else {
+                                                                // Fallback jika tidak ada di map atau map tidak dikirim
+                                                                $display_text = ucwords(str_replace('_', ' ', str_replace('tbl_', '', $opt)));
+                                                            }
+
+                                                            echo '<label class="filter-item">';
+                                                            echo '<input type="checkbox" value="'.htmlspecialchars($opt).'" '.$checked.' data-key="'.$key.'"> ';
+                                                            echo $display_text; 
+                                                            echo '</label>';
+                                                        }
+                                                    } else {
+                                                        echo '<div class="p-2 text-muted text-center small">No Options</div>';
+                                                    }
+                                                    echo '</div>';
+                                                    echo '<div class="filter-footer">';
+                                                    echo '<button type="button" class="btn btn-xs btn-default" onclick="clearFilter(\''.$key.'\')">Clear</button>';
+                                                    echo '<button type="button" class="btn btn-xs btn-primary btn-theme-gradient" onclick="applyFilter(\''.$key.'\')">Apply</button>';
+                                                    echo '</div>';
+                                                echo '</div>';
+                                            echo '</div>';
+                                        echo '</div>';
+                                        echo '</th>';
+                                    }
 								?>
 
                                 <?= render_th('Timestamp', 'timestamp', $opt_timestamp, $selected_filters) ?>
                                 <?= render_th('User', 'username', $opt_username, $selected_filters) ?>
                                 <?= render_th('Action', 'action', $opt_action, $selected_filters) ?>
-                                <?= render_th('Page Name', 'table_name', $opt_table_name, $selected_filters) ?>
+                                <?= render_th('Page Name', 'table_name', $opt_table_name, $selected_filters, $table_map) ?>
                                 <?= render_th('Field Name', 'field_name', $opt_field_name, $selected_filters) ?>
                                 <?= render_th('Old Value', 'old_value', $opt_old_value, $selected_filters) ?>
                                 <?= render_th('New Value', 'new_value', $opt_new_value, $selected_filters) ?>
@@ -171,7 +197,7 @@
                             <?php if(!empty($historys)): ?>
                                 <?php 
                                     $start = $this->input->get('per_page');
-                                    $no = $start ? $start + 1 : 1; 
+                                    $no = ($start != '') ? (int)$start + 1 : 1;
                                 ?>
                                 <?php foreach($historys as $row): ?>
                                 
@@ -180,42 +206,14 @@
                                     $display_table = $raw_table; 
                                     $target_controller = '#';
 
-                                    $table_map = [
-                                        'tbl_server'        => 'Server',
-                                        'tbl_operating_software' => 'Operating Software',
-                                        'tbl_apps_operational_hour'    => 'Operational Hour',
-                                        'tbl_apps_deployment'         => 'Deployment',
-                                        'tbl_apps_category'            => 'Category',
-                                        'tbl_apps_network'             => 'Network',
-                                        'tbl_network_product'    => 'Network Product',
-                                        'tbl_network_provider'   => 'Network Provider',
-                                        'tbl_day'                => 'Operational Day',
-                                        'tbl_database_master'            => 'Database',
-                                        'tbl_audit_trail'        => 'History',
-                                        'tbl_history'            => 'History'
-                                    ];
-                                    
-                                    $controller_map = [
-                                        'tbl_server'        => 'server',          
-                                        'tbl_operating_software' => 'operating_software',
-                                        'tbl_apps_operational_hour'    => 'operational_hour',
-                                        'tbl_apps_deployment'         => 'deployment',
-                                        'tbl_apps_category'            => 'category',
-                                        'tbl_apps_network'             => 'network',
-                                        'tbl_network_product'    => 'network_product',
-                                        'tbl_network_provider'   => 'network_provider',
-                                        'tbl_day'                => 'operational_day', 
-                                        'tbl_database_master'            => 'database',
-                                        'tbl_audit_trail'        => 'history',
-                                        'tbl_history'            => 'history'
-                                    ];
-                                    
+                                    // Mapping table name (Array sudah ada di thead, tinggal pakai)
                                     if(isset($table_map[$raw_table])) {
                                         $display_table = $table_map[$raw_table];
                                     } else {
                                         $display_table = ucwords(str_replace('_', ' ', str_replace('tbl_', '', $raw_table)));
                                     }
 
+                                    // Mapping controller (Array sudah ada di thead, tinggal pakai)
                                     if(isset($controller_map[$raw_table])) {
                                         $target_controller = $controller_map[$raw_table];
                                     } else {
@@ -251,6 +249,10 @@
                                             } elseif($action == 'DEACTIVATE') { 
                                                 $bg = '#ffebee'; 
                                                 $color = '#c62828'; 
+                                            } elseif($action == 'DELETE') { 
+                                                // Warna Merah yang lebih kontras untuk Delete
+                                                $bg = '#f9d2d2'; 
+                                                $color = '#b71c1c'; 
                                             } elseif($action == 'ACTIVATE') { 
                                                 $bg = '#e0f2f1'; 
                                                 $color = '#00695c';
@@ -376,10 +378,7 @@
     <div class="mt-2 font-weight-bold" style="color: #333;">Processing...</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.17/dist/sweetalert2.all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<?php $this->load->view('layout/foot_links'); ?>
 
 <script>
     function filterList(input) {
@@ -425,8 +424,9 @@
             text: "File akan otomatis diunduh.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, export!',
+            confirmButtonText: 'Yes, Export',
             cancelButtonText: 'Cancel',
+			reverseButtons: true,
             buttonsStyling: false,
             customClass: {
                 confirmButton: 'btn btn-save-custom px-4 mx-2', 
@@ -520,7 +520,7 @@
     }
     
     const logoutBtn = document.getElementById('logoutLink');
-    const overlay = document.getElementById('loadingOverlay');
+	const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -528,22 +528,101 @@
             const urlLogout = this.getAttribute('href');
 
             Swal.fire({
-                title: 'Berhasil Logout!',
-                text: 'Anda akan keluar dari sistem',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Logout',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
                 customClass: {
-                    confirmButton: 'btn-theme-gradient' 
+                    confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                    cancelButton: 'btn btn-secondary px-4 mx-2'
                 }
             }).then((result) => {
-                if (result.isConfirmed || result.isDismissed) {
-                    overlay.style.display = 'flex';
+                if (result.isConfirmed) {
+                    if(overlay) overlay.style.display = 'flex';
                     window.location.href = urlLogout;
                 }
             });
         });
     }
+	$(document).on('input', '#history_name, #old_value, #new_value, #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
+        var el = $(this);
+        var currentValue = el.val();
+        var forbiddenChars;
+        var isTimestampFilter = false;
+
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'timestamp' || columnKey === 'created_at') {
+                isTimestampFilter = true;
+            }
+        }
+
+        if (isTimestampFilter) {
+            forbiddenChars = /[^0-9\s\-:]/g;
+        } else {
+            // Izinkan huruf, angka, spasi, dan simbol: . , _ - : | > ( )
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-:|>()]/g; 
+        }
+
+        if (forbiddenChars.test(currentValue)) {
+            el.val(currentValue.replace(forbiddenChars, ''));
+            
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+            
+            if (el.hasClass('filter-search-input')) {
+                filterList(this);
+            }
+        }
+    });
+	
+    $(document).on('paste', '#history_name, #old_value, #new_value, #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {
+        var el = $(this);
+        // Ambil data teks dari clipboard
+        var pasteData = (e.originalEvent || e).clipboardData.getData('text');
+        var forbiddenChars;
+        var isTimestampFilter = false;
+
+        // 1. CEK: Apakah ini input filter untuk kolom Timestamp/Created At?
+        if (el.hasClass('filter-search-input')) {
+            var columnKey = el.closest('.custom-filter-dropdown').find('input[type="checkbox"]').first().data('key');
+            if (columnKey === 'timestamp' || columnKey === 'created_at') {
+                isTimestampFilter = true;
+            }
+        }
+
+        // 2. TENTUKAN REGEX (Sesuai logika input kamu)
+        if (isTimestampFilter) {
+            // Hanya boleh Angka, Spasi, Strip (-), dan Titik Dua (:)
+            forbiddenChars = /[^0-9\s\-:]/g;
+        } else {
+            // General History: Huruf, Angka, Spasi, dan simbol . , _ - : | > ( )
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-:|>()]/g; 
+        }
+
+        // 3. EKSEKUSI BLOKIR JIKA MENGANDUNG KARAKTER TERLARANG
+        if (forbiddenChars.test(pasteData)) {
+            // Batalkan proses paste secara total jika ada karakter ilegal
+            e.preventDefault();
+            
+            // Efek visual border merah berkedip
+            el.css({
+                'border-color': '#dc3545',
+                'box-shadow': '0 0 0 0.2rem rgba(220, 53, 69, 0.25)'
+            });
+            setTimeout(function() {
+                el.css({ 'border-color': '', 'box-shadow': '' });
+            }, 400);
+        }
+    });
 </script>
 </body>
 </html>

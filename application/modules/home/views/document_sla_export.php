@@ -402,7 +402,7 @@
                             if (isset($app['total_hour']) && $app['total_hour'] != '') {
                                 $total = str_replace(',', '.', $app['total_hour']);
                                 $total = (float)$total; 
-                                $total_hour_text = " ({$total} Jam)";
+                                $total_hour_text = " ({$total} Jam Per Hari)";
                             }
                             echo "{$start_time} – {$end_time}{$total_hour_text}";
                         } else {
