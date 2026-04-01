@@ -182,11 +182,35 @@ class User_role_model extends CI_Model {
     }
 
     public function insert($data) { 
+        // 1. Sinkronisasi key 'user_id' menjadi 'id' agar sesuai database
+        if (isset($data['user_id'])) {
+            $data['id'] = $data['user_id'];
+            unset($data['user_id']);
+        }
+
+        // 2. PROTEKSI: Buang 'status' karena kolom ini tidak ada di tbl_user_role
+        // Kolom status hanya milik table 'users'
+        if (isset($data['status'])) {
+            unset($data['status']);
+        }
+
         return $this->db->insert('tbl_user_role', $data); 
     }
 
     public function update($id, $data) { 
-        $this->db->where('user_role_id', $id); return $this->db->update('tbl_user_role', $data); 
+        // 1. Sinkronisasi key 'user_id' menjadi 'id'
+        if (isset($data['user_id'])) {
+            $data['id'] = $data['user_id'];
+            unset($data['user_id']);
+        }
+
+        // 2. PROTEKSI: Buang 'status' agar tidak error Unknown Column
+        if (isset($data['status'])) {
+            unset($data['status']);
+        }
+
+        $this->db->where('user_role_id', $id); 
+        return $this->db->update('tbl_user_role', $data); 
     }
 
     public function delete($id) { 

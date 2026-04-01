@@ -428,6 +428,7 @@
                                     reason: result.value 
                                 },
                                 success: function(response) {
+									$('#loadingOverlay').css('display', 'none');
                                     if (response.success) {
                                         Swal.fire({
                                             icon: 'success',
@@ -523,6 +524,7 @@
                         reason: result.value // Gunakan nilai dari input pop-up
                     },
                     success: function(response) {
+						$('#loadingOverlay').css('display', 'none');
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',

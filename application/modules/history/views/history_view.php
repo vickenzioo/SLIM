@@ -106,7 +106,10 @@
                                         'tbl_apps_operational_day'   => 'Operational Day',
                                         'tbl_database_master'        => 'Database',
                                         'tbl_audit_trail'            => 'History',
-                                        'tbl_history'                => 'History'
+                                        'tbl_history'                => 'History',
+										'tbl_holiday'                => 'Holiday',
+										'tbl_user_role'              => 'User Role',
+										'users'                      => 'User Role'
                                     ];
 
                                     $controller_map = [
@@ -125,7 +128,10 @@
                                         'tbl_apps_operational_day'   => 'operational_day',
                                         'tbl_database_master'        => 'database',
                                         'tbl_audit_trail'            => 'history',
-                                        'tbl_history'                => 'history'
+                                        'tbl_history'                => 'history',
+										'tbl_holiday'                => 'holiday',
+										'tbl_user_role'              => 'user_role',
+										'users'                      => 'user_role'
                                     ];
 
                                     function render_th($label, $key, $options, $selected, $map = null) {

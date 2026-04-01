@@ -122,21 +122,24 @@ class History extends CI_Controller {
 
         $data['table_map'] = [
             'tbl_portofolio_apps_master' => 'My Portfolio',
-                                        'tbl_server'                 => 'Server Type',
-                                        'tbl_operating_software'     => 'Operating Software',
-                                        'tbl_apps_operational_hour'  => 'Operational Hour',
-                                        'tbl_apps_deployment'        => 'Deployment',
-                                        'tbl_apps_deployment_model'  => 'Deployment Provider',
-                                        'tbl_apps_deployment_site'   => 'Deployment Site',
-                                        'tbl_app_type'               => 'Application Type',
-                                        'tbl_apps_category'          => 'Category',
-                                        'tbl_apps_network'           => 'Network',
-                                        'tbl_network_product'        => 'Network Product',
-                                        'tbl_network_provider'       => 'Network Provider',
-                                        'tbl_apps_operational_day'   => 'Operational Day',
-                                        'tbl_database_master'        => 'Database',
-                                        'tbl_audit_trail'            => 'History',
-                                        'tbl_history'                => 'History'
+            'tbl_server'                 => 'Server Type',
+            'tbl_operating_software'     => 'Operating Software',
+            'tbl_apps_operational_hour'  => 'Operational Hour',
+            'tbl_apps_deployment'        => 'Deployment',
+            'tbl_apps_deployment_model'  => 'Deployment Provider',
+            'tbl_apps_deployment_site'   => 'Deployment Site',
+            'tbl_app_type'               => 'Application Type',
+            'tbl_apps_category'          => 'Category',
+            'tbl_apps_network'           => 'Network',
+            'tbl_network_product'        => 'Network Product',
+            'tbl_network_provider'       => 'Network Provider',
+            'tbl_apps_operational_day'   => 'Operational Day',
+            'tbl_database_master'        => 'Database',
+            'tbl_audit_trail'            => 'History',
+            'tbl_history'                => 'History',
+            'tbl_holiday'                => 'Holiday',
+            'tbl_user_role'              => 'User Role',
+            'users'                      => 'User Role'
         ];
         
         header("Content-type: application/vnd-ms-excel");

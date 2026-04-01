@@ -131,9 +131,10 @@ class Audit_model extends CI_Model {
             $this->db->from('tbl_apps_operational_hour');
             $this->db->where('operational_hour_id', $id);
         } elseif ($type == 'tbl_user_role') {
-            $this->db->select('b.username as name');
+            $this->db->select("CONCAT(b.username, ' (', c.role_name, ')') as name");
             $this->db->from('tbl_user_role a');
-            $this->db->join('users b', 'a.user_id = b.id'); 
+            $this->db->join('users b', 'a.id = b.id', 'left'); 
+            $this->db->join('tbl_role c', 'a.role_id = c.role_id', 'left'); 
             $this->db->where('a.user_role_id', $id);
         } else {
             // Fallback default

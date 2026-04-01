@@ -209,11 +209,11 @@
                                                         <i class="fas fa-edit fa-fw text-warning mr-2"></i> Edit Data
                                                     </button>
                                                     
-                                                    <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $ur['id'] ?>)">
+                                                    <button class="dropdown-item" type="button" onclick="confirmDelete(<?= $ur['user_role_id'] ?>)">
                                                         <i class="fas fa-power-off fa-fw text-danger mr-2"></i> Deactivate
                                                     </button>
                                                 <?php else: ?>
-                                                    <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $ur['id'] ?>)">
+                                                    <button class="dropdown-item" type="button" onclick="confirmRestore(<?= $ur['user_role_id'] ?>)">
                                                         <i class="fas fa-undo-alt fa-fw text-success mr-2"></i> Activate
                                                     </button>
                                                 <?php endif; ?>
@@ -343,8 +343,9 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Username - Email</label>
-                        <select name="id" class="form-control select2" data-placeholder="-- Pilih User --" style="width: 100%;" required>
-                            <option value=""></option> <?php foreach($users_no_role as $u): ?>
+                        <select name="user_id" class="form-control select2" data-placeholder="-- Pilih User --" style="width: 100%;" required>
+                            <option value=""></option> 
+                            <?php foreach($users_no_role as $u): ?>
                                 <option value="<?= $u['id'] ?>"><?= $u['username'] ?> (<?= $u['email'] ?>)</option>
                             <?php endforeach; ?>
                         </select>
@@ -376,8 +377,8 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="user_role_id" id="edit_user_role_id">
-                    <input type="hidden" name="id" id="edit_user_id">
+                    <input type="hidden" name="id" id="edit_user_role_id">
+                    <input type="hidden" name="user_id" id="edit_user_id">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -418,9 +419,9 @@
 <?php $this->load->view('layout/foot_links'); ?>
 
 <script>
-	$(document).ready(function() {
-		// Inisialisasi semua Select2 di dalam modal
-		$('.select2').each(function() {
+    $(document).ready(function() {
+        // Inisialisasi semua Select2 di dalam modal
+        $('.select2').each(function() {
             var $this = $(this);
             $this.select2({
                 theme: 'bootstrap4',
@@ -432,112 +433,145 @@
             });
         });
 
-		// Menghilangkan highlight biru default Select2 saat dibuka
-		$('.select2').on('select2:open', function() {
-			document.querySelector('.select2-search__field').focus();
-		});
-		
-		$('#loadingOverlay').fadeOut();
-	});
+        // Menghilangkan highlight biru default Select2 saat dibuka
+        $('.select2').on('select2:open', function() {
+            document.querySelector('.select2-search__field').focus();
+        });
+        
+        $('#loadingOverlay').fadeOut();
+    });
 
 
-	$(document).ready(function() {
-		// Fungsi Show/Hide Password
-		$('#togglePasswordAdd').on('click', function() {
-			const passwordField = $('#passwordInputAdd');
-			const eyeIcon = $('#eyeIconAdd');
-			
-			// Cek tipe input
-			const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
-			passwordField.attr('type', type);
-			
-			// Ganti icon
-			eyeIcon.toggleClass('fa-eye fa-eye-slash');
-		});
-	});
+    $(document).ready(function() {
+        // Fungsi Show/Hide Password
+        $('#togglePasswordAdd').on('click', function() {
+            const passwordField = $('#passwordInputAdd');
+            const eyeIcon = $('#eyeIconAdd');
+            
+            // Cek tipe input
+            const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+            passwordField.attr('type', type);
+            
+            // Ganti icon
+            eyeIcon.toggleClass('fa-eye fa-eye-slash');
+        });
+    });
 
 
 
-	// --- FILTER LOGIC ---
-	function filterList(input) {
-		var filter = input.value.toUpperCase();
-		var div = input.parentNode.nextElementSibling;
-		var labels = div.getElementsByTagName("label");
-		for (var i = 0; i < labels.length; i++) {
-			var txtValue = labels[i].textContent || labels[i].innerText;
-			if (txtValue.toUpperCase().indexOf(filter) > -1) {
-				labels[i].style.display = "block";
-			} else {
-				labels[i].style.display = "none";
-			}
-		}
-	}
+    // --- FILTER LOGIC ---
+    function filterList(input) {
+        var filter = input.value.toUpperCase();
+        var div = input.parentNode.nextElementSibling;
+        var labels = div.getElementsByTagName("label");
+        for (var i = 0; i < labels.length; i++) {
+            var txtValue = labels[i].textContent || labels[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                labels[i].style.display = "block";
+            } else {
+                labels[i].style.display = "none";
+            }
+        }
+    }
 
-	function applyFilter(key) {
-		$('.filter-applied-' + key).remove();
-		var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
-		var container = document.getElementById('activeFiltersContainer');
-		checkboxes.forEach(function(cb) {
-			var input = document.createElement('input');
-			input.type = 'hidden';
-			input.name = 'filter[' + key + '][]';
-			input.value = cb.value;
-			input.className = 'filter-applied-' + key;
-			container.appendChild(input);
-		});
-		document.getElementById('mainFilterForm').submit();
-	}
+    function applyFilter(key) {
+        $('.filter-applied-' + key).remove();
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]:checked');
+        var container = document.getElementById('activeFiltersContainer');
+        checkboxes.forEach(function(cb) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter[' + key + '][]';
+            input.value = cb.value;
+            input.className = 'filter-applied-' + key;
+            container.appendChild(input);
+        });
+        document.getElementById('mainFilterForm').submit();
+    }
 
-	function clearFilter(key) {
-		$('#loadingOverlay').css('display', 'flex'); 
-		var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
-		checkboxes.forEach(cb => cb.checked = false);
-		$('.filter-applied-' + key).remove();
-		document.getElementById('mainFilterForm').submit();
-	}
+    function clearFilter(key) {
+        $('#loadingOverlay').css('display', 'flex'); 
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][data-key="' + key + '"]');
+        checkboxes.forEach(cb => cb.checked = false);
+        $('.filter-applied-' + key).remove();
+        document.getElementById('mainFilterForm').submit();
+    }
 
-	function openAssignModal() {
-		$('#modalAssignRole form')[0].reset();
-		$('#modalAssignRole .select2').val(null).trigger('change');
-		$('#modalAssignRole').modal('show');
-	}
+    function openAssignModal() {
+        $('#modalAssignRole form')[0].reset();
+        $('#modalAssignRole .select2').val(null).trigger('change');
+        $('#modalAssignRole').modal('show');
+    }
 
-	function openEditModal(id, userId, roleId, username, email) {
-		$('#edit_user_role_id').val(id);
-		$('#edit_user_id').val(userId);
-		$('#edit_username').val(username);
-		$('#edit_email').val(email);
-		$('#edit_role_id').val(roleId).trigger('change');
-		$('#edit_reason').val('');
-		$('#modalEditData').modal('show');
-	}
+    function openEditModal(id, userId, roleId, username, email) {
+        $('#edit_user_role_id').val(id);
+        $('#edit_user_id').val(userId);
+        $('#edit_username').val(username);
+        $('#edit_email').val(email);
+        $('#edit_role_id').val(roleId).trigger('change');
+        
+        // Tampilkan field reason
+        $('#reason_container').show(); 
+        // Reset isi reason (sesuai id="reason" di HTML)
+        $('#reason').val(''); 
+        
+        $('#modalEditData').modal('show');
+    }
 
-	function confirmExport() {
-		Swal.fire({
-			title: 'Export to Excel?',
-			text: "File akan otomatis diunduh.",
-			icon: 'question',
-			showCancelButton: true,
-			confirmButtonText: 'Yes, Export',
-			cancelButtonText: 'Cancel',
-			reverseButtons: true,
-			buttonsStyling: false,
-			customClass: {
-				confirmButton: 'btn btn-save-custom px-4 mx-2', 
-				cancelButton: 'btn btn-secondary px-4 mx-2'
-			}
-		}).then((result) => {
-			if (result.isConfirmed) {
-				const Toast = Swal.mixin({
-					toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
-				});
-				Toast.fire({ icon: 'success', title: 'Downloading file...' });
-				window.location.href = "<?= base_url('user_role/export') ?>" + window.location.search;
-			}
-		})
-	}
+    // Fungsi saat klik tombol "Assign Role"
+    function openAddRoleModal() {
+        $('#userRoleModalLabel').text('Assign Role');
+        $('#userRoleForm')[0].reset();
+        
+        // Reset select2 jika digunakan
+        $('#user_id_select').val('').trigger('change');
+        $('#role_id_select').val('').trigger('change');
+        
+        $('#user_role_id').val(''); // KOSONGKAN ID (Agar masuk ke blok ELSE di controller)
+        $('#reason_field').hide();  // SEMBUNYIKAN REASON
+        $('#userRoleModal').modal('show');
+    }
 
-	function confirmDelete(id) {
+    // Fungsi saat klik tombol "Edit" di tabel
+    function openEditRoleModal(id, user_id, role_id) {
+        $('#userRoleModalLabel').text('Edit User Role');
+        
+        $('#user_role_id').val(id); // ISI ID (Agar masuk ke blok IF di controller)
+        $('#user_id_select').val(user_id).trigger('change');
+        $('#role_id_select').val(role_id).trigger('change');
+        
+        $('#reason_field').show();  // TAMPILKAN REASON
+        $('#reason_input').val(''); // Reset isi reason sebelumnya
+        $('#userRoleModal').modal('show');
+    }
+
+    function confirmExport() {
+        Swal.fire({
+            title: 'Export to Excel?',
+            text: "File akan otomatis diunduh.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Export',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-save-custom px-4 mx-2', 
+                cancelButton: 'btn btn-secondary px-4 mx-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const Toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true
+                });
+                Toast.fire({ icon: 'success', title: 'Downloading file...' });
+                window.location.href = "<?= base_url('user_role/export') ?>" + window.location.search;
+            }
+        })
+    }
+
+    // Fungsi untuk Menonaktifkan (Status 0)
+    function confirmDelete(id) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "User akan dinonaktifkan.",
@@ -574,6 +608,7 @@
                         reason: result.value
                     },
                     success: function(response) {
+						$('#loadingOverlay').css('display', 'none');
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -654,6 +689,7 @@
                         reason: result.value
                     },
                     success: function(response) {
+						$('#loadingOverlay').css('display', 'none');
                         if (response.success) {
                             Swal.fire({
                                 icon: 'success',
@@ -695,8 +731,8 @@
             }
         });
     }
- 
- // Flashdata Success
+
+    // Flashdata Success
     <?php if($this->session->flashdata('success')): ?>
         Swal.fire({
             icon: 'success',
@@ -766,6 +802,10 @@
                 updateIcon(false);
             }
 
+            // --- PERUBAHAN PENTING DISINI ---
+            // Cek dulu: Apakah fungsi updateChartTheme SUDAH DIBUAT di halaman ini?
+            // Jika halaman ini punya grafik (Portofolio), maka jalankan.
+            // Jika halaman ini tidak punya grafik (Database), maka LEWATI agar tidak error.
             if (typeof updateChartTheme === 'function') {
                 updateChartTheme(isDark);
             }
@@ -774,7 +814,7 @@
     
     // --- Script Logout ---
     const logoutBtn = document.getElementById('logoutLink');
-	const overlay = document.getElementById('loadingOverlay');
+    const overlay = document.getElementById('loadingOverlay');
 
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -801,8 +841,8 @@
             });
         });
     }
-	
-	// 1. Validasi Global (Search, Filter, Reason, Username Edit, dan Username Add)
+
+    // 1. Validasi Global (Search, Filter, Reason, Username Edit, dan Username Add)
     $(document).on('input', '#edit_username, #edit_reason, input[name="username"], #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function() {
         var el = $(this);
         var currentValue = el.val();
@@ -822,7 +862,7 @@
             forbiddenChars = /[^a-zA-Z0-9@.\-_]/g;
         } else {
             // Standar nama dan alasan
-            forbiddenChars = /[^a-zA-Z0-9@\s.,_\-]/g; 
+            forbiddenChars = /[^a-zA-Z0-9\s.,_\-]/g; 
         }
 
         if (forbiddenChars.test(currentValue)) {
@@ -859,7 +899,6 @@
             }, 400);
         }
     });
-	
 
     // 1. Paste Validation - Global (Search, Filter, Reason, Username)
     $(document).on('paste', '#edit_username, #edit_reason, input[name="username"], #reason, input[name="keyword"], .filter-search-input, .swal2-popup input[type="text"], .swal2-popup textarea', function(e) {

@@ -36,11 +36,16 @@ class History_model extends CI_Model {
         }
     }
 
-    // Helper: Keyword Search
     private function _apply_keyword($keyword) {
         if($keyword) {
             $this->db->group_start();
-            $this->db->like('table_name', $keyword); // Page Name
+            
+            if (stripos('User Role', $keyword) !== false) {
+                $this->db->like('table_name', 'tbl_user_role');
+                $this->db->or_like('table_name', 'users');
+            }
+
+            $this->db->or_like('table_name', $keyword);
             $this->db->or_like('field_name', $keyword);
             $this->db->or_like('action', $keyword);
             $this->db->or_like('username', $keyword);

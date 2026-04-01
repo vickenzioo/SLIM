@@ -65,8 +65,16 @@ class Auth extends CI_Controller {
                     return; // Hentikan proses
                 }
 
-                // Cek Password Biasa (Plain Text)
-                if ($password == $user['password']) {
+                // --- PERBAIKAN: Gunakan password_verify ---
+                // Mengecek apakah ada hash (diawali $2y$) atau masih plain text (untuk kompatibilitas user lama)
+                $isPasswordValid = false;
+                if (strpos($user['password'], '$2y$') === 0) {
+                    $isPasswordValid = password_verify($password, $user['password']);
+                } else {
+                    $isPasswordValid = ($password == $user['password']);
+                }
+
+                if ($isPasswordValid) {
                     
                     // Pastikan kita menyimpan role_id ke dalam session sejak awal login
                     $role_id = isset($user['role_id']) ? (int)$user['role_id'] : 0;
@@ -99,7 +107,7 @@ class Auth extends CI_Controller {
                 $this->session->set_flashdata('old_email', $this->input->post('email'));
                 $this->session->set_flashdata('old_password', $this->input->post('password'));
 
-                $this->session->set_flashdata('error_password', 'Email atau password tidak valid?');
+                $this->session->set_flashdata('error_password', 'Email atau password tidak valid!');
                 redirect('auth');
             }
         }

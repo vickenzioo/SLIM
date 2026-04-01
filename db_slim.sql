@@ -11,7 +11,7 @@
  Target Server Version : 100419
  File Encoding         : 65001
 
- Date: 31/03/2026 16:11:39
+ Date: 01/04/2026 09:17:44
 */
 
 SET NAMES utf8mb4;
@@ -30,7 +30,7 @@ CREATE TABLE `tbl_app_type`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`app_type_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_app_type
@@ -38,6 +38,7 @@ CREATE TABLE `tbl_app_type`  (
 INSERT INTO `tbl_app_type` VALUES (1, 'Custom-built', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_app_type` VALUES (2, 'Off the shelf', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_app_type` VALUES (3, 'Off the shelf with customization', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_app_type` VALUES (4, 'Test App Types', 0, 1, '2026-04-01 08:29:48', 1, '2026-04-01 08:43:50');
 
 -- ----------------------------
 -- Table structure for tbl_apps_approval
@@ -56,7 +57,7 @@ CREATE TABLE `tbl_apps_approval`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`approval_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 315 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 319 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_approval
@@ -76,6 +77,9 @@ INSERT INTO `tbl_apps_approval` VALUES (311, 89, 3, 1, 0, '- Description : \'a\'
 INSERT INTO `tbl_apps_approval` VALUES (312, 89, 1, 1, 0, '- Standard Category (%) : \'98.50\' -> \'99\'', '2026-03-31 15:51:36', 3, '2026-03-31 15:46:12', 1, '2026-03-31 15:51:36');
 INSERT INTO `tbl_apps_approval` VALUES (313, 88, 3, 1, 0, '- Resilience : \'L2\' -> \'L3\'\r\n- Source Code Owned : \'Yes\' -> \'No\'', '2026-03-31 16:09:10', 2, '2026-03-31 16:08:47', 3, '2026-03-31 16:09:10');
 INSERT INTO `tbl_apps_approval` VALUES (314, 88, 1, 1, 0, '- Standard Category (%) : \'(kosong)\' -> \'100\'\r\n- Operational Day : \'(kosong)\' -> \'Tuesday - Friday\'\r\n- Operational Hour : \'(kosong)\' -> \'00:00:00 - 23:59:00\'', '2026-03-31 16:10:16', 3, '2026-03-31 16:09:10', 1, '2026-03-31 16:10:16');
+INSERT INTO `tbl_apps_approval` VALUES (316, 92, 2, 1, 0, 'Tes buat SLA', '2026-04-01 08:19:56', 2, '2026-04-01 08:19:12', 2, '2026-04-01 08:19:56');
+INSERT INTO `tbl_apps_approval` VALUES (317, 92, 3, 1, 0, 'Tes SLA\r\n\r\n- Application Name : \'tes1\' -> \'tes1000\'\r\n- Category : \'Necessary\' -> \'Very Important\'\r\n- Application Type : \'Custom-built\' -> \'Off the shelf\'\r\n- Resilience : \'L2\' -> \'L1\'\r\n- Operating Software : \'Ms Windows Server\' -> \'OS400, Ms Windows Server\'\r\n- Database : \'CloudSQL for MySQL 8.0\' -> \'Oracle, CloudSQL for MySQL 8.0\'', '2026-04-01 08:22:34', 2, '2026-04-01 08:19:56', 3, '2026-04-01 08:22:34');
+INSERT INTO `tbl_apps_approval` VALUES (318, 92, 1, 1, 0, 'Tes SLA\r\n\r\n- Standard Category (%) : \'(kosong)\' -> \'99\'\r\n- Deployment Model : \'IaaS\' -> \'On-Premises\'\r\n- Operational Day : \'(kosong)\' -> \'Monday - Sunday\'\r\n- Operational Hour : \'(kosong)\' -> \'08:00:00 - 22:00:00\'', '2026-04-01 08:24:36', 3, '2026-04-01 08:22:34', 1, '2026-04-01 08:24:36');
 
 -- ----------------------------
 -- Table structure for tbl_apps_audit_trail
@@ -90,7 +94,7 @@ CREATE TABLE `tbl_apps_audit_trail`  (
   `created_by` int(11) NOT NULL,
   `created_at` datetime(0) NOT NULL DEFAULT current_timestamp(0),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 136 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 139 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_audit_trail
@@ -139,6 +143,9 @@ INSERT INTO `tbl_apps_audit_trail` VALUES (132, 87, 1, 'SUBMIT', '- Application 
 INSERT INTO `tbl_apps_audit_trail` VALUES (133, 88, 2, 'SUBMIT', '-', 0, '2026-03-31 16:08:47');
 INSERT INTO `tbl_apps_audit_trail` VALUES (134, 88, 3, 'SUBMIT', '- Resilience : \'L2\' -> \'L3\'\r\n- Source Code Owned : \'Yes\' -> \'No\'', 0, '2026-03-31 16:09:10');
 INSERT INTO `tbl_apps_audit_trail` VALUES (135, 88, 1, 'SUBMIT', '- Standard Category (%) : \'(kosong)\' -> \'100\'\r\n- Operational Day : \'(kosong)\' -> \'Tuesday - Friday\'\r\n- Operational Hour : \'(kosong)\' -> \'00:00:00 - 23:59:00\'', 0, '2026-03-31 16:10:16');
+INSERT INTO `tbl_apps_audit_trail` VALUES (136, 92, 2, 'SUBMIT', 'Tes buat SLA', 0, '2026-04-01 08:19:56');
+INSERT INTO `tbl_apps_audit_trail` VALUES (137, 92, 3, 'SUBMIT', 'Tes SLA\r\n\r\n- Application Name : \'tes1\' -> \'tes1000\'\r\n- Category : \'Necessary\' -> \'Very Important\'\r\n- Application Type : \'Custom-built\' -> \'Off the shelf\'\r\n- Resilience : \'L2\' -> \'L1\'\r\n- Operating Software : \'Ms Windows Server\' -> \'OS400, Ms Windows Server\'\r\n- Database : \'CloudSQL for MySQL 8.0\' -> \'Oracle, CloudSQL for MySQL 8.0\'', 0, '2026-04-01 08:22:34');
+INSERT INTO `tbl_apps_audit_trail` VALUES (138, 92, 1, 'SUBMIT', 'Tes SLA\r\n\r\n- Standard Category (%) : \'(kosong)\' -> \'99\'\r\n- Deployment Model : \'IaaS\' -> \'On-Premises\'\r\n- Operational Day : \'(kosong)\' -> \'Monday - Sunday\'\r\n- Operational Hour : \'(kosong)\' -> \'08:00:00 - 22:00:00\'', 0, '2026-04-01 08:24:36');
 
 -- ----------------------------
 -- Table structure for tbl_apps_category
@@ -154,7 +161,7 @@ CREATE TABLE `tbl_apps_category`  (
   `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`category_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_category
@@ -164,6 +171,7 @@ INSERT INTO `tbl_apps_category` VALUES (2, 'Very Important', 99.00, NULL, NULL, 
 INSERT INTO `tbl_apps_category` VALUES (3, 'Important', 98.50, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_apps_category` VALUES (4, 'Necessary', NULL, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_apps_category` VALUES (5, 'Others', NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_apps_category` VALUES (16, 'Test Categorys', 1.00, 1, '2026-04-01 08:30:05', 1, '2026-04-01 08:43:04', 0);
 
 -- ----------------------------
 -- Table structure for tbl_apps_database
@@ -174,7 +182,7 @@ CREATE TABLE `tbl_apps_database`  (
   `apps_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `database_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id_apps_database`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 258 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 263 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_database
@@ -187,6 +195,8 @@ INSERT INTO `tbl_apps_database` VALUES (252, '89', '2');
 INSERT INTO `tbl_apps_database` VALUES (253, '89', '3');
 INSERT INTO `tbl_apps_database` VALUES (254, '87', '2');
 INSERT INTO `tbl_apps_database` VALUES (257, '88', '3');
+INSERT INTO `tbl_apps_database` VALUES (261, '92', '2');
+INSERT INTO `tbl_apps_database` VALUES (262, '92', '4');
 
 -- ----------------------------
 -- Table structure for tbl_apps_deployment
@@ -201,13 +211,14 @@ CREATE TABLE `tbl_apps_deployment`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`deployment_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_deployment
 -- ----------------------------
 INSERT INTO `tbl_apps_deployment` VALUES (1, 'On-Premises', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_apps_deployment` VALUES (2, 'IaaS', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment` VALUES (13, 'Tes Deploys', 0, 1, '2026-04-01 08:41:24', 1, '2026-04-01 08:41:32');
 
 -- ----------------------------
 -- Table structure for tbl_apps_deployment_model
@@ -222,13 +233,14 @@ CREATE TABLE `tbl_apps_deployment_model`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`deployment_provider_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_deployment_model
 -- ----------------------------
 INSERT INTO `tbl_apps_deployment_model` VALUES (1, 'CIMB', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_apps_deployment_model` VALUES (2, 'GCP', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment_model` VALUES (3, 'Tes Deploy Prvs', 0, 1, '2026-04-01 08:45:04', 1, '2026-04-01 08:45:12');
 
 -- ----------------------------
 -- Table structure for tbl_apps_deployment_site
@@ -243,7 +255,7 @@ CREATE TABLE `tbl_apps_deployment_site`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`deployment_site_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_deployment_site
@@ -251,6 +263,7 @@ CREATE TABLE `tbl_apps_deployment_site`  (
 INSERT INTO `tbl_apps_deployment_site` VALUES (1, 'Bintaro', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_apps_deployment_site` VALUES (2, 'Asia-southeast2 (Jakarta)', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_apps_deployment_site` VALUES (3, 'NTT', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_deployment_site` VALUES (4, 'Tes Deploy Site', 0, 1, '2026-04-01 08:45:50', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tbl_apps_network
@@ -265,7 +278,7 @@ CREATE TABLE `tbl_apps_network`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`network_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_network
@@ -273,6 +286,7 @@ CREATE TABLE `tbl_apps_network`  (
 INSERT INTO `tbl_apps_network` VALUES (1, 'Customer Facing', 1, NULL, NULL, 2, '2026-01-20 14:12:36');
 INSERT INTO `tbl_apps_network` VALUES (2, 'Internal User (Include Branches)', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_apps_network` VALUES (3, 'Internal User (Exclude Branches)', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_apps_network` VALUES (16, 'Tes Networks', 0, 1, '2026-04-01 08:49:33', 1, '2026-04-01 08:49:40');
 
 -- ----------------------------
 -- Table structure for tbl_apps_operating_software
@@ -283,7 +297,7 @@ CREATE TABLE `tbl_apps_operating_software`  (
   `apps_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `operating_software_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id_apps_operating_software`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 287 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_operating_software
@@ -296,6 +310,8 @@ INSERT INTO `tbl_apps_operating_software` VALUES (276, '89', '2');
 INSERT INTO `tbl_apps_operating_software` VALUES (277, '89', '4');
 INSERT INTO `tbl_apps_operating_software` VALUES (278, '87', '1');
 INSERT INTO `tbl_apps_operating_software` VALUES (281, '88', '2');
+INSERT INTO `tbl_apps_operating_software` VALUES (285, '92', '1');
+INSERT INTO `tbl_apps_operating_software` VALUES (286, '92', '2');
 
 -- ----------------------------
 -- Table structure for tbl_apps_operational_day
@@ -312,7 +328,7 @@ CREATE TABLE `tbl_apps_operational_day`  (
   `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`operational_day_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_operational_day
@@ -323,6 +339,7 @@ INSERT INTO `tbl_apps_operational_day` VALUES (3, 'Tuesday', 'Saturday', 5, NULL
 INSERT INTO `tbl_apps_operational_day` VALUES (19, 'Monday', 'Tuesday', 2, 2, '2026-02-02 09:24:58', NULL, NULL, 1);
 INSERT INTO `tbl_apps_operational_day` VALUES (22, 'Wednesday', 'Saturday', 4, 2, '2026-02-02 10:40:21', NULL, NULL, 1);
 INSERT INTO `tbl_apps_operational_day` VALUES (24, 'Tuesday', 'Friday', 4, 1, '2026-03-30 16:00:09', NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_day` VALUES (25, 'Monday', 'Wednesday', 3, 1, '2026-04-01 08:53:36', 1, '2026-04-01 08:54:08', 0);
 
 -- ----------------------------
 -- Table structure for tbl_apps_operational_hour
@@ -339,7 +356,7 @@ CREATE TABLE `tbl_apps_operational_hour`  (
   `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`operational_hour_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_operational_hour
@@ -349,6 +366,7 @@ INSERT INTO `tbl_apps_operational_hour` VALUES (2, '08:00:00', '18:00:00', 10.0,
 INSERT INTO `tbl_apps_operational_hour` VALUES (3, '08:00:00', '22:00:00', 14.0, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_apps_operational_hour` VALUES (18, '09:00:00', '09:30:00', 0.5, 2, '2026-01-20 00:00:00', NULL, NULL, 1);
 INSERT INTO `tbl_apps_operational_hour` VALUES (31, '08:00:00', '23:59:00', 16.0, 1, '2026-03-27 10:05:11', NULL, NULL, 1);
+INSERT INTO `tbl_apps_operational_hour` VALUES (32, '08:52:00', '09:52:00', 1.0, 1, '2026-04-01 08:51:59', 1, '2026-04-01 08:52:27', 0);
 
 -- ----------------------------
 -- Table structure for tbl_apps_server
@@ -359,7 +377,7 @@ CREATE TABLE `tbl_apps_server`  (
   `apps_id` int(11) NULL DEFAULT NULL,
   `server_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`apps_server_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 232 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 235 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_server
@@ -376,6 +394,7 @@ INSERT INTO `tbl_apps_server` VALUES (222, 87, 3);
 INSERT INTO `tbl_apps_server` VALUES (229, 88, 1);
 INSERT INTO `tbl_apps_server` VALUES (230, 88, 4);
 INSERT INTO `tbl_apps_server` VALUES (231, 88, 5);
+INSERT INTO `tbl_apps_server` VALUES (234, 92, 1);
 
 -- ----------------------------
 -- Table structure for tbl_apps_sla_history
@@ -390,7 +409,7 @@ CREATE TABLE `tbl_apps_sla_history`  (
   `created_at` datetime(0) NULL DEFAULT NULL,
   `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`sla_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_apps_sla_history
@@ -407,6 +426,7 @@ INSERT INTO `tbl_apps_sla_history` VALUES (38, 89, 1, 'SLA_as_20260331_154732.pd
 INSERT INTO `tbl_apps_sla_history` VALUES (39, 89, 2, 'SLA_as_20260331_155136.pdf', 1, '2026-03-31 15:51:36', 'Auto-Generated SLA on Final Approval');
 INSERT INTO `tbl_apps_sla_history` VALUES (40, 87, 2, 'SLA_asaaaa_20260331_160705.pdf', 1, '2026-03-31 16:07:05', 'Auto-Generated SLA on Final Approval');
 INSERT INTO `tbl_apps_sla_history` VALUES (41, 88, 1, 'SLA_x_20260331_161017.pdf', 1, '2026-03-31 16:10:17', 'Auto-Generated SLA on Final Approval');
+INSERT INTO `tbl_apps_sla_history` VALUES (42, 92, 1, 'SLA_tes1000_20260401_082439.pdf', 1, '2026-04-01 08:24:39', 'Auto-Generated SLA on Final Approval');
 
 -- ----------------------------
 -- Table structure for tbl_audit_trail
@@ -424,7 +444,7 @@ CREATE TABLE `tbl_audit_trail`  (
   `new_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`audit_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 282 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 374 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_audit_trail
@@ -665,6 +685,98 @@ INSERT INTO `tbl_audit_trail` VALUES (278, '2026-03-31 13:23:35', 'role1', 'EXPO
 INSERT INTO `tbl_audit_trail` VALUES (279, '2026-03-31 14:43:21', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
 INSERT INTO `tbl_audit_trail` VALUES (280, '2026-03-31 14:43:30', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
 INSERT INTO `tbl_audit_trail` VALUES (281, '2026-03-31 14:43:36', 'role1', 'EXPORT', 'tbl_history', 0, '-', '-', '-', 'Export Data');
+INSERT INTO `tbl_audit_trail` VALUES (282, '2026-04-01 08:29:48', 'role1', 'ADD', 'tbl_app_type', 4, 'app_type_name', '-', 'Test App Type', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (283, '2026-04-01 08:30:05', 'role1', 'ADD', 'tbl_apps_category', 16, 'Category Name', '-', 'Test Category', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (284, '2026-04-01 08:30:05', 'role1', 'ADD', 'tbl_apps_category', 16, 'Standard Category', '-', '0', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (285, '2026-04-01 08:30:34', 'role1', 'DEACTIVATE', 'tbl_apps_category', 16, 'status', '1', '0', 'Tes Category');
+INSERT INTO `tbl_audit_trail` VALUES (286, '2026-04-01 08:30:53', 'role1', 'DEACTIVATE', 'tbl_app_type', 4, 'status', '1', '0', 'Tes Category');
+INSERT INTO `tbl_audit_trail` VALUES (287, '2026-04-01 08:34:25', 'role1', 'ACTIVATE', 'tbl_app_type', 4, 'status', '0', '1', 'Tes App Type');
+INSERT INTO `tbl_audit_trail` VALUES (288, '2026-04-01 08:34:33', 'role1', 'DEACTIVATE', 'tbl_app_type', 4, 'status', '1', '0', 'Tes');
+INSERT INTO `tbl_audit_trail` VALUES (289, '2026-04-01 08:34:40', 'role1', 'ACTIVATE', 'tbl_app_type', 4, 'status', '0', '1', 's');
+INSERT INTO `tbl_audit_trail` VALUES (290, '2026-04-01 08:35:49', 'role1', 'DEACTIVATE', 'tbl_app_type', 4, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (291, '2026-04-01 08:37:29', 'role1', 'ACTIVATE', 'tbl_apps_category', 16, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (292, '2026-04-01 08:39:16', 'role1', 'ACTIVATE', 'tbl_app_type', 4, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (293, '2026-04-01 08:40:02', 'role1', 'DEACTIVATE', 'tbl_apps_category', 16, 'status', '1', '0', 'Tes Category');
+INSERT INTO `tbl_audit_trail` VALUES (294, '2026-04-01 08:40:07', 'role1', 'ACTIVATE', 'tbl_apps_category', 16, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (295, '2026-04-01 08:40:38', 'role1', 'ADD', 'tbl_database_master', 49, 'database_name', '-', 'Tes Database', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (296, '2026-04-01 08:40:47', 'role1', 'DEACTIVATE', 'tbl_database_master', 49, 'status', '1', '0', 'Tes DB');
+INSERT INTO `tbl_audit_trail` VALUES (297, '2026-04-01 08:41:24', 'role1', 'ADD', 'tbl_apps_deployment', 13, 'deployment_model', '-', 'Tes Deploy', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (298, '2026-04-01 08:41:32', 'role1', 'EDIT', 'tbl_apps_deployment', 13, 'deployment_model', 'Tes Deploy', 'Tes Deploys', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (299, '2026-04-01 08:41:57', 'role1', 'DEACTIVATE', 'tbl_apps_deployment', 13, 'status', '1', '0', 'tes dep');
+INSERT INTO `tbl_audit_trail` VALUES (300, '2026-04-01 08:42:16', 'role1', 'ACTIVATE', 'tbl_database_master', 49, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (301, '2026-04-01 08:42:22', 'role1', 'EDIT', 'tbl_database_master', 49, 'database_name', 'Tes Database', 'Tes Databases', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (302, '2026-04-01 08:42:26', 'role1', 'DEACTIVATE', 'tbl_database_master', 49, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (303, '2026-04-01 08:42:49', 'role1', 'EDIT', 'tbl_apps_category', 16, 'Category Name', 'Test Category', 'Test Categorys', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (304, '2026-04-01 08:43:04', 'role1', 'EDIT', 'tbl_apps_category', 16, 'Standard Category', '0.00', '1.00', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (305, '2026-04-01 08:43:30', 'role1', 'DEACTIVATE', 'tbl_apps_category', 16, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (306, '2026-04-01 08:43:50', 'role1', 'EDIT', 'tbl_app_type', 4, 'app_type_name', 'Test App Type', 'Test App Types', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (307, '2026-04-01 08:43:55', 'role1', 'DEACTIVATE', 'tbl_app_type', 4, 'status', '1', '0', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (308, '2026-04-01 08:45:04', 'role1', 'ADD', 'tbl_apps_deployment_model', 3, 'deployment_provider_name', '-', 'Tes Deploy Prv', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (309, '2026-04-01 08:45:12', 'role1', 'EDIT', 'tbl_apps_deployment_model', 3, 'deployment_provider_name', 'Tes Deploy Prv', 'Tes Deploy Prvs', 'Tes Edit');
+INSERT INTO `tbl_audit_trail` VALUES (310, '2026-04-01 08:45:17', 'role1', 'DEACTIVATE', 'tbl_apps_deployment_model', 3, 'status', '1', '0', 'Tes off');
+INSERT INTO `tbl_audit_trail` VALUES (311, '2026-04-01 08:45:50', 'role1', 'ADD', 'tbl_apps_deployment_site', 4, 'deployment_site_name', '-', 'Tes Deploy Site', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (312, '2026-04-01 08:46:03', 'role1', 'EDIT', 'tbl_apps_deployment_site', 4, 'deployment_site_name', 'Tes Deploy Site', 'Tes Deploy Sites', 'Tes Edit');
+INSERT INTO `tbl_audit_trail` VALUES (313, '2026-04-01 08:46:08', 'role1', 'DEACTIVATE', 'tbl_apps_deployment_site', 4, 'status', '1', '0', 'Tes off');
+INSERT INTO `tbl_audit_trail` VALUES (314, '2026-04-01 08:46:25', 'role1', 'ACTIVATE', 'tbl_apps_deployment_site', 4, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (315, '2026-04-01 08:46:35', 'role1', 'DEACTIVATE', 'tbl_apps_deployment_site', 4, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (316, '2026-04-01 08:46:42', 'role1', 'ACTIVATE', 'tbl_apps_deployment_model', 3, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (317, '2026-04-01 08:46:47', 'role1', 'DEACTIVATE', 'tbl_apps_deployment_model', 3, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (318, '2026-04-01 08:47:41', 'role1', 'ACTIVATE', 'tbl_apps_deployment', 13, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (319, '2026-04-01 08:47:49', 'role1', 'DEACTIVATE', 'tbl_apps_deployment', 13, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (320, '2026-04-01 08:48:14', 'role1', 'ACTIVATE', 'tbl_database_master', 49, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (321, '2026-04-01 08:48:18', 'role1', 'DEACTIVATE', 'tbl_database_master', 49, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (322, '2026-04-01 08:48:33', 'role1', 'ACTIVATE', 'tbl_apps_category', 16, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (323, '2026-04-01 08:48:38', 'role1', 'DEACTIVATE', 'tbl_apps_category', 16, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (324, '2026-04-01 08:48:48', 'role1', 'ACTIVATE', 'tbl_app_type', 4, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (325, '2026-04-01 08:48:54', 'role1', 'DEACTIVATE', 'tbl_app_type', 4, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (326, '2026-04-01 08:49:33', 'role1', 'ADD', 'tbl_apps_network', 16, 'network_name', '-', 'Tes Network', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (327, '2026-04-01 08:49:40', 'role1', 'EDIT', 'tbl_apps_network', 16, 'network_name', 'Tes Network', 'Tes Networks', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (328, '2026-04-01 08:49:48', 'role1', 'DEACTIVATE', 'tbl_apps_network', 16, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (329, '2026-04-01 08:49:53', 'role1', 'ACTIVATE', 'tbl_apps_network', 16, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (330, '2026-04-01 08:49:59', 'role1', 'DEACTIVATE', 'tbl_apps_network', 16, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (331, '2026-04-01 08:50:54', 'role1', 'ADD', 'tbl_operating_software', 15, 'operating_software_name', '-', 'Tes OS', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (332, '2026-04-01 08:51:03', 'role1', 'EDIT', 'tbl_operating_software', 15, 'operating_software_name', 'Tes OS', 'Tes OSs', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (333, '2026-04-01 08:51:07', 'role1', 'DEACTIVATE', 'tbl_operating_software', 15, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (334, '2026-04-01 08:51:12', 'role1', 'ACTIVATE', 'tbl_operating_software', 15, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (335, '2026-04-01 08:51:18', 'role1', 'DEACTIVATE', 'tbl_operating_software', 15, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (336, '2026-04-01 08:51:59', 'role1', 'ADD', 'tbl_apps_operational_hour', 32, 'Start Time', '-', '08:51', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (337, '2026-04-01 08:51:59', 'role1', 'ADD', 'tbl_apps_operational_hour', 32, 'End Time', '-', '09:51', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (338, '2026-04-01 08:51:59', 'role1', 'ADD', 'tbl_apps_operational_hour', 32, 'Total Hour', '-', '1.00 Hours', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (339, '2026-04-01 08:52:27', 'role1', 'EDIT', 'tbl_apps_operational_hour', 32, 'Start Time', '08:51:00', '08:52', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (340, '2026-04-01 08:52:27', 'role1', 'EDIT', 'tbl_apps_operational_hour', 32, 'End Time', '09:51:00', '09:52', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (341, '2026-04-01 08:52:32', 'role1', 'DEACTIVATE', 'tbl_apps_operational_hour', 32, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (342, '2026-04-01 08:52:37', 'role1', 'ACTIVATE', 'tbl_apps_operational_hour', 32, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (343, '2026-04-01 08:52:42', 'role1', 'DEACTIVATE', 'tbl_apps_operational_hour', 32, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (344, '2026-04-01 08:53:36', 'role1', 'ADD', 'tbl_apps_operational_day', 25, 'Start Day', '-', 'Monday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (345, '2026-04-01 08:53:36', 'role1', 'ADD', 'tbl_apps_operational_day', 25, 'End Day', '-', 'Friday', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (346, '2026-04-01 08:54:08', 'role1', 'EDIT', 'tbl_apps_operational_day', 25, 'End Day', 'Friday', 'Wednesday', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (347, '2026-04-01 08:54:23', 'role1', 'DEACTIVATE', 'tbl_apps_operational_day', 25, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (348, '2026-04-01 08:54:28', 'role1', 'ACTIVATE', 'tbl_apps_operational_day', 25, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (349, '2026-04-01 08:54:33', 'role1', 'DEACTIVATE', 'tbl_apps_operational_day', 25, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (350, '2026-04-01 08:55:32', 'role1', 'ADD', 'tbl_server', 14, 'server_name', '-', 'Tes Server', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (351, '2026-04-01 08:55:40', 'role1', 'EDIT', 'tbl_server', 14, 'server_name', 'Tes Server', 'Tes Servers', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (352, '2026-04-01 08:55:46', 'role1', 'DEACTIVATE', 'tbl_server', 14, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (353, '2026-04-01 08:55:50', 'role1', 'ACTIVATE', 'tbl_server', 14, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (354, '2026-04-01 08:55:54', 'role1', 'DEACTIVATE', 'tbl_server', 14, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (355, '2026-04-01 08:56:29', 'role1', 'ADD', 'tbl_holiday', 22, 'Holiday Name', '-', 'Tes Holiday', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (356, '2026-04-01 08:56:29', 'role1', 'ADD', 'tbl_holiday', 22, 'Holiday Date', '-', '2026-04-02', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (357, '2026-04-01 08:56:29', 'role1', 'ADD', 'tbl_holiday', 22, 'Holiday Description', '-', 'Tes add', 'Initial creation');
+INSERT INTO `tbl_audit_trail` VALUES (358, '2026-04-01 08:57:08', 'role1', 'EDIT', 'tbl_holiday', 22, 'Holiday Name', 'Tes Holiday', 'Tes Holidays', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (359, '2026-04-01 08:57:36', 'role1', 'DELETE', 'tbl_holiday', 22, 'Holiday Date', '2026-04-02 Tes Holidays', '-', 'tes del');
+INSERT INTO `tbl_audit_trail` VALUES (360, '2026-04-01 09:01:59', 'role1', 'ADD', 'users', 12, 'Username', '-', 'Tes User', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (361, '2026-04-01 09:01:59', 'role1', 'ADD', 'users', 12, 'Email', '-', 'tes0@gmail.com', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (362, '2026-04-01 09:01:59', 'role1', 'ADD', 'users', 12, 'Password', '-', '********', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (363, '2026-04-01 09:04:37', 'role1', 'ADD', 'tbl_user_role', 13, 'User Role', '-', 'EA', 'Initial Creation');
+INSERT INTO `tbl_audit_trail` VALUES (364, '2026-04-01 09:05:08', 'role1', 'EDIT', 'users', 12, 'Username', 'Tes User', 'Tes Users', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (365, '2026-04-01 09:05:08', 'role1', 'EDIT', 'users', 12, 'Email', 'tes0@gmail.com', 'tes1@gmail.com', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (366, '2026-04-01 09:05:08', 'role1', 'EDIT', 'tbl_user_role', 13, 'Role', 'EA', 'IT SLM', 'tes edit');
+INSERT INTO `tbl_audit_trail` VALUES (367, '2026-04-01 09:05:15', 'role1', 'DEACTIVATE', 'tbl_user_role', 13, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (368, '2026-04-01 09:05:35', 'role1', 'ACTIVATE', 'tbl_user_role', 13, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (369, '2026-04-01 09:05:40', 'role1', 'DEACTIVATE', 'tbl_user_role', 13, 'status', '1', '0', 'tees off');
+INSERT INTO `tbl_audit_trail` VALUES (370, '2026-04-01 09:05:54', 'role1', 'ACTIVATE', 'tbl_user_role', 13, 'status', '0', '1', 'tes on');
+INSERT INTO `tbl_audit_trail` VALUES (371, '2026-04-01 09:06:23', 'role1', 'DEACTIVATE', 'tbl_user_role', 13, 'status', '1', '0', 'tes off');
+INSERT INTO `tbl_audit_trail` VALUES (372, '2026-04-01 09:12:47', 'role1', 'ACTIVATE', 'tbl_user_role', 13, 'status', '0', '1', 'tes');
+INSERT INTO `tbl_audit_trail` VALUES (373, '2026-04-01 09:13:20', 'role1', 'DEACTIVATE', 'tbl_user_role', 13, 'status', '1', '0', 'tes off');
 
 -- ----------------------------
 -- Table structure for tbl_database_master
@@ -679,7 +791,7 @@ CREATE TABLE `tbl_database_master`  (
   `modified_by` int(11) NULL DEFAULT NULL,
   `modified_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`database_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_database_master
@@ -688,6 +800,7 @@ INSERT INTO `tbl_database_master` VALUES (1, 'DB2', 1, NULL, NULL, 2, '2026-01-2
 INSERT INTO `tbl_database_master` VALUES (2, 'Oracle', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_database_master` VALUES (3, 'Ms SQL Server', 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_database_master` VALUES (4, 'CloudSQL for MySQL 8.0', 1, NULL, NULL, NULL, NULL);
+INSERT INTO `tbl_database_master` VALUES (49, 'Tes Databases', 0, 1, '2026-04-01 08:40:38', 1, '2026-04-01 08:42:22');
 
 -- ----------------------------
 -- Table structure for tbl_holiday
@@ -703,7 +816,7 @@ CREATE TABLE `tbl_holiday`  (
   `modified_at` int(11) NULL DEFAULT NULL,
   `modified_by` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`Holiday_ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_holiday
@@ -882,7 +995,7 @@ CREATE TABLE `tbl_operating_software`  (
   `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`operating_software_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_operating_software
@@ -891,6 +1004,7 @@ INSERT INTO `tbl_operating_software` VALUES (1, 'OS400', NULL, NULL, 2, '2026-01
 INSERT INTO `tbl_operating_software` VALUES (2, 'Ms Windows Server', NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_operating_software` VALUES (3, 'Solaris', NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_operating_software` VALUES (4, 'RHEL', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_operating_software` VALUES (15, 'Tes OSs', 1, '2026-04-01 08:50:54', 1, '2026-04-01 08:51:03', 0);
 
 -- ----------------------------
 -- Table structure for tbl_penanganan_dr
@@ -988,7 +1102,7 @@ CREATE TABLE `tbl_portofolio_apps_master`  (
   `approved_at` datetime(0) NULL DEFAULT NULL,
   `status` bigint(1) NULL DEFAULT 1,
   PRIMARY KEY (`apps_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 91 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_portofolio_apps_master
@@ -999,6 +1113,7 @@ INSERT INTO `tbl_portofolio_apps_master` VALUES (86, 3, 1, 2, 4, 2, 2, 1, 2, 2, 
 INSERT INTO `tbl_portofolio_apps_master` VALUES (87, 3, 2, 2, 3, 1, 22, 2, 2, 2, 'aaaaa', 'asaaaa', 'aaaa', 'as', 'as', 'a', 99.00, '1111', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'apatu.com', 'SLA_asaaaa_20260331_160705.pdf', 2, '2026-03-30 11:58:02', 1, '2026-03-31 16:07:05', NULL, NULL, 1);
 INSERT INTO `tbl_portofolio_apps_master` VALUES (88, 4, 1, 2, 1, 1, 24, 1, 2, 2, 'a', 'x', 'x', 'a', 'a', 'a', 100.00, '12121', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'No', 'https://www.cimbniaga.co.id/', 'SLA_x_20260331_161017.pdf', 2, '2026-03-30 14:17:10', 1, '2026-03-31 16:10:16', NULL, NULL, 1);
 INSERT INTO `tbl_portofolio_apps_master` VALUES (89, 4, 2, 2, 2, 3, 19, 1, 1, 1, 'aaa', 'as', 'sss', 'aa', 'a', 'a', 99.00, '1111', NULL, 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', NULL, NULL, NULL, NULL, NULL, NULL, 'Yes', 'pokemons.com', 'SLA_as_20260331_155136.pdf', 2, '2026-03-30 16:38:12', 1, '2026-03-31 15:51:36', NULL, NULL, 1);
+INSERT INTO `tbl_portofolio_apps_master` VALUES (92, 2, 1, 2, 2, 3, 1, 1, 1, 2, 'tes', 'tes1000', 'tes1001', 'Tes upload SLA', 'OTAA', 'OTAA', 99.00, '2025', NULL, 'Directorate', 'Sub-Directorate', 'Department Head', 'Group', 'Group Head', 'IT Sub-Directorate', 'IT Department Head', 'IT Support Group', 'IT Group Head', 'IT Support Division', 'IT Division Head', NULL, NULL, 'OTAA', NULL, NULL, NULL, 'Yes', 'tes.com', 'SLA_tes1000_20260401_082439.pdf', 2, '2026-04-01 08:19:12', 1, '2026-04-01 08:24:36', NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for tbl_product_provider_junc
@@ -1092,7 +1207,7 @@ CREATE TABLE `tbl_server`  (
   `modified_at` datetime(0) NULL DEFAULT NULL,
   `status` tinyint(1) NULL DEFAULT 1,
   PRIMARY KEY (`server_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_server
@@ -1102,6 +1217,7 @@ INSERT INTO `tbl_server` VALUES (2, 'VM', 99.42, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_server` VALUES (3, 'GCM', 99.50, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_server` VALUES (4, 'AWS', 99.50, NULL, NULL, NULL, NULL, 1);
 INSERT INTO `tbl_server` VALUES (5, 'Azure', 99.50, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_server` VALUES (14, 'Tes Servers', 0.00, 1, '2026-04-01 08:55:32', 1, '2026-04-01 08:55:40', 0);
 
 -- ----------------------------
 -- Table structure for tbl_service
@@ -1152,7 +1268,7 @@ CREATE TABLE `tbl_user_role`  (
   PRIMARY KEY (`user_role_id`) USING BTREE,
   INDEX `user_id`(`id`) USING BTREE,
   INDEX `role_id`(`role_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tbl_user_role
@@ -1160,6 +1276,7 @@ CREATE TABLE `tbl_user_role`  (
 INSERT INTO `tbl_user_role` VALUES (1, 1, 1, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_user_role` VALUES (2, 2, 2, NULL, NULL, NULL, NULL);
 INSERT INTO `tbl_user_role` VALUES (3, 3, 3, NULL, NULL, 2, '2026-01-23 04:55:10');
+INSERT INTO `tbl_user_role` VALUES (13, 12, 1, 1, '2026-04-01 09:04:37', 1, '2026-04-01 09:05:08');
 
 -- ----------------------------
 -- Table structure for users
@@ -1175,7 +1292,7 @@ CREATE TABLE `users`  (
   `updated_at` timestamp(0) NOT NULL DEFAULT current_timestamp(0) ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
@@ -1183,5 +1300,6 @@ CREATE TABLE `users`  (
 INSERT INTO `users` VALUES (1, 'role1', 'role1@gmail.com', '11111', 1, '2025-12-30 10:52:45', '2026-02-20 09:16:05');
 INSERT INTO `users` VALUES (2, 'role2', 'role2@gmail.com', '11111', 1, '2025-12-30 16:11:58', '2026-02-20 09:16:06');
 INSERT INTO `users` VALUES (3, 'role3', 'role3@gmail.com', '11111', 1, '2026-01-23 09:27:33', '2026-02-20 09:16:06');
+INSERT INTO `users` VALUES (12, 'Tes Users', 'tes1@gmail.com', '$2y$10$7aby7zC6haTYVgNSSRX/UOaBwPMhIWjdR.VTsnQ5qDpilLGoKG3aO', 0, '2026-04-01 09:01:59', '2026-04-01 09:13:20');
 
 SET FOREIGN_KEY_CHECKS = 1;
