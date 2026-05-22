@@ -1,0 +1,2618 @@
+/* --- 1. CORE THEME VARIABLES --- */
+:root {
+    --theme-yellow-primary: #fbc531; 
+    --theme-yellow-hover: #e1b12c;
+    --theme-bg-yellow-light: #fefae0;
+    --theme-bg-yellow-dark: #fae588;
+    --text-dark: #2f3542;
+    --sidebar-bg: #2f3542; 
+}
+
+body { font-family: 'Poppins', sans-serif; }
+
+/* --- 2. SIDEBAR & NAVBAR --- */
+.main-sidebar { 
+    background-color: #343A40 !important; 
+}
+
+.brand-link {
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    display: flex; align-items: center; justify-content: center; padding: 15px 10px;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active {
+    background-color: var(--theme-yellow-primary);
+    color: var(--text-dark);
+    font-weight: 700;
+}
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
+    background-color: rgba(251, 197, 49, 0.2);
+    color: var(--theme-yellow-primary);
+}
+
+.card-primary:not(.card-outline) > .card-header {
+    background-color: var(--theme-yellow-primary); color: var(--text-dark);
+}
+.navbar-light .navbar-nav .nav-link { color: var(--text-dark); font-weight: 500; }
+.dropdown-item:active { background-color: var(--theme-yellow-primary); color: var(--text-dark); }
+
+.bg-info {
+    background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%) !important;
+    color: var(--text-dark) !important; border: none;
+}
+
+/* --- 3. SMALL BOXES --- */
+.small-box.bg-info, .small-box.bg-success, .small-box.bg-warning, .small-box.bg-danger {
+    background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%) !important;
+    color: var(--text-dark) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 12px; border: none;
+}
+.small-box .inner h3, .small-box .inner p, .small-box .inner sup { color: var(--text-dark) !important; }
+.small-box .icon > i { color: var(--text-dark) !important; opacity: 0.4; }
+.small-box:hover .icon > i { color: var(--text-dark) !important; opacity: 0.6; transform: scale(1.1); }
+.small-box > .small-box-footer {
+    background-color: rgba(47, 53, 66, 0.1) !important; color: var(--text-dark) !important;
+    border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+}
+.small-box > .small-box-footer:hover { background-color: rgba(47, 53, 66, 0.2) !important; }
+
+/* --- 4. LOADING & UTILS --- */
+#loadingOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.85); z-index: 9999; 
+    display: none; justify-content: center; align-items: center; flex-direction: column;
+}
+.spinner-border { width: 3rem; height: 3rem; color: var(--theme-yellow-primary); }
+.spinner-svg { width: 80px; height: 80px; color: var(--theme-yellow-primary); }
+.loading-text { margin-top: 15px; color: var(--text-dark); font-weight: 600; letter-spacing: 1px; }
+
+/* --- 5. BUTTONS --- */
+.btn-theme-gradient {
+    background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%) !important;
+    color: var(--text-dark) !important; border: none !important; font-weight: 700 !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.btn-theme-gradient:hover { transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+.btn-add-custom { background-color: #2f50b7 !important; color: white !important; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.dark-mode .btn-add-custom,
+.dark-mode .btn-add-custom.dropdown-toggle {
+    background-color: #2f50b7 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.dark-mode .btn-add-custom:hover,
+.dark-mode .btn-add-custom.dropdown-toggle:hover {
+    background-color: #2f50b7 !important;
+    color: #fff !important;
+    opacity: 0.9; /* Sedikit efek feedback saat hover */
+}
+
+.dark-mode .btn-add-custom:hover {
+    background-color: #2f50b7 !important;
+}
+
+.task-red {
+    border-left: 5px solid #dc3545 !important ; 
+}
+
+.btn-red-force {
+        background-color: #dc3545 !important; 
+        border-color: #dc3545 !important;
+        color: #212529 !important;
+    }
+    
+.btn-red-force:hover {
+    background-color: #c82333 !important;
+}
+
+.btn-export-custom { background: #10B981 !important; color: white !important; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.btn-save-custom { 
+    background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%); 
+    border: none; color: var(--text-dark); 
+    font-weight: bold; 
+}
+.btn-primary:hover, .btn-add-custom:hover,.btn-secondary:hover, 
+.btn-export-custom:hover, .btn-save-custom:hover,{ 
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15); 
+}
+
+.btn-activate {
+    color: #fff !important;
+    background-color: #00bc8c;
+    border-color: #00bc8c;
+    box-shadow: none;
+}
+
+/* Tambahkan ini agar saat hover warna tulisan tidak berubah */
+.btn-activate:hover {
+    color: #fff !important;
+    background-color: #008966; /* Warna hijau yang sedikit lebih gelap saat hover */
+    border-color: #008966;
+    opacity: 1;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.btn-deactivate {
+    color: #fff !important; /* Tambahkan !important agar pasti putih */
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    box-shadow: none;
+}
+
+/* Tambahkan ini agar saat hover warna tulisan tidak berubah */
+.btn-deactivate:hover {
+    color: #fff !important;
+    background-color: #c0392b; /* Warna merah yang sedikit lebih gelap saat hover */
+    border-color: #c0392b;
+    opacity: 1; /* Memastikan tidak transparan */
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+/* Operation Button */
+.btn-operation {
+    min-width: 162px !important; width: 162px !important;
+    background-color: #4b545c !important; color: #ffffff !important;
+    border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.btn-operation:hover { transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+.dropdown-operation-menu {
+    min-width: 162px !important; 
+    width: 162px !important;
+    padding: 0 !important;
+    margin-top: 2px !important; 
+    border: none !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important; 
+    overflow: hidden !important; 
+}
+
+.dropdown-operation-menu .dropdown-item {
+    padding: 10px 16px !important; 
+    font-size: 0.85rem !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f4f4f4 !important; 
+    margin: 0 !important; 
+}
+.dropdown-operation-menu .dropdown-item i {
+    width: 20px !important;
+    margin-right: 10px !important;
+    text-align: center;
+}
+.dropdown-operation-menu .dropdown-item:last-child {
+    border-bottom: none !important;
+}
+
+.btn-reset { background-color: #5a5c69; color: white !important; border: none !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.btn-reset:hover { transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+
+
+/* Custom Button Generate Template */
+.btn-generate-template {
+    background-color: #17a2b8 !important; /* Warna dasar sesuai gambar */
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+}
+
+.btn-generate-template:hover {
+    background-color: #17a2b8 !important; /* Warna sedikit lebih gelap saat di-hover */
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+.btn-generate-template:focus, 
+.btn-generate-template.focus {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5) !important;
+}
+
+/* Custom Button Import */
+.btn-import-custom {
+    background-color: #28a745 !important; /* Warna hijau rumput */
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease;
+}
+
+.btn-import-custom:hover {
+    background-color: #28a745 !important; /* Warna hijau rumput */
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.btn-import-custom:focus, 
+.btn-import-custom.focus {
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.5) !important;
+}
+
+/* Task Action Buttons */
+.btn-task { font-weight: 600; font-size: 0.85rem; padding: 6px 18px; border-radius: 4px; float: right; color: #fff !important; text-transform: capitalize; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.btn-yellow { background-color: #ffc107; color: #212529 !important; border: none; }
+.btn-orange { background-color: #fd7e14; border: none; }
+.btn-blue { background-color: #007bff; border: none; }
+.btn-task:hover { opacity: 0.9; }
+
+/* Action Buttons (Yellow/Red/Audit) */
+.btn-action-yellow { background-color: var(--theme-yellow-primary); border: none; color: var(--text-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.btn-action-yellow:hover { background-color: var(--theme-yellow-hover); color: var(--text-dark); }
+.btn-action-red { background-color: #dc3545; border: none; color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.btn-action-red:hover { background-color: #c82333; color: #ffffff; }
+.btn-action-audit { background-color: #3f51b5; color: white; border: none; transition: 0.3s; }
+.btn-action-audit:hover { background-color: #303f9f; color: white; }
+
+.swal2-icon.swal2-question { border-color: var(--theme-yellow-primary) !important; color: var(--theme-yellow-primary) !important; }
+.swal2-icon.swal2-success { border-color: var(--theme-bg-yellow-light) !important; color: var(--theme-yellow-primary) !important; }
+.swal2-icon.swal2-success .swal2-success-ring { border: 4px solid var(--theme-yellow-primary) !important; }
+.swal2-icon.swal2-success [class^='swal2-success-line'] { background-color: var(--theme-yellow-primary) !important; }
+
+/* --- 6. SCROLL CONTAINERS (FIXED HEIGHT) --- */
+.task-scroll-container,
+.portfolio-scroll-container {
+    max-height: 535px !important; 
+    overflow-y: auto !important;  
+    overflow-x: auto;             
+    display: block;               
+}
+.task-scroll-container { padding-right: 8px; padding-top: 10px; padding-bottom: 10px; }
+.portfolio-scroll-container { border-bottom: 1px solid #dee2e6; margin-bottom: 0; }
+
+.portfolio-scroll-container thead th {
+    position: sticky; top: 0; z-index: 1020;
+    background-color: #fff3cd !important; 
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+.task-scroll-container::-webkit-scrollbar, .portfolio-scroll-container::-webkit-scrollbar { width: 6px; height: 6px; }
+.task-scroll-container::-webkit-scrollbar-track, .portfolio-scroll-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.task-scroll-container::-webkit-scrollbar-thumb, .portfolio-scroll-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+.task-scroll-container::-webkit-scrollbar-thumb:hover, .portfolio-scroll-container::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+/* --- 7. HOME SPECIFICS (Card Task & Table) --- */
+.card-task { border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; transition: transform 0.2s; background: #fff; margin-bottom: 15px; }
+.card-task:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+.task-yellow { border-left: 6px solid #ffc107; } 
+.task-orange { border-left: 6px solid #fd7e14; } 
+.task-blue   { border-left: 6px solid #007bff; } 
+.task-title { font-weight: 700; font-size: 1.05rem; color: #333; display: block; margin-bottom: 2px; }
+.task-meta { font-size: 0.8rem; color: #888; font-weight: 400; float: right; }
+.task-status-text { font-weight: 700; font-size: 0.95rem; color: #333; margin-top: 10px; margin-bottom: 5px; }
+.task-info-item { font-size: 0.85rem; color: #666; margin-bottom: 2px; display: flex; align-items: center; }
+.task-info-item i { width: 20px; color: #999; }
+
+.table tbody td { vertical-align: middle !important; }
+.table thead th { 
+    padding-top: 10px !important;  
+    padding-bottom: 10px !important;
+    vertical-align: middle !important;
+    line-height: 1.2 !important;  
+}
+
+.table-custom-fixed { font-size: 0.85rem; }
+.table-custom-fixed thead th { 
+    background-color: #fff3cd; color: #212529; 
+    text-align: center !important; vertical-align: middle !important; white-space: nowrap !important;
+    width: 1% !important; min-width: 100px !important;
+    padding: 10px; padding-right: 30px !important; position: relative;
+    border-bottom: 2px solid #dee2e6; border-right: 1px solid rgba(0,0,0,0.05); font-weight: 600;
+}
+.table-custom-fixed tbody td { white-space: normal !important; word-wrap: break-word !important; max-width: 200px !important; vertical-align: middle !important; }
+.table-custom-fixed thead th:first-child { width: 50px !important; min-width: 50px !important; }
+.table-custom-fixed thead th:nth-child(2) { width: 100px !important; min-width: 100px !important; }
+
+/* Table Responsive Min-Height */
+.table-responsive { min-height: 550px; }
+
+/* Filter UI */
+.filter-icon-wrapper { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-dark); opacity: 0.5; z-index: 10; padding: 5px; transition: all 0.2s; margin-left: 5px !important; }
+.filter-icon-wrapper:hover { opacity: 1; color: #000; transform: translateY(-50%) scale(1.1); }
+.filter-active { color: #000 !important; opacity: 1; font-weight: bold; }
+.custom-filter-dropdown { min-width: 250px !important; width: 250px !important; max-width: 300px !important; padding: 0; font-size: 0.9rem; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,.15); margin-top: 10px; z-index: 9999; }.filter-header { padding: 8px; border-bottom: 1px solid #eee; background: #f8f9fa; }
+.filter-search-input { width: 100%; padding: 4px 8px; font-size: 13px; border: 1px solid #ddd; border-radius: 3px; outline: none; color: #333; font-weight: normal; }
+.filter-body { max-height: 250px; overflow-y: auto; padding: 5px 0; background: #fff; }
+.filter-item { padding: 6px 12px; display: block; font-size: 13px; cursor: pointer; font-weight: normal !important; margin: 0; color: #333; text-align: left; }
+.filter-item:hover { background-color: #f1f1f1; }
+.filter-item input[type="checkbox"] { margin-right: 8px; vertical-align: middle; }
+.filter-footer { padding: 8px; border-top: 1px solid #eee; display: flex; justify-content: space-between; background: #fff; border-radius: 0 0 4px 4px; }
+
+
+/* --- ANIMATION & MINI TASK VIEW --- */
+.transition-column { transition: all 0.4s ease-in-out; }
+
+.mini-task-list { list-style: none; padding: 0; margin: 0; }
+.mini-task-item { padding: 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s; cursor: default; border-left: 4px solid transparent; background-color: #fff; margin-bottom: 5px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.mini-task-item:hover { background-color: #f8f9fa; }
+.mini-border-yellow { border-left-color: #ffc107; }
+.mini-border-orange { border-left-color: #fd7e14; }
+.mini-border-blue   { border-left-color: #007bff; }
+
+.btn-toggle-task { color: #adb5bd; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; border: 1px solid transparent; }
+.btn-toggle-task:hover { background-color: #f1f1f1; color: #333; border-color: #dee2e6; }
+
+/* Equal Height Logic */
+.row-dashboard { display: flex; flex-wrap: wrap; }
+.row-dashboard > [class*='col-'] { display: flex; flex-direction: column; transition: all 0.3s ease; }
+.row-dashboard .card { height: 100%; width: 100%; margin-bottom: 15px; }
+
+.short-task-list { display: none; padding: 10px 5px; overflow-y: auto; }
+.short-task-list ul { list-style: none; padding: 0; margin: 0; }
+.short-task-item { display: block; background-color: #fff; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); font-size: 0.9rem; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 5px solid #ddd; transition: all 0.2s ease; cursor: default; }
+.short-task-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.btn-minimize-task { background: transparent; border: none; color: #adb5bd; }
+.btn-minimize-task:hover { color: #333; }
+
+/* Badge Colors */
+.badge-necessary { background-color: #dc3545; color: #fff; }
+.badge-critical { background-color: #fd7e14; color: #fff; }
+.badge-very-important { background-color: #ffc107; color: #fff; }
+.badge-important { background-color: #28a745; color: #fff; }
+.badge-others { background-color: #6c757d; color: #fff; }
+
+/* Pagination Override */
+.pagination .page-item .page-link { color: var(--text-dark); box-shadow: none !important; }
+.pagination .page-item .page-link:hover { color: #000; background-color: #e9ecef; border-color: #dee2e6; }
+.pagination .page-item.active .page-link { background-color: var(--theme-yellow-primary) !important; border-color: var(--theme-yellow-primary) !important; color: #212529 !important; font-weight: 700; }
+.pagination .page-link { color: var(--text-dark); }
+.pagination .page-link:hover { background-color: #f2f2f2; }
+
+/* Breadcrumb */
+.breadcrumb-home { color: var(--text-dark) !important; font-weight: 600; text-decoration: none; }
+.breadcrumb-home:hover { color: var(--text-dark) !important; text-decoration: underline !important; }
+
+/* Action Container */
+.action-container { display: flex !important; flex-direction: column !important; gap: 12px !important; align-items: center !important; justify-content: center !important; padding: 10px 0 !important; }
+.action-container .btn { width: 35px !important; height: 35px !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 !important; padding: 0 !important; }
+
+/* Disabled Row */
+.row-disabled { background-color: #f4f6f9 !important; color: #adb5bd !important; opacity: 0.8; }
+.row-disabled .btn { opacity: 0.5; pointer-events: none; }
+
+/* Network Menu */
+.network-separator { border-bottom: none; transition: border 0.3s; }
+.network-separator.menu-open { border-bottom: 1px solid #4f5962; margin-bottom: 5px; padding-bottom: 5px; }
+
+/* Export Badge */
+.badge-export { background-color: #17a2b8 !important; color: #ffffff !important; border: none; }
+
+/* Link Table Dynamic */
+.link-table-dynamic { color: #212529 !important; text-decoration: none; cursor: pointer; transition: color 0.3s; }
+
+
+/* --- FORM DETAIL & TIMELINE --- */
+.btn-header-back { color: var(--text-dark); font-size: 1.1rem; margin-right: 10px; transition: color 0.2s; background: transparent; border: none; padding: 0; }
+.btn-header-back:hover { color: var(--theme-yellow-hover); }
+
+.timeline-wrapper { position: relative; padding: 10px 0 10px 20px; list-style: none; min-width: 600px;}
+.timeline-item { position: relative; padding-bottom: 25px; border-left: 2px solid #e0e0e0; padding-left: 20px; }
+.timeline-item:last-child { border-left: 0; padding-bottom: 0; }
+.timeline-marker { position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 3px solid #ccc; z-index: 1; }
+.timeline-item.passed .timeline-marker { border-color: #28a745; background: #28a745; }
+.timeline-item.passed { border-left-color: #28a745; }
+.timeline-item.active .timeline-marker { border-color: var(--theme-yellow-primary); background: #fff; box-shadow: 0 0 0 4px rgba(251, 197, 49, 0.2); }
+.timeline-item.rejected .timeline-marker { border-color: #dc3545; background: #dc3545; }
+.timeline-content { position: relative; top: -5px; }
+.timeline-title { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); display: block; }
+.timeline-date { font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px; }
+.timeline-user { font-size: 0.85rem; color: #555; }
+
+.card-tabs .nav-link { color: #6c757d; font-weight: 600; }
+.card-tabs .nav-link.active { color: var(--text-dark); border-top: 3px solid var(--theme-yellow-primary); }
+
+.nav-tabs .nav-link.active { background-color: transparent !important; border: none !important; border-bottom: 3px solid var(--theme-yellow-primary) !important; border-radius: 0; }
+.nav-tabs .nav-link { border: none !important; color: #6c757d; padding: 10px 20px; transition: all 0.3s ease; }
+.nav-tabs .nav-link:hover { color: var(--theme-yellow-primary); }
+nav-tabs { border-bottom: 1px solid #dee2e6; }
+
+.form-section-title { font-weight: 700; color: #343a40; margin-bottom: 20px; margin-top: 10px; display: flex; align-items: center; font-size: 1.1rem; }
+.form-section-title i { margin-right: 12px; color: #6c757d; font-size: 1.2rem; }
+.section-divider { border-top: 1px solid #e9ecef; margin: 35px 0 25px 0; }
+.form-group label { font-weight: 600; color: #495057; }
+.form-control:disabled, .form-control[readonly] { background-color: #e9ecef; opacity: 1; cursor: not-allowed; }
+
+/* --- 8. DARK MODE OVERRIDES --- */
+body.dark-mode, body.dark-mode .navbar, body.dark-mode .card, body.dark-mode .main-sidebar, body.dark-mode .main-header { transition: background-color 0.3s, color 0.3s; }
+body.dark-mode .main-header { background-color: #343a40 !important; border-bottom: 3px solid var(--theme-yellow-primary) !important; }
+body.dark-mode .main-header .nav-link, body.dark-mode .main-header .btn-link { color: #ffffff !important; }
+body.dark-mode .card { background-color: #343a40; color: #fff; }
+body.dark-mode .card-header { background-color: #343a40 !important; color: #ffffff !important; border-bottom: 1px solid #4b545c; }
+body.dark-mode .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(255,255,255,0.05); }
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3:not(.inner h3), body.dark-mode h4 { color: #fff !important; }
+body.dark-mode .nav-sidebar > .nav-item > .nav-link.active, body.dark-mode .nav-treeview > .nav-item > .nav-link.active { background-color: rgba(251, 197, 49, 0.2) !important; color: var(--theme-yellow-primary) !important; }
+body.dark-mode .nav-sidebar > .nav-item > .nav-link.active:hover, body.dark-mode .nav-treeview > .nav-item > .nav-link.active:hover { background-color: var(--theme-yellow-primary)!important; color: var(--text-dark)!important; font-weight: 700 !important; }
+
+/* Dark Mode Small Boxes */
+body.dark-mode .small-box.bg-info, body.dark-mode .small-box.bg-success, body.dark-mode .small-box.bg-warning, body.dark-mode .small-box.bg-danger { background: linear-gradient(135deg, rgba(254, 250, 224, 0.6) 0%, rgba(250, 229, 136, 0.6) 100%) !important; box-shadow: none !important; }
+body.dark-mode .small-box .inner h3, body.dark-mode .small-box .inner p, body.dark-mode .small-box .inner sup { color: #ffffff !important; }
+body.dark-mode .small-box .icon > i { color: #ffffff !important; opacity: 0.5; }
+body.dark-mode .small-box:hover .icon > i { color: #ffffff !important; opacity: 0.7; transform: scale(1.1); }
+body.dark-mode .small-box > .small-box-footer { background-color: rgba(47, 53, 66, 0.2) !important; color: #ffffff !important; }
+body.dark-mode.small-box > .small-box-footer:hover { background-color: rgba(47, 53, 66, 0.2) !important; color: #ffffff !important; }
+
+/* Dark Mode Utilities */
+body.dark-mode .breadcrumb-home { color: #ffffff !important; font-weight: 600; text-decoration: none; }
+body.dark-mode .breadcrumb-home:hover { color: #ffffff !important; text-decoration: underline !important; }
+body.dark-mode .breadcrumb-item, body.dark-mode .breadcrumb-item a { color: #ced4da !important; }
+body.dark-mode .breadcrumb-item.active { color: #ffffff !important; }
+body.dark-mode .content-header h1 { color: #ffffff !important; }
+body.dark-mode .card-footer.bg-white { background-color: #343a40 !important; border-top: 1px solid #4b545c; }
+body.dark-mode .card-footer .text-muted { color: #ffffff !important; }
+body.dark-mode .pagination .page-link { background-color: #343a40; border-color: #6c757d; color: #ffffff; }
+body.dark-mode .pagination .page-item.active .page-link { background-color: var(--theme-yellow-primary) !important; border-color: var(--theme-yellow-primary) !important; color: #1f2d3d !important; }
+body.dark-mode .pagination .page-item.disabled .page-link { background-color: #454d55; border-color: #6c757d; color: #6c757d; }
+body.dark-mode .pagination .page-link:hover { background-color: #4b545c; color: #ffffff; }
+body.dark-mode .bg-info { background: linear-gradient(135deg, rgba(254, 250, 224, 0.8) 0%, rgba(250, 229, 136, 0.8) 100%) !important; border: none; }
+body.dark-mode .btn-theme-gradient { background: linear-gradient(135deg, rgba(254, 250, 224, 0.8) 0%, rgba(250, 229, 136, 0.8) 100%) !important; color: var(--text-dark) !important; }
+body.dark-mode .btn-theme-gradient:hover { background: linear-gradient(135deg, rgba(254, 250, 224, 0.9) 0%, rgba(250, 229, 136, 0.9) 100%) !important; }
+body.dark-mode .modal-header { background: linear-gradient(135deg, rgba(254, 250, 224, 0.8) 0%, rgba(250, 229, 136, 0.8) 100%) !important; color: var(--text-dark); }
+body.dark-mode .btn-save-custom { background: linear-gradient(135deg, rgba(254, 250, 224, 0.8) 0%, rgba(250, 229, 136, 0.8) 100%) !important; border: none; color: var(--text-dark); font-weight: bold; }
+body.dark-mode .btn-save-custom:hover { background: linear-gradient(135deg, rgba(254, 250, 224, 0.9) 0%, rgba(250, 229, 136, 0.9) 100%) !important; border: none; color: var(--text-dark); font-weight: bold; }
+body.dark-mode .close { color: #ffffff !important; }
+body.dark-mode .btn-danger { color: #ffffff !important; border: none !important; }
+body.dark-mode .btn-danger:hover { background-color: #921925 !important; color: #ffffff !important; }
+body.dark-mode .link-table-dynamic { color: inherit !important; }
+body.dark-mode .btn-action-audit { background-color: rgba(63, 81, 181, 0.8) !important; border: 1px solid rgba(63, 81, 181, 0.4) !important; color: #ffffff !important; }
+body.dark-mode .btn-action-audit:hover { background-color: #3f51b5 !important; opacity: 1; transform: translateY(-2px); }
+body.dark-mode .btn-action-yellow { background-color: rgba(251, 197, 49, 0.8) !important; border: 1px solid rgba(251, 197, 49, 0.4) !important; color: var(--text-dark) !important; }
+body.dark-mode .btn-action-yellow:hover { background-color: var(--theme-yellow-primary) !important; opacity: 1; }
+body.dark-mode .btn-action-red { background-color: rgba(220, 53, 69, 0.8) !important; border: 1px solid rgba(220, 53, 69, 0.4) !important; color: #ffffff !important; }
+body.dark-mode .btn-action-red:hover { background-color: #dc3545 !important; opacity: 1; }
+
+/* Dark Mode Details Form */
+body.dark-mode label { color: #ffffff !important; }
+body.dark-mode .form-section-title { color: #f8f9fa !important; }
+body.dark-mode .form-section-title i { color: #ced4da !important; }
+body.dark-mode .card, body.dark-mode .card-header, body.dark-mode .card-body, body.dark-mode .card-footer { background-color: #343a40 !important; color: #ffffff !important; }
+body.dark-mode .form-control { background-color: #343a40 !important; border-color: #6c757d !important; color: #ffffff !important; }
+body.dark-mode .form-control:disabled, body.dark-mode .form-control[readonly] { background-color: #454d55 !important; opacity: 1; }
+body.dark-mode .select2-selection__placeholder { color: #ced4da !important; }
+body.dark-mode .select2-selection { background-color: #343a40 !important; border-color: #6c757d !important; color: #ffffff !important; }
+body.dark-mode .select2-selection__rendered { color: #ffffff !important; line-height: 1.5 !important; }
+body.dark-mode .select2-dropdown { background-color: #343a40 !important; border-color: #6c757d !important; color: #ffffff !important; }
+body.dark-mode .select2-results__option { background-color: #343a40 !important; color: #ffffff !important; }
+body.dark-mode .select2-results__option--highlighted[aria-selected] { background-color: #007bff !important; color: #ffffff !important; }
+body.dark-mode .select2-results__option[aria-selected="true"] { background-color: #495057 !important; color: #ffffff !important; }
+body.dark-mode .select2-search__field { background-color: #3f474e !important; color: #ffffff !important; border-color: #6c757d !important; }
+body.dark-mode .select2-selection__arrow b { border-top-color: #ffffff !important; }
+body.dark-mode .select2-container--open .select2-selection__arrow b { border-bottom-color: #ffffff !important; }
+
+/* Dark Mode Dropdowns & Filters */
+body.dark-mode .custom-filter-dropdown { background: #343a40; border: 1px solid #6c757d; }
+body.dark-mode .filter-header, body.dark-mode .filter-footer { background: #3f474e; border-color: #6c757d; }
+body.dark-mode .filter-body { background: #343a40; }
+body.dark-mode .filter-item { color: #fff; }
+body.dark-mode .filter-item:hover { background: #4b545c; }
+body.dark-mode .filter-search-input { background: #4b545c; border-color: #6c757d; color: #fff; }
+body.dark-mode #loadingOverlay { background: rgba(0,0,0,0.7); }
+body.dark-mode .filter-icon-wrapper { color: #212529 !important; opacity: 0.5; }
+body.dark-mode .filter-icon-wrapper:hover { color: #000000 !important; opacity: 1; }
+body.dark-mode .filter-active { color: #000000 !important; font-weight: bold; }
+
+/* Dark Mode Operation Dropdowns */
+body.dark-mode .dropdown-operation-menu { border: 1px solid #ffffff !important; }
+body.dark-mode .dropdown-operation-menu .dropdown-item { border: 1px solid #ffffff !important; border-bottom: none !important; }
+body.dark-mode .dropdown-operation-menu .dropdown-item:last-child { border: 1px solid #ffffff !important;}
+body.dark-mode .btn-operation { border: 1px solid #ffffff !important; }
+body.dark-mode .btn-operation:hover { border-color: #f8f9fa !important; box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+body.dark-mode .btn-operation i { color: #ffffff !important; }
+
+/* Dark Mode Task Mini */
+body.dark-mode .mini-task-item { color: #fff; border-bottom-color: #4b545c; background-color: #3f474e; }
+body.dark-mode .mini-task-item:hover { background-color: #4b545c; }
+body.dark-mode .btn-toggle-task:hover { background-color: #4b545c; color: #fff; border-color: #6c757d; }
+body.dark-mode .dropdown-menu { background-color: #343a40; border-color: #6c757d; }
+body.dark-mode .form-check-label { color: #fff; }
+body.dark-mode .dropdown-toggle { background-color: #343a40 !important; border-color: #6c757d !important; color: #fff !important; }
+body.dark-mode .task-scroll-container::-webkit-scrollbar-track, body.dark-mode .portfolio-scroll-container::-webkit-scrollbar-track { background: #454d55; }
+body.dark-mode .task-scroll-container::-webkit-scrollbar-thumb, body.dark-mode .portfolio-scroll-container::-webkit-scrollbar-thumb { background: #6c757d; }
+
+.dark-mode .task-title,
+.dark-mode .task-status-text,
+.dark-mode .task-info-item {
+    color: #ffffff !important;
+}
+
+.dark-mode .task-meta {
+    color: #cccccc !important;
+}
+
+.dark-mode .card-task {
+    background-color: #343a40 !important; 
+    border: 1px solid #4b545c;
+    border-left-width: 5px !important; 
+}
+
+.dark-mode .task-yellow { border-left-color: #ffc107 !important; }
+.dark-mode .task-orange { border-left-color: #fd7e14 !important; }
+.dark-mode .task-blue   { border-left-color: #007bff !important; }
+
+.dark-mode .short-task-item {
+    background-color: transparent !important;
+    border-top: 1px solid #6c757d !important;
+    border-right: 1px solid #6c757d !important; 
+    border-bottom: 1px solid #6c757d !important;
+    box-shadow: none !important;
+}
+
+.dark-mode .short-task-item div {
+    color: #ffffff !important;
+}
+
+/* SELECT2 FORMATTING FIX */
+.select2-container .select2-selection--single { display: flex !important; align-items: center !important; height: calc(2.25rem + 2px) !important; }
+.select2-container .select2-selection--single .select2-selection__rendered { line-height: normal !important; margin-top: 0 !important; padding-left: 12px !important; padding-right: 20px !important; }
+.select2-container .select2-selection--single .select2-selection__arrow { height: 100% !important; top: 0 !important; display: flex; align-items: center; }
+
+.infra-header { color: var(--theme-yellow-primary, #007bff); font-weight: 700; border-bottom: 1px solid #dee2e6; padding-bottom: 5px; margin-bottom: 15px; margin-top: 10px; }
+
+#titleTask { display: flex; align-items: center; line-height: 1; }
+.task-badge-circle { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; background-color: #ffc107; color: #212529; font-size: 0.75rem; font-weight: 800; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+/* Mengubah background dan border saat Dark Mode aktif */
+body.dark-mode .no-task-card {
+    background-color: #343a40 !important; /* Warna background gelap AdminLTE */
+    border-color: #4b545c !important;     /* Warna garis tepi yang lebih menyatu */
+}
+
+/* Memastikan teks tetap nyaman dibaca di background gelap */
+body.dark-mode .no-task-card .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Default (Light Mode): Sembunyikan logo dark */
+.logo-dark {
+    display: none;
+}
+
+/* Saat Dark Mode aktif: Sembunyikan logo light, tampilkan logo dark */
+body.dark-mode .logo-light {
+    display: none !important;
+}
+
+body.dark-mode .logo-dark {
+    display: block !important;
+}
+
+.url-link {
+    color: black;
+    text-decoration: underline;
+}
+
+    
+.url-link:hover {
+    color: black;
+    text-decoration: underline;
+}
+
+/* Mode Gelap: URL berubah menjadi putih menyesuaikan teks lainnya */
+body.dark-mode .url-link {
+    color: #ffffff !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--single { height: calc(2.25rem + 2px) !important; }
+.dropdown-menu.keep-open { max-height: 250px; overflow-y: auto; }
+
+.form-control[readonly] { 
+  background-color: #e9ecef !important; 
+  opacity: 1; 
+  pointer-events: none; 
+  cursor: not-allowed;
+}
+
+.calc-field { background-color: #f8f9fa; font-weight: bold; color: #495057; }
+
+.service-row { transition: all 0.3s; }
+.service-row:hover { box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+.is-invalid { border-color: #dc3545 !important; }
+
+.scrollable-card-body::-webkit-scrollbar { width: 6px; }
+.scrollable-card-body::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.scrollable-card-body::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+.scrollable-card-body::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+.nav-tabs .nav-link .tab-text {
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  transition: max-width 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+.nav-tabs .nav-link.active .tab-text {
+  max-width: 80px; /* Lebar maksimal untuk teks terpanjang */
+  opacity: 1;
+  margin-left: 0.25rem; /* Memberikan jarak (seperti class ml-1) setelah teks muncul */
+}
+
+.custom-scroll-tabs .nav-link {
+color: #495057 !important; /* Warna teks bawaan (Abu-abu gelap) */
+font-weight: bold;
+transition: all 0.2s ease-in-out; 
+border-radius: 0; 
+border: 1px solid transparent; 
+}
+
+.custom-scroll-tabs .nav-link i {
+color: #6c757d; /* Warna ikon bawaan */
+transition: all 0.2s ease-in-out;
+}
+
+/* Saat di-Hover (Mouse diarahkan) */
+.custom-scroll-tabs .nav-link:hover {
+color: #fbc531 !important; /* Teks berubah biru */
+border-color: transparent transparent #dee2e6 transparent;
+}
+
+.custom-scroll-tabs .nav-link:hover i {
+color: #fbc531 !important; /* Ikon WAJIB berubah biru */
+transform: scale(1.1); /* Ikon sedikit membesar */
+}
+
+/* Saat Tab Aktif (Sedang dibuka) */
+.custom-scroll-tabs .nav-link.active {
+color: #fbc531 !important; /* Teks biru terang */
+background-color: transparent !important;
+border-bottom: 2px solid #fbc531 !important; /* Garis bawah biru */
+}
+
+.custom-scroll-tabs .nav-link.active i {
+color: #fbc531 !important; /* Ikon WAJIB biru terang */
+}
+
+body.dark-mode .custom-scroll-tabs .nav-link:not(.active) {
+    color: #ffffff !important;
+}
+
+body.dark-mode .custom-scroll-tabs .nav-link:not(.active) i {
+    color: #ffffff !important;
+}
+
+body.dark-mode .timeline-title {
+    color: #ffffff !important;
+}
+
+body.dark-mode .timeline-user {
+    color: #ced4da !important;
+}
+
+.swal2-styled.swal2-confirm {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.2s ease;
+}
+
+.swal2-styled.swal2-confirm:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+.swal2-styled.swal2-confirm:focus {
+    outline: none !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 1. Lebar scrollbar (Tetap 16px) */
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar {
+    width: 16px; 
+}
+
+/* 2. Jalur Scrollbar (Track) */
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-track {
+    background-color: #343a40; 
+}
+
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-thumb {
+    background-color: #9e9e9e; 
+    border-radius: 10px; 
+    
+    /* UBAH DI SINI: Ganti warna gelap menjadi 'transparent' */
+    border: 5px solid transparent; 
+    
+    background-clip: padding-box;
+}
+
+/* 4. Tombol Panah Atas (Up Arrow) */
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-button:single-button:vertical:decrement {
+    display: block;
+    height: 16px;
+    background-color: #343a40;
+    
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px; 
+}
+
+/* 5. Tombol Panah Bawah (Down Arrow) */
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: block;
+    height: 16px;
+    background-color: #343a40;
+    
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px; 
+}
+
+/* 6. Efek sentuh/hover pada tombol panah - Tetap */
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-button:single-button:vertical:decrement:hover,
+.dark-mode .custom-scroll-kiri::-webkit-scrollbar-button:single-button:vertical:increment:hover {
+    background-color: #454d55;
+}
+
+/* =========================================================
+   SCROLLBAR HORIZONTAL UNTUK TABS (.custom-scroll-tabs)
+   ========================================================= */
+
+/* 1. Tinggi scrollbar (horizontal pakai height, bukan width) */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar {
+    height: 16px; 
+}
+
+/* 2. Jalur Scrollbar (Track) */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-track {
+    background-color: #343a40; 
+}
+
+/* 3. Bar Pegangan (Thumb) */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-thumb {
+    background-color: #9e9e9e; 
+    border-radius: 10px; 
+    /* Trik transparan agar bar abu-abunya kurus */
+    border: 5px solid transparent; 
+    background-clip: padding-box;
+}
+
+/* 4. Tombol Panah KIRI (Left Arrow) */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    display: block;
+    width: 16px; /* horizontal pakai width untuk tombolnya */
+    background-color: #343a40;
+    
+    /* Ikon Segitiga Kiri */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M15 18l-6-6 6-6z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px; 
+}
+
+/* 5. Tombol Panah KANAN (Right Arrow) */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-button:single-button:horizontal:increment {
+    display: block;
+    width: 16px; /* horizontal pakai width untuk tombolnya */
+    background-color: #343a40;
+    
+    /* Ikon Segitiga Kanan */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M9 18l6-6-6-6z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px; 
+}
+
+/* 6. Efek Hover pada panah */
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-button:single-button:horizontal:decrement:hover,
+.dark-mode .custom-scroll-tabs::-webkit-scrollbar-button:single-button:horizontal:increment:hover {
+    background-color: #454d55;
+}
+
+/* Menyamakan warna row active dengan hover secara solid agar tidak belang */
+.table tbody tr.table-active,
+.table tbody tr.table-active > td {
+    background-color: #ececec !important; /* Warna hasil kalkulasi rgba(0,0,0,0.075) di atas putih */
+    color: #212529 !important;
+}
+
+/* Jika kamu menggunakan Dark Mode, tambahkan ini agar tetap terlihat kontras */
+body.dark-mode .table tbody tr.table-active,
+body.dark-mode .table tbody tr.table-active > td {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Memunculkan kembali border tabel agar terlihat jelas */
+.table tbody tr td {
+    border-top: 1.5px solid #dee2e6 !important;
+    border-bottom: 1.5px solid #dee2e6 !important;
+}
+
+/* Memastikan baris yang sedang diedit/active tetap punya border */
+.table tbody tr.table-active td {
+    border-top: 1.5px solid #dee2e6 !important;
+    border-bottom: 1.5px solid #dee2e6 !important;
+}
+
+
+/* =========================================================
+   SCROLLBAR UNTUK TABEL HOME VIEW (.main-table-wrapper & .top-scrollbar-wrapper)
+   ========================================================= */
+
+/* 1. Ukuran Scrollbar (Width untuk Vertikal, Height untuk Horizontal) */
+.dark-mode .main-table-wrapper::-webkit-scrollbar,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar {
+    width: 16px; 
+    height: 16px; 
+}
+
+/* ================= VERTIKAL (ATAS - BAWAH) ================= */
+
+/* Track Vertikal */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-track:vertical,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-track:vertical {
+    background-color: #343a40; 
+}
+
+/* Thumb Vertikal (Bar Abu-abu Kurus) */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-thumb:vertical,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-thumb:vertical {
+    background-color: #9e9e9e; 
+    border-radius: 10px; 
+    border: 5px solid transparent; 
+    background-clip: padding-box;
+}
+
+/* Panah Atas */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
+    display: block; height: 16px; background-color: #343a40;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+    background-position: center; background-repeat: no-repeat; background-size: 20px;
+}
+
+/* Panah Bawah */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-button:single-button:vertical:increment,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: block; height: 16px; background-color: #343a40;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-position: center; background-repeat: no-repeat; background-size: 20px;
+}
+
+/* ================= HORIZONTAL (KIRI - KANAN) ================= */
+
+/* Track Horizontal */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-track:horizontal,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-track:horizontal {
+    background-color: #343a40; 
+}
+
+/* Thumb Horizontal (Bar Abu-abu Kurus) */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-thumb:horizontal,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-thumb:horizontal {
+    background-color: #9e9e9e; 
+    border-radius: 10px; 
+    border: 5px solid transparent; 
+    background-clip: padding-box;
+}
+
+/* Panah Kiri */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-button:single-button:horizontal:decrement,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    display: block; width: 16px; background-color: #343a40;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M15 18l-6-6 6-6z'/%3E%3C/svg%3E");
+    background-position: center; background-repeat: no-repeat; background-size: 20px;
+}
+
+/* Panah Kanan */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-button:single-button:horizontal:increment,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-button:single-button:horizontal:increment {
+    display: block; width: 16px; background-color: #343a40;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M9 18l6-6-6-6z'/%3E%3C/svg%3E");
+    background-position: center; background-repeat: no-repeat; background-size: 20px;
+}
+
+/* ================= EFEK HOVER ================= */
+.dark-mode .main-table-wrapper::-webkit-scrollbar-button:hover,
+.dark-mode .top-scrollbar-wrapper::-webkit-scrollbar-button:hover {
+    background-color: #454d55;
+}
+
+/* Mengubah username (role1) menjadi putih HANYA saat Dark Mode aktif */
+.dark-mode .user-info-content .font-weight-bold {
+    color: #ffffff !important;
+}
+
+/* Mengubah tulisan role (IT SLM) menjadi abu-abu terang di Dark Mode */
+.dark-mode .user-info-content .text-muted {
+    color: #ced4da !important; 
+}
+
+/* 1. Jalur Toggle (Track) - Lebar dipangkas jadi 80px */
+.neumorphic-toggle {
+    width: 80px; /* UBAH DI SINI: Turun dari 100px jadi 80px */
+    height: 32px; 
+    border-radius: 50px;
+    background: #f4f6f9; 
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+/* 2. Pengaturan Teks (Light / Dark Mode) */
+.neumorphic-toggle .toggle-text {
+    font-size: 9px; /* UBAH DI SINI: Dikecilkan sedikit agar muat (dari 10px) */
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%); 
+    transition: all 0.4s ease;
+    pointer-events: none; 
+}
+
+/* Posisi didekatkan ke pinggir agar tidak nabrak pentolan */
+.neumorphic-toggle .text-light-mode {
+    right: 12px; /* UBAH DI SINI: Turun dari 22px */
+    color: #a0a5ab;
+}
+
+.neumorphic-toggle .text-dark-mode {
+    left: 16px; /* UBAH DI SINI: Turun dari 22px */
+    color: #6c757d;
+    opacity: 0; 
+}
+
+/* 3. Pentolan Bulat (Thumb) - Ukuran Tetap 24px */
+.neumorphic-toggle .toggle-thumb {
+    width: 24px; 
+    height: 24px; 
+    border-radius: 50%;
+    background: #f4f6f9;
+    box-shadow: 3px 3px 6px #d1d9e6, -3px -3px 6px #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 4px; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+}
+
+/* 4. Pengaturan Ikon di dalam Pentolan - Ukuran Tetap 12px */
+.neumorphic-toggle .toggle-thumb i {
+    font-size: 12px; 
+    position: absolute;
+    transition: all 0.4s ease;
+}
+
+.neumorphic-toggle .icon-sun {
+    /* UBAH DI SINI: Warna matahari jadi hitam */
+    color: #495057 !important; 
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+}
+
+.neumorphic-toggle .icon-moon {
+    /* UBAH DI SINI: Warna bulan jadi putih */
+    color: #ffffff !important; 
+    transform: scale(0.5) rotate(-90deg);
+    opacity: 0;
+}
+
+
+/* =========================================================
+   KONDISI SAAT DARK MODE AKTIF (DI-KLIK)
+   ========================================================= */
+
+/* Ubah Jalur Track jadi Gelap */
+.dark-mode .neumorphic-toggle {
+    background: #343a40;
+    box-shadow: inset 4px 4px 8px #22252a, inset -4px -4px 8px #464f56;
+}
+
+/* Hilangkan tulisan LIGHT, munculkan tulisan DARK */
+.dark-mode .neumorphic-toggle .text-light-mode {
+    opacity: 0;
+}
+.dark-mode .neumorphic-toggle .text-dark-mode {
+    opacity: 1;
+    color: #8a939b;
+}
+
+/* Pentolan bergeser ke kanan dan warnanya jadi gelap */
+.dark-mode .neumorphic-toggle .toggle-thumb {
+    background: #343a40;
+    /* UBAH DI SINI: Jarak geser baru! Lebar 80px - Jarak 4px - Pentolan 24px = 52px */
+    left: 52px; 
+    box-shadow: 3px 3px 6px #22252a, -3px -3px 6px #464f56;
+}
+
+/* Hilangkan Matahari, putar dan munculkan Bulan */
+.dark-mode .neumorphic-toggle .icon-sun {
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+}
+.dark-mode .neumorphic-toggle .icon-moon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+/* Memaksa elemen .icon-sun agar SELALU berbentuk matahari (Unicode FontAwesome f185) */
+.neumorphic-toggle .icon-sun::before {
+    content: "\f185" !important; 
+}
+
+/* Memaksa elemen .icon-moon agar SELALU berbentuk bulan (Unicode FontAwesome f186) */
+.neumorphic-toggle .icon-moon::before {
+    content: "\f186" !important; 
+}
+
+/* Menyeragamkan tinggi footer card agar sejajar di berbagai role/status */
+.custom-card-footer {
+    height: 55px; 
+    min-height: 55px; /* Tambahkan ini agar tidak menciut */
+    max-height: 55px; /* Tambahkan ini agar tidak melar */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    padding: 0 1.25rem;
+    background-color: #ffffff !important;
+    border-top: 1px solid rgba(0,0,0,.125);
+    width: 100%; /* Pastikan memenuhi lebar card */
+}
+
+/* --- Tambahan CSS untuk Dark Mode pada custom-card-footer --- */
+body.dark-mode .custom-card-footer {
+    background-color: #343a40 !important; /* Warna background gelap AdminLTE */
+    color: #ffffff !important;           /* Warna teks putih */
+    border-top: 1px solid #ffffff;     /* Warna garis pembatas yang seraras */
+}
+
+/* Pastikan elemen teks di dalamnya (seperti keterangan 'Total') juga mengikuti warna gelap */
+body.dark-mode .custom-card-footer .small,
+body.dark-mode .custom-card-footer span {
+    color: #ffffff !important;
+}
+
+/* Memastikan kolom row induk menggunakan stretch */
+.row-equal-height {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row-equal-height > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
+.row-equal-height .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-active-list,
+.table-active-list > th,
+.table-active-list > td {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+ 
+.table-hover .table-active-list:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+.table-hover .table-active-list:hover > td,
+.table-hover .table-active-list:hover > th {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* --- Tambahan CSS untuk Mencerahkan Highlight Baris Aktif (Dark Mode) --- */
+body.dark-mode .table-active-list,
+body.dark-mode .table-active-list > th,
+body.dark-mode .table-active-list  > td {
+    /* Menggunakan putih transparan yang lebih tinggi (0.2) agar abu-abunya lebih muda/terang */
+    background-color: rgba(225, 225, 225, 0.095) !important; 
+    color: #ffffff !important;
+}
+
+/* Memastikan hover pada baris aktif juga terlihat lebih terang */
+body.dark-mode .table-hover tbody tr.table-active-list:hover td {
+    background-color: rgba(225, 225, 225, 0.095) !important;
+}
+
+/* --- Mengubah warna tombol minimize card saat hover di Dark Mode --- */
+body.dark-mode .btn-minimize-task:hover,
+body.dark-mode .btn-minimize-task:hover i {
+    color: #ffffff !important;
+}
+
+/* Opsional: Membuat tombol terlihat sedikit lebih terang (abu-abu terang) sebelum di-hover agar tidak terlalu gaib */
+body.dark-mode .btn-minimize-task,
+body.dark-mode .btn-minimize-task i {
+    color: #adb5bd; /* Warna abu-abu terang */
+    transition: color 0.3s ease; /* Biar transisi perubahannya mulus */
+}
+
+
+.task-scroll-container::-webkit-scrollbar:vertical {
+    display: block;
+    width: 16px; 
+    background-color: rgba(0, 0, 0, 0.01);
+    border-radius: 10px;
+}
+
+.task-scroll-container::-webkit-scrollbar:horizontal {
+    display: none; 
+}
+
+.task-scroll-container::-webkit-scrollbar-track:vertical {
+    background-color: transparent; 
+}
+
+.task-scroll-container::-webkit-scrollbar-thumb:vertical {
+    background-color: #8b8b8b; 
+    border-radius: 10px;
+    border: 4px solid transparent; 
+    background-clip: padding-box;
+}
+.task-scroll-container::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #6b6b6b; 
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement,
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: block; 
+    height: 16px;
+    background-color: transparent; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 24px; 
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b8b8b'%3E%3Cpath d='M7 15l5-7 5 7H7z'/%3E%3C/svg%3E");
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b8b8b'%3E%3Cpath d='M7 9l5 7 5-7H7z'/%3E%3C/svg%3E");
+}
+
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    background-color: rgba(0, 0, 0, 0.03); 
+    border-radius: 10px 10px 0 0;
+}
+.task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment:hover {
+    background-color: rgba(0, 0, 0, 0.03); 
+    border-radius: 0 0 10px 10px;
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar:vertical {
+    background-color: transparent; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-track:vertical,
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement,
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-color: transparent; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-thumb:vertical {
+    background-color: #9e9e9e; 
+    border: 4px solid transparent; 
+    background-clip: padding-box; 
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 15l5-7 5 7H7z'/%3E%3C/svg%3E");
+}
+
+body.dark-mode .task-scroll-container::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Cpath d='M7 9l5 7 5-7H7z'/%3E%3C/svg%3E");
+}
+
+.table-wrapper-scroll-y {
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+    
+.table-sticky-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--theme-bg-yellow-light) 0%, var(--theme-bg-yellow-dark) 100%) !important;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+.table-sticky-header thead th {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-bottom: none;
+}
+
+#leftColumn, #rightColumn {
+    transition: all 0.4s ease-in-out; /* Durasi animasi 0.4 detik */
+}
+
+/* Mencegah card kanan turun ke bawah saat transisi berjalan */
+.main-row-nowrap {
+    flex-wrap: nowrap !important; 
+}
+
+/* Class saat kiri disembunyikan */
+.left-col-hidden {
+    flex: 0 0 0% !important;
+    max-width: 0% !important;
+    opacity: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Class saat kanan dilebarkan */
+.right-col-fullscreen {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+/* 5. Penyesuaian Khusus saat Sidebar di-Collapse (Dikecilkan) */
+.sidebar-collapse .main-sidebar, 
+.sidebar-collapse .main-sidebar:hover {
+    width: 4.6rem !important; 
+    max-width: 4.6rem !important; 
+    overflow-x: hidden !important;
+}
+
+.sidebar-collapse .content-wrapper, 
+.sidebar-collapse .main-footer, 
+.sidebar-collapse .main-header {
+    margin-left: 4.6rem !important;
+}
+
+/* MATIKAN TEKS & PANAH AGAR TIDAK MUNCUL SAAT DI-HOVER */
+.sidebar-collapse .nav-sidebar .nav-link p,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p,
+.sidebar-collapse .nav-sidebar .nav-link > .right,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link > .right {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* RAPIKAN KOTAK MENU & IKON AGAR PAS DI TENGAH */
+.sidebar-collapse .nav-sidebar .nav-link,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link {
+    width: 3.4rem !important; /* Presisi! Sisa lebar dikurangi padding */
+    padding: 10px 0 !important;
+    margin: 0 auto 5px auto !important; /* Paksa kotak selalu rata tengah */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 6px !important;
+}
+
+.sidebar-collapse .nav-sidebar .nav-icon,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-icon {
+    margin: 0 !important; 
+    font-size: 13px !important; /* Ubah ke 12px atau 11px agar mungil */
+    text-align: center !important;
+}
+
+/* RAPIKAN LOGO BAWAAN SAAT TERTUTUP */
+.sidebar-collapse .brand-link,
+.sidebar-collapse .main-sidebar:hover .brand-link {
+    width: 4.6rem !important;
+    padding: 15px 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.content-header h1.font-weight-bold.text-dark {
+    font-size: 18px !important;
+}
+
+.dashboard-main-card .col-md-9 .card-header h5 {
+    font-size: 14px !important;
+}
+
+/* 3. General Information, Deployment, dsb (Sub-judul) -> 11px */
+.dashboard-main-card .col-md-9 .infra-header {
+    font-size: 12px !important;
+}
+
+/* 4. Application Name * (Label Form) -> 10px */
+.dashboard-main-card .col-md-9 .form-group label {
+    font-size: 10px !important;
+}
+
+/* 5. Isi Field (Input text, Textarea, Readonly Box, Text Checkbox) -> 9px */
+.dashboard-main-card .col-md-9 .form-control,
+.dashboard-main-card .col-md-9 .p-2.border.rounded.bg-light,
+.dashboard-main-card .col-md-9 .form-check-label,
+.dashboard-main-card .col-md-9 .dropdown-toggle span {
+    font-size: 9px !important;
+}
+
+/* Khusus untuk teks yang terpilih di dalam plugin Select2 -> 9px */
+.dashboard-main-card .col-md-9 .select2-container .select2-selection--single .select2-selection__rendered {
+    font-size: 9px !important;
+}
+
+/* Khusus untuk pilihan list dropdown Select2 saat diklik terbuka -> 9px */
+.select2-results__option {
+    font-size: 9px !important;
+}
+
+/* 6. Mengecilkan ukuran tinggi kotak input (Text, Number, dsb) */
+.dashboard-main-card .col-md-9 input.form-control,
+.dashboard-main-card .col-md-9 select.form-control {
+    height: 28px !important;
+    padding: 2px 8px !important;
+}
+
+/* 7. Mengecilkan kotak Readonly Multi-select (Server, DB, OS) */
+.dashboard-main-card .col-md-9 .p-2.border.rounded.bg-light {
+    min-height: 28px !important;
+    padding: 4px 8px !important;
+    display: flex;
+    align-items: center;
+}
+
+/* 8. Mengecilkan tinggi kotak Select2 (Dropdown) */
+.dashboard-main-card .col-md-9 .select2-container .select2-selection--single,
+.modal-submenu-compact .select2-container .select2-selection--single{
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+}
+
+/* Menyelaraskan teks di dalam Select2 agar posisinya di tengah kotak */
+.dashboard-main-card .col-md-9 .select2-container .select2-selection--single .select2-selection__rendered,
+.modal-submenu-compact .select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: 28px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Menyesuaikan tinggi panah dropdown Select2 */
+.dashboard-main-card .col-md-9 .select2-container .select2-selection--single .select2-selection__arrow,
+.modal-submenu-compact .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 26px !important;
+}
+
+/* 9. Mengecilkan tombol Dropdown (Multi-select) */
+.dashboard-main-card .col-md-9 .dropdown-toggle {
+    height: 28px !important;
+    padding: 2px 8px !important;
+    display: flex;
+    align-items: center;
+}
+
+/* 10. (Opsional) Merapatkan jarak antar form ke bawah agar tidak terlalu renggang */
+.dashboard-main-card .col-md-9 .form-group {
+    margin-bottom: 12px !important;
+}
+
+/* 11. Mengecilkan ukuran tombol Back di header form kiri */
+.dashboard-main-card .col-md-9 .card-header .btn {
+    padding: 2px 10px !important;
+    font-size: 10px !important;
+    height: 24px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mengecilkan ukuran ikon panah di dalam tombol Back */
+.dashboard-main-card .col-md-9 .card-header .btn i {
+    font-size: 10px !important;
+    margin-right: 4px !important; /* Merapatkan jarak ikon dengan tulisan 'Back' */
+}
+
+/* =========================================================
+   CUSTOM FONT SIZE & UKURAN UNTUK CARD KANAN (TABS, TABEL, TIMELINE)
+   ========================================================= */
+
+/* 12. Mengecilkan ukuran Tabs di card kanan */
+.dashboard-main-card .col-md-3 .nav-tabs .nav-link {
+    padding: 8px 12px !important;
+    font-size: 10px !important;
+}
+.dashboard-main-card .col-md-3 .nav-tabs .nav-link i {
+    font-size: 10px !important;
+}
+
+/* 13. Mengecilkan teks dan padding tabel (List, Audit, Docs) */
+.dashboard-main-card .col-md-3 .table thead th,
+.dashboard-main-card .col-md-3 .table tbody td,
+.dashboard-main-card .col-md-3 .table tbody tr {
+    font-size: 9px !important;
+    padding: 4px 6px !important;
+}
+
+/* Mengecilkan ukuran checkbox di dalam tabel List */
+.dashboard-main-card .col-md-3 .table input[type="checkbox"] {
+    transform: scale(0.8);
+    margin: 0 !important;
+}
+
+/* Mengecilkan Badge status (Submit, Draft, dll) di tab Audit */
+.dashboard-main-card .col-md-3 .table .badge {
+    font-size: 8px !important;
+    padding: 4px 6px !important;
+    min-width: 80px !important; /* Dikecilkan dari 110px */
+}
+
+/* 14. Mengecilkan tombol action di dalam tabel (Edit, Delete, Download) */
+.dashboard-main-card .col-md-3 .table .btn-xs {
+    padding: 2px 6px !important;
+    font-size: 9px !important;
+    height: 20px !important;
+    line-height: 1 !important;
+}
+.dashboard-main-card .col-md-3 .table .btn-xs i {
+    font-size: 9px !important;
+}
+
+/* 15. Mengecilkan ukuran Timeline / Workflow */
+.dashboard-main-card .col-md-3 .timeline-title,
+.dashboard-main-card .col-md-3 .timeline-date,
+.dashboard-main-card .col-md-3 .timeline-content .text-muted,
+.dashboard-main-card .col-md-3 .timeline-content span,
+.dashboard-main-card .col-md-3 .timeline-content div {
+    font-size: 10px !important;
+}
+
+/* Mengecilkan bulatan (marker) timeline agar proporsional */
+.dashboard-main-card .col-md-3 .timeline-marker {
+    width: 12px !important;
+    height: 12px !important;
+    left: -7px !important;
+    border-width: 2px !important;
+}
+
+/* Merapatkan jarak antar item timeline ke bawah */
+.dashboard-main-card .col-md-3 .timeline-item {
+    padding-bottom: 15px !important;
+    padding-left: 15px !important;
+}
+
+/* 16. Mengecilkan tombol utama (Submit / Export) di bagian bawah tab */
+.dashboard-main-card .col-md-3 .custom-card-footer .btn {
+    height: 28px !important;
+    padding: 2px 10px !important;
+    font-size: 10px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mengecilkan ikon di dalam tombol bawah tersebut */
+.dashboard-main-card .col-md-3 .custom-card-footer .btn i {
+    font-size: 10px !important;
+}
+
+/* =========================================================
+   CUSTOM FONT SIZE & UKURAN UNTUK HOME VIEW
+   ========================================================= */
+
+/* 1. Card Header (Judul "My Tasks" & "My Portofolio") -> 14px */
+.row-dashboard .card-header h4 {
+    font-size: 14px !important;
+}
+
+/* Lingkaran angka pada My Tasks */
+#titleTask .task-badge-circle {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 10px !important;
+}
+
+/* 2. My Tasks (Tampilan Penuh / Full View) */
+.card-task .task-title {
+    font-size: 11px !important; /* Judul task */
+}
+.card-task .task-status-text {
+    font-size: 10px !important; /* Tulisan status */
+}
+.card-task .task-info-item,
+.card-task .task-meta {
+    font-size: 9px !important;  /* Info kategori, waktu, dll */
+}
+.card-task .btn-task {
+    font-size: 9px !important;
+    padding: 4px 10px !important;
+    height: 24px !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* 3. My Tasks (Tampilan Mini / Short List) */
+.short-task-list .short-task-item {
+    font-size: 10px !important;
+    padding: 8px 12px !important;
+}
+
+/* 4. Tabel Portofolio (Header & Isi) -> 9px */
+.main-table-wrapper table thead th {
+    font-size: 9px !important;
+    padding: 8px 10px !important; /* Merapatkan jarak atas bawah */
+}
+.main-table-wrapper table tbody td {
+    font-size: 9px !important;
+    padding: 6px 8px !important; /* Merapatkan isi sel */
+}
+
+/* 5. Tombol Action (Dropdown Actions di dalam tabel) */
+.main-table-wrapper table .btn-operation {
+    font-size: 9px !important;
+    padding: 2px 8px !important;
+    min-width: 110px !important; /* Ubah angkanya agar sama */
+    width: 110px !important;
+    height: 24px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-table-wrapper table .btn-operation i {
+    font-size: 9px !important;
+    margin-right: 4px !important;
+}
+.dropdown-operation-menu {
+    min-width: 110px !important;
+    width: 110px !important;
+}
+.dropdown-operation-menu .dropdown-item {
+    font-size: 9px !important;
+    padding: 6px 10px !important;
+}
+.dropdown-operation-menu .dropdown-item i {
+    font-size: 9px !important;
+    width: 14px !important;
+}
+
+/* 6. Filter, Search, dan Tombol Atas (Create, Export, Reset) */
+#colRight .input-group-sm .form-control {
+    font-size: 9px !important;
+    height: 26px !important;
+}
+
+#colRight .btn-sm, 
+#colRight .input-group-append .btn {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 15px !important; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tambahkan ini sedikit agar ada jarak antara ikon dan teks di dalam tombol tersebut */
+#colRight .btn-sm i {
+    margin-right: 6px !important;
+}
+
+/* 7. Dropdown Icon Filter di Header Tabel */
+.custom-filter-dropdown .filter-search-input,
+.custom-filter-dropdown .filter-item,
+.custom-filter-dropdown .filter-footer .btn {
+    font-size: 9px !important;
+}
+
+/* 8. Badge (Status Active/Drafting, Workflow, Criticality, dll) di Tabel */
+.main-table-wrapper table .badge {
+    font-size: 8px !important;
+    padding: 4px 6px !important;
+    min-width: 75px !important; /* Lebar minimum dikecilkan agar proporsional */
+}
+
+/* 9. Card Footer (Total Portofolio, Limit Baris, Pagination) */
+.card-footer .small,
+.card-footer .text-muted {
+    font-size: 9px !important;
+}
+#limitSelect {
+    font-size: 9px !important;
+    height: 24px !important;
+    padding: 2px 6px !important;
+}
+.pagination .page-link {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+    height: 22px !important;
+    display: flex;
+    align-items: center;
+}
+
+/* --- TAMBAHKAN INI: Khusus untuk tombol Reset agar tidak lebar --- */
+#colRight #btnResetFilter {
+    padding: 0 !important; /* Hapus padding samping */
+    width: 30px !important;  /* Paksa lebar jadi kotak */
+    min-width: 30px !important;
+}
+
+#colRight .btn-sm i {
+    margin-right: 6px !important;
+}
+
+/* Hilangkan margin kanan ikon khusus di tombol reset karena tidak ada teksnya */
+#colRight #btnResetFilter i {
+    margin-right: 0 !important;
+}
+
+#colRight #btnResetFilter,
+#colRight .input-group-append .btn {
+    padding: 0 !important; 
+    width: 30px !important; 
+    min-width: 30px !important;
+}
+
+/* Hilangkan margin kanan ikon karena tidak ada teks */
+#colRight #btnResetFilter i,
+#colRight .input-group-append .btn i {
+    margin-right: 0 !important;
+}
+
+/* =========================================================
+   OVERRIDE UKURAN HEADER, SIDEBAR, & FOOTER (GLOBAL)
+   ========================================================= */
+
+/* 1. Mengecilkan Tinggi Navbar (Header) */
+.main-header {
+    height: 40px !important; 
+    padding: 0 !important;
+}
+
+.main-header .navbar-nav {
+    height: 40px !important;
+}
+
+/* Menyelaraskan isi di dalam header agar tetap di tengah */
+.main-header .nav-link {
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.main-header .navbar-nav.ml-auto .nav-item {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+
+/* Penyesuaian konten wrapper agar tidak tertutup sidebar yang baru */
+.content-wrapper, 
+.main-footer, 
+.main-header {
+    margin-left: 210px !important;
+}
+
+
+/* 3. Mengecilkan Ukuran Logo Sidebar (SLIM) */
+.brand-link {
+    height: 40px !important;
+    padding: 5px !important;
+}
+.brand-link svg {
+    width: 90px !important; /* Dikecilkan agar pas di sidebar baru */
+    height: 30px !important;
+}
+
+/* 4. Mengecilkan Tinggi Footer */
+.main-footer {
+    height: 40px !important;
+    padding: 5px 15px !important;
+    font-size: 11px !important;
+    display: flex !important; /* Tambahkan ini */
+    align-items: center !important; /* Tambahkan ini agar teks rata tengah secara vertikal */
+    justify-content: space-between !important;
+}
+
+/* 1. Jalur Toggle (Track) - Diperkecil lebarnya */
+.neumorphic-toggle {
+    width: 60px; /* Turun dari 80px ke 60px */
+    height: 24px; /* Turun dari 32px ke 24px */
+    border-radius: 50px;
+    background: #f4f6f9; 
+    box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #ffffff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+/* 2. Pentolan Bulat (Thumb) - Diperkecil ukurannya */
+.neumorphic-toggle .toggle-thumb {
+    width: 18px; /* Turun dari 24px ke 18px */
+    height: 18px; /* Turun dari 24px ke 18px */
+    border-radius: 50%;
+    background: #f4f6f9;
+    box-shadow: 2px 2px 4px #d1d9e6, -2px -2px 4px #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 3px; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+}
+
+/* 3. Pengaturan Ikon di dalam Pentolan - Ukuran diperkecil */
+.neumorphic-toggle .toggle-thumb i {
+    font-size: 9px; /* Turun dari 12px ke 9px */
+    position: absolute;
+    transition: all 0.4s ease;
+}
+
+/* =========================================================
+   KONDISI SAAT DARK MODE AKTIF (GESER)
+   ========================================================= */
+
+/* Pentolan bergeser ke kanan - Hitungan baru: Lebar 60px - Jarak 3px - Pentolan 18px = 39px */
+.dark-mode .neumorphic-toggle .toggle-thumb {
+    background: #343a40;
+    left: 39px; 
+    box-shadow: 2px 2px 4px #22252a, -2px -2px 4px #464f56;
+}
+
+/* Update shadow track saat dark mode */
+.dark-mode .neumorphic-toggle {
+    box-shadow: inset 2px 2px 4px #22252a, inset -2px -2px 4px #464f56;
+}
+
+/* =========================================================
+   PENYESUAIAN DROPDOWN MULTIPLE (SERVER, DB, OS)
+   ========================================================= */
+
+/* Menyesuaikan tinggi tombol dropdown agar sama dengan input lain (28px) */
+.dashboard-main-card .col-md-9 .dropdown .btn.dropdown-toggle {
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 9px !important;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Memastikan teks di dalam button terpotong rapi jika kepanjangan */
+.dashboard-main-card .col-md-9 .dropdown .btn.dropdown-toggle span {
+    font-size: 9px !important;
+    max-width: 90%;
+}
+
+/* Menyesuaikan ukuran list pilihan di dalam dropdown menu */
+.dashboard-main-card .col-md-9 .dropdown-menu {
+    font-size: 9px !important;
+    padding: 5px !important;
+}
+
+/* Menyesuaikan ukuran checkbox dan label di dalam list */
+.dashboard-main-card .col-md-9 .dropdown-menu .form-check {
+    padding-left: 1.5rem !important;
+    margin-bottom: 2px !important;
+}
+
+.dashboard-main-card .col-md-9 .dropdown-menu .form-check-input {
+    margin-top: 2px !important;
+    transform: scale(0.8); /* Mengecilkan ukuran checkbox agar proporsional */
+}
+
+.dashboard-main-card .col-md-9 .dropdown-menu .form-check-label {
+    font-size: 9px !important;
+    cursor: pointer;
+}
+
+/* Style saat Dark Mode */
+body.dark-mode .dashboard-main-card .col-md-9 .dropdown .btn.dropdown-toggle {
+    background-color: #343a40 !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   PENYESUAIAN UKURAN SEARCH BOX DI DALAM SELECT2
+   ========================================================= */
+
+/* 1. Mengecilkan kotak input search */
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+    padding: 2px 8px !important;
+    height: 24px !important; /* Dikecilkan dari default */
+    font-size: 9px !important;
+    margin-top: 4px !important;
+}
+
+/* 2. Mengecilkan teks placeholder dan hasil pencarian */
+.select2-results__option {
+    font-size: 9px !important;
+    padding: 4px 8px !important; /* Merapatkan jarak antar list */
+}
+
+/* 3. Menyesuaikan teks "Searching..." atau "No results found" */
+.select2-results__message {
+    font-size: 9px !important;
+    padding: 4px 8px !important;
+}
+
+/* 4. Dark Mode: Memastikan search box Select2 di mode gelap juga kecil */
+body.dark-mode .select2-search__field {
+    background-color: #3f474e !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+/* 5. Menghilangkan padding berlebih pada container dropdown agar lebih compact */
+.select2-dropdown {
+    border-radius: 4px !important;
+    overflow: hidden;
+}
+
+/* --- Penyesuaian Dropdown Limit di Footer --- */
+#limitDropdown {
+    height: 18px !important;    /* Dikurangi dari 22px ke 18px */
+    padding: 0 4px !important;  /* Padding atas-bawah 0, samping 4px */
+    line-height: 1 !important;
+    min-height: 18px !important;
+}
+
+#limitDropdown::after {
+    vertical-align: middle !important;
+    margin-left: 5px !important;
+}
+
+.limit-option {
+    padding: 2px 0 !important; /* Hilangkan padding samping agar teks angka di tengah */
+    text-align: center;
+}
+
+.limit-option:hover {
+   background-color: #ececec !important; /* Warna abu-abu yang sama dengan hover baris tabel */
+    color: #212529 !important;
+}
+
+/* Memastikan menu dropdown tidak lebih lebar dari tombolnya */
+.dropdown-menu[aria-labelledby="limitDropdown"] {
+    min-width: 100% !important;
+    padding: 0 !important;      /* UBAH DI SINI: dari 2px menjadi 0 agar hover penuh ke pinggir */
+    margin-top: 2px !important;
+    overflow: hidden;           /* TAMBAHKAN INI: agar warna hover tidak keluar dari rounded corner */
+}
+
+/* Dark Mode adjustment */
+body.dark-mode .dropdown-menu[aria-labelledby="limitDropdown"] {
+    background-color: #343a40;
+    border: 1px solid #6c757d;
+}
+
+/* Dark Mode Support untuk Limit Dropdown */
+body.dark-mode #limitDropdown {
+    background-color: #343a40 !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode #limitDropdown::after {
+    border-top-color: #ffffff;
+}
+
+body.dark-mode .dropdown-menu {
+    background-color: #343a40;
+    border-color: #6c757d;
+}
+
+body.dark-mode .limit-option {
+    color: #ffffff !important;
+}
+
+body.dark-mode .limit-option:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   PENYESUAIAN UKURAN KONTEN CARD MY TASK (HOME VIEW)
+   ========================================================= */
+
+/* 1. Header My Task (Badge angka) */
+.task-badge-circle {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 9px !important;
+}
+
+/* 2. Full Task View (Card Task) */
+.card-task .card-body {
+    padding: 10px !important; /* Memperkecil padding dalam card */
+}
+
+.card-task .task-title {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px !important;
+}
+
+.card-task .task-meta {
+    font-size: 8px !important;
+    color: #888;
+}
+
+.card-task .task-info-item {
+    font-size: 9px !important;
+    margin-bottom: 1px !important;
+}
+
+.card-task .task-status-text {
+    font-size: 9px !important;
+    margin-top: 8px !important;
+    font-weight: 700 !important;
+}
+
+/* Badge RENEWAL di dalam judul */
+.card-task .text-danger.font-weight-bold {
+    font-size: 9px !important;
+}
+
+/* Tombol di dalam Task */
+.card-task .btn-task {
+    font-size: 9px !important;
+    padding: 3px 10px !important;
+    height: 22px !important;
+    line-height: 1 !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* 3. Mini Task View (Short List) */
+.short-task-item {
+    padding: 6px 10px !important;
+    font-size: 9px !important;
+    margin-bottom: 6px !important;
+}
+
+.short-task-item div {
+    font-size: 9px !important;
+}
+
+/* 4. Alert No Task */
+.no-task-card {
+    padding: 15px !important;
+}
+.no-task-card img {
+    width: 35px !important; /* Perkecil ikon no-task */
+}
+.no-task-card span {
+    font-size: 10px !important;
+}
+
+/* 5. Tombol Minimize Task */
+.btn-minimize-task {
+    font-size: 10px !important;
+}
+
+/* Mengurangi padding card header agar lebih rapat ke judul */
+.row-dashboard .card-header {
+    padding-top: 10px !important;
+    padding-bottom: 5px !important;
+}
+
+/* Mengurangi margin bawah antar card task */
+.card-task {
+    margin-bottom: 8px !important;
+}
+
+
+/* Menyesuaikan tinggi tabel agar tidak memaksa scroll panjang */
+.table-responsive {
+    min-height: auto !important; /* Hapus min-height 550px sebelumnya */
+}
+
+/* Merapatkan filter dan tombol search */
+#colRight .mb-3 {
+    margin-bottom: 10px !important;
+}
+
+@media (min-width: 992px) {
+    /* SAAT SIDEBAR TERBUKA (NORMAL) */
+    body:not(.sidebar-collapse) .main-sidebar,
+    body:not(.sidebar-collapse) .main-sidebar .sidebar,
+    body:not(.sidebar-collapse) .brand-link {
+        width: 210px !important; 
+        max-width: 210px !important; /* Kunci mati lebarnya */
+    }
+    
+    /* Mendorong header & konten persis sejauh lebar sidebar */
+    body:not(.sidebar-collapse) .main-header,
+    body:not(.sidebar-collapse) .content-wrapper,
+    body:not(.sidebar-collapse) .main-footer {
+        margin-left: 210px !important; 
+    }
+}
+
+body:not(.sidebar-collapse) .nav-sidebar .nav-link {
+    width: calc(100% - 24px) !important;
+    margin: 0 12px 2px 12px !important;
+    border-radius: 6px !important;
+}
+
+
+body:not(.sidebar-collapse) .nav-treeview > .nav-item > .nav-link {
+    width: calc(100% - 24px) !important;
+    margin: 0 12px 2px 12px !important;
+    padding-left: 20px !important; /* Sesuaikan indentasi sub-menu */
+}
+
+/* 1. Mengecilkan ukuran tulisan menu utama (Home, Apps, Administration) */
+.nav-sidebar .nav-link p {
+    font-size: 12px !important; 
+    font-weight: 500 !important; 
+    margin: 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* 2. Mengecilkan ukuran tulisan sub-menu (Application Type, dll) */
+.nav-treeview > .nav-item > .nav-link p {
+    font-size: 11px !important; 
+    font-weight: 400 !important; 
+}
+
+/* 3. Mengecilkan ukuran ikon utama (Rumah, Kubus, User) */
+.nav-sidebar .nav-icon {
+    font-size: 13px !important; /* DITURUNKAN dari 13px ke 11px agar presisi dengan collapse */
+    width: 20px !important; 
+    margin-right: 12px !important; 
+    text-align: center !important;
+}
+
+.main-sidebar,
+.main-sidebar .sidebar,
+.sidebar-collapse .main-sidebar,
+.sidebar-collapse .main-sidebar .sidebar {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+
+/* 4. Mengecilkan ikon bulat (far fa-circle) di sub-menu */
+.nav-treeview > .nav-item > .nav-link i.nav-icon {
+    font-size: 9px !important; 
+    margin-right: 10px !important;
+}
+
+/* 5. Mengecilkan ikon panah dropdown (angle-left) di sebelah kanan menu */
+.nav-sidebar .nav-link > .right {
+    font-size: 12px !important;
+    top: auto !important; /* Mencegah panah miring/tidak sejajar */
+}
+
+/* 6. Memastikan isi dalam tombol menu rata tengah vertikal */
+.nav-sidebar .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 15px !important; /* Sedikit mengurangi padding atas-bawah */
+}
+
+
+/* INI TAMBAHAN UNTUK KECILIN FONT DI SUB MENU
+/* =========================================================
+   CUSTOM FONT SIZE & UKURAN UNTUK SUB MENU (MASTER DATA)
+   ========================================================= */
+
+/* 1. Header Halaman & Breadcrumb (Berlaku Global) */
+.content-header h1 {
+    font-size: 18px !important;
+}
+.breadcrumb-item, .breadcrumb-item a {
+    font-size: 12px !important;
+}
+
+/* 2. Top Actions (Tombol Add, Export, Search Box) */
+.card-submenu-compact .card-header .btn-sm,
+.card-submenu-compact .card-header .input-group .btn {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 10px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-submenu-compact .card-header .btn-sm i,
+.card-submenu-compact .card-header .input-group .btn i {
+    font-size: 9px !important;
+    margin-right: 4px !important;
+}
+.card-submenu-compact .card-header .input-group .btn-secondary i {
+    margin-right: 0 !important; /* Reset button tidak butuh margin */
+}
+.card-submenu-compact .card-header .input-group .form-control {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 8px !important;
+}
+
+/* 3. Tabel Master Data (Header & Isi) - Disamakan dengan Portofolio */
+.card-submenu-compact .card-body .table thead th {
+    font-size: 9px !important;
+    padding: 8px 10px !important;
+}
+.card-submenu-compact .card-body .table tbody td {
+    font-size: 9px !important;
+    padding: 6px 8px !important;
+}
+
+/* 4. Dropdown Action di dalam tabel */
+.card-submenu-compact .card-body .table .btn-operation {
+    font-size: 9px !important;
+    padding: 2px 8px !important;
+    min-width: 110px !important; /* Diubah menjadi 110px agar sama dengan Home View */
+    width: 110px !important;     /* Diubah menjadi 110px agar sama dengan Home View */
+    height: 24px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-submenu-compact .card-body .table .btn-operation i {
+    font-size: 9px !important;
+    margin-right: 4px !important;
+}
+
+.card-submenu-compact .card-body .table .dropdown-operation-menu {
+    min-width: 110px !important;
+    width: 110px !important;
+}
+.card-submenu-compact .card-body .table .dropdown-operation-menu .dropdown-item {
+    font-size: 9px !important;
+    padding: 6px 10px !important; /* Disesuaikan dengan Home View */
+}
+.card-submenu-compact .card-body .table .dropdown-operation-menu .dropdown-item i {
+    font-size: 9px !important;
+    width: 14px !important;
+}
+
+/* 5. Badge Status (Active / Non Active) */
+.card-submenu-compact .card-body .table .badge {
+    font-size: 8px !important;
+    padding: 4px 6px !important;
+    min-width: 75px !important;
+}
+
+/* 6. Footer (Pagination & Total Data) */
+.card-submenu-compact .card-footer .float-left small,
+.card-submenu-compact .card-footer .pagination .page-link {
+    font-size: 9px !important;
+}
+.card-submenu-compact .card-footer .pagination .page-link {
+    padding: 2px 6px !important;
+    height: 22px !important;
+    display: flex;
+    align-items: center;
+}
+
+/* 7. MODAL (Add / Edit Form) */
+.modal-submenu-compact .modal-title {
+    font-size: 14px !important;
+}
+.modal-submenu-compact .form-group label {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+}
+.modal-submenu-compact .form-control {
+    font-size: 9px !important;
+    height: 28px !important;
+    padding: 2px 8px !important;
+}
+
+.modal-submenu-compact textarea.form-control {
+    height: auto !important; /* Textarea menyesuaikan tinggi baris */
+}
+.modal-submenu-compact .modal-footer .btn {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 10px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* code sidebar terbaru
+/* 1. Hilangkan indentasi (menjorok ke dalam) pada bungkus sub-menu */
+.sidebar-collapse .nav-treeview,
+.sidebar-collapse .main-sidebar:hover .nav-treeview {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+/* 2. Pastikan ikon lingkaran tidak terdorong margin */
+.sidebar-collapse .nav-treeview > .nav-item > .nav-link i.nav-icon,
+.sidebar-collapse .main-sidebar:hover .nav-treeview > .nav-item > .nav-link i.nav-icon {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    text-align: center !important;
+}
+
+.sidebar-collapse .nav-treeview > .nav-item > .nav-link:hover,
+.sidebar-collapse .main-sidebar:hover .nav-treeview > .nav-item > .nav-link:hover {
+    width: 3.4rem !important; /* Kunci lebarnya agar sama persis dengan menu utama */
+    padding: 10px 0 !important;
+    margin: 0 auto 5px auto !important; /* Pastikan posisinya tetap di tengah */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 6px !important; /* Beri lengkungan yang sama */
+}
+
+/* Pastikan ikon bulatnya tidak bergeser saat di-hover */
+.sidebar-collapse .nav-treeview > .nav-item > .nav-link:hover i.nav-icon {
+    margin: 0 !important; 
+    padding: 0 !important;
+}
+
+.sidebar-collapse .nav-sidebar .nav-link,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link,
+.sidebar-collapse .nav-sidebar .nav-item > .nav-link:hover,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-item > .nav-link:hover {
+    width: 3.4rem !important;
+    min-width: 3.4rem !important;
+    max-width: 3.4rem !important;
+    flex: 0 0 3.4rem !important; /* Paksa lebar kotak di 3.4rem secara absolut */
+    padding: 10px 0 !important;
+    margin: 0 auto 5px auto !important; /* Kunci di tengah */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important; /* Pastikan border/padding tidak menambah lebar */
+    overflow: hidden !important; /* Potong apapun yang mencoba meluber */
+}
+
+/* Kunci ikon agar tidak goyang saat dihover */
+.sidebar-collapse .nav-sidebar .nav-link i.nav-icon,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link i.nav-icon,
+.sidebar-collapse .nav-sidebar .nav-link:hover i.nav-icon,
+.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link:hover i.nav-icon {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important; /* Ikon memenuhi kotaknya yang berukuran 3.4rem */
+    text-align: center !important;
+}
+
+/* Matikan transisi lebar agar tidak ada efek melar sesaat */
+.sidebar-collapse .nav-sidebar .nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+/* 1. Kunci menu utama saat terbuka dan di-hover */
+body:not(.sidebar-collapse) .nav-sidebar > .nav-item > .nav-link:hover {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    margin: 0 12px 2px 12px !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+}
+
+/* 2. Kunci sub-menu (anak menu) saat terbuka dan di-hover */
+body:not(.sidebar-collapse) .nav-treeview > .nav-item > .nav-link:hover {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    margin: 0 12px 2px 12px !important;
+    padding-left: 20px !important; /* Tetap pertahankan posisi menjorok ke dalam */
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+}
+
+
+/* INI YG HARUS DI COPY PASTE SAMA VICKEN
+/* =========================================================
+   CUSTOM FONT SIZE & UKURAN UNTUK HOLIDAY CALENDAR
+   ========================================================= */
+
+/* 1. Header & Title Calendar (Teks Bulan & Tahun) */
+.fc-toolbar-title {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+/* 2. Tombol Aksi Calendar (Add, Export, Panah Kiri/Kanan) */
+.fc-toolbar-chunk .btn,
+.fc-toolbar-chunk .fc-button {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 10px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1 !important;
+}
+.fc-toolbar-chunk .btn i {
+    font-size: 9px !important;
+}
+
+/* 3. Header Nama Hari (Mon, Tue) & Angka Tanggal di Calendar */
+.fc-col-header-cell-cushion,
+.fc-daygrid-day-number {
+    font-size: 10px !important;
+    padding: 4px !important;
+    color: var(--text-dark);
+}
+body.dark-mode .fc-col-header-cell-cushion,
+body.dark-mode .fc-daygrid-day-number {
+    color: #ffffff !important;
+}
+
+/* 4. Teks Event (Acara Libur) di dalam kotak biru */
+.fc-h-event .fc-event-title {
+    font-size: 9px !important;
+    padding: 2px 4px !important;
+}
+
+/* 5. Popover Hover (Detail saat kursor diarahkan ke libur) */
+#holidayHoverPopover {
+    position: fixed !important;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 9999;
+    padding: 8px 12px !important;
+    font-size: 9px !important;
+    color: var(--text-dark);
+    max-width: 200px;
+}
+#hp_title {
+    font-size: 10px !important;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+body.dark-mode #holidayHoverPopover {
+    background: #343a40;
+    border-color: #6c757d;
+    color: #ffffff;
+}
+
+/* 6. MODAL HOLIDAY (Add, Edit, dan Detail Form) agar ukurannya seragam dengan form lain */
+#modalHoliday .modal-title,
+#modalHolidayDetail .modal-title {
+    font-size: 14px !important;
+}
+#modalHoliday .form-group label {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+}
+#modalHoliday .form-control {
+    font-size: 9px !important;
+    height: 28px !important;
+    padding: 2px 8px !important;
+}
+#modalHoliday textarea.form-control {
+    height: auto !important; /* Biarkan tinggi textarea menyesuaikan teks */
+}
+#modalHoliday .modal-footer .btn,
+#modalHolidayDetail .modal-footer .btn {
+    font-size: 9px !important;
+    height: 26px !important;
+    padding: 2px 10px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+#modalHolidayDetail .modal-footer .btn i {
+    font-size: 9px !important;
+}
+#modalHolidayDetail .modal-body p {
+    font-size: 10px !important;
+    margin-bottom: 10px !important;
+}
+#modalHolidayDetail .modal-body span {
+    font-size: 9px !important;
+}
+
+/* ==========================================
+   TAMBAHAN UNTUK MENGECILKAN UKURAN MODAL 
+   (Tambahkan di bagian 7. MODAL)
+   ========================================== */
+
+/* Mengecilkan lebar keseluruhan kotak modal */
+.modal-submenu-compact .modal-dialog {
+    max-width: 350px !important; /* Dikecilkan dari default 500px */
+    margin: 1.75rem auto; 
+}
+
+/* Merapatkan jarak (padding) di dalam modal agar tidak terlalu melompong */
+.modal-submenu-compact .modal-header,
+.modal-submenu-compact .modal-body,
+.modal-submenu-compact .modal-footer {
+    padding: 12px 15px !important; 
+}
+
+.modal-submenu-compact .modal-footer {
+    padding: 8px 15px 8px 15px !important; /* Atas 5px, Kanan 15px, Bawah 12px, Kiri 15px */
+}
+
+/* Mengecilkan ukuran tombol silang (Close 'x') di pojok kanan atas */
+.modal-submenu-compact .close {
+    font-size: 16px !important; 
+    padding: 12px !important;
+    margin: -12px -12px -12px auto !important;
+}
+
+
+@media (max-width: 992px) {
+    /* 1. Pastikan lebar sidebar tetap konsisten 210px di mode kecil */
+    .main-sidebar,
+    .main-sidebar .sidebar,
+    .brand-link {
+        width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    /* 2. Dorong Header (beserta burger), Konten, dan Footer ke kanan saat terbuka */
+    body.sidebar-open .main-header,
+    body.sidebar-open .content-wrapper,
+    body.sidebar-open .main-footer {
+        margin-left: 210px !important;
+    }
+
+    /* 3. Berikan animasi transisi yang mulus agar gesernya enak dilihat */
+    .main-header,
+    .content-wrapper,
+    .main-footer {
+        transition: margin-left 0.3s ease-in-out !important;
+    }
+}
+
+
+@media (max-width: 992px) {
+    /* 1. Pastikan lebar sidebar tetap konsisten 210px di mode kecil */
+    .main-sidebar,
+    .main-sidebar .sidebar,
+    .brand-link {
+        width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    /* 2. Dorong Header (beserta burger), Konten, dan Footer ke kanan saat terbuka */
+    body.sidebar-open .main-header,
+    body.sidebar-open .content-wrapper,
+    body.sidebar-open .main-footer {
+        margin-left: 210px !important;
+    }
+
+    /* 3. Berikan animasi transisi yang mulus agar gesernya enak dilihat */
+    .main-header,
+    .content-wrapper,
+    .main-footer {
+        transition: margin-left 0.3s ease-in-out !important;
+    }
+}
+
+.custom-card-footer .btn {
+    font-size: 10px !important;
+    padding: 4px 15px !important; /* Menyesuaikan jarak kiri-kanan teks */
+    height: 28px !important; /* Menyesuaikan tinggi tombol agar proporsional */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 600 !important; /* Opsional: agar teks 10px tetap terbaca jelas */
+}
+
+/* --- KEMBALIKAN SIFAT TEXTAREA --- */
+/* Jangan kunci tinggi textarea agar bisa ditarik dan menyesuaikan teks */
+.dashboard-main-card .col-md-9 textarea.form-control,
+.modal-submenu-compact textarea.form-control {
+    min-height: 30px; /* Tidak pakai !important di height/min-height */
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    resize: vertical !important; /* Memunculkan gagang tarikan */
+}
+
+/* Pastikan di Dark Mode juga tidak ada !important pada height */
+body.dark-mode .dashboard-main-card .col-md-9 textarea.form-control,
+body.dark-mode .modal-submenu-compact textarea.form-control {
+    min-height: 30px;
+}
+
+/* 1. Memaksa bungkus div memenuhi tinggi baris agar tombol rata tengah */
+.dashboard-main-card .col-md-3 .table tbody td.p-0 > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 2. Memastikan ikon di dalam tombol benar-benar berada di poros tengah */
+.dashboard-main-card .col-md-3 .table .btn-xs {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important; 
+}
+
+/* --- Penyesuaian Ukuran Dropdown Limit (Footer) agar sama di semua halaman --- */
+.custom-card-footer #limitDropdown {
+    height: 22px !important;
+    min-height: 22px !important;
+    padding: 0 5px !important;
+    line-height: 1 !important;
+    font-size: 9px !important;
+}
+
+/* Memastikan wrapper dropdown (div dengan class="dropdown") tidak memiliki height yang melar */
+.custom-card-footer .dropdown {
+    height: 22px !important;
+}
+
+/* Menyamarkan sudut pertemuan scrollbar di mode gelap */
+body.dark-mode .main-table-wrapper::-webkit-scrollbar-corner {
+    background-color: #343a40; /* Sesuaikan kode hex ini dengan warna background card dark mode Anda */
+}
+
+/* Pastikan background wrapper juga menyesuaikan */
+body.dark-mode .main-table-wrapper {
+    background-color: transparent; 
+}
+
+
+/* =========================================================
+   FREEZE PANE HORIZONTAL (KOLOM 1 & 2) - KHUSUS HOME
+   ========================================================= */
+
+/* 1. Kunci Kolom 1 (Action) */
+.table-freeze-home tbody td:nth-child(1):not([colspan]),
+.table-freeze-home thead th:nth-child(1):not([colspan]) {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 5 !important;
+    background-color: #ffffff; /* Wajib ada agar teks saat scroll tidak numpuk */
+}
+
+/* 2. Kunci Kolom 2 (Application Name) */
+.table-freeze-home tbody td:nth-child(2):not([colspan]),
+.table-freeze-home thead th:nth-child(2):not([colspan]) {
+    position: sticky !important;
+    left: 126px !important; 
+    z-index: 5 !important;
+    background-color: #ffffff; /* Wajib ada */
+    box-shadow: 3px 0 5px -2px rgba(0,0,0,0.15);
+}
+
+/* 3. Warna Belang (Striped) & Hover pada Kolom yang di-Freeze */
+.table-freeze-home.table-striped tbody tr:nth-of-type(odd) td:nth-child(1):not([colspan]),
+.table-freeze-home.table-striped tbody tr:nth-of-type(odd) td:nth-child(2):not([colspan]) {
+    background-color: #f2f2f2;
+}
+.table-freeze-home.table-hover tbody tr:hover td:nth-child(1):not([colspan]),
+.table-freeze-home.table-hover tbody tr:hover td:nth-child(2):not([colspan]) {
+    background-color: #ececec;
+}
+
+/* 4. FIX HEADER NEMBUS (Menggunakan Variabel Tema Anda) */
+.table-freeze-home thead th:nth-child(1):not([colspan]),
+.table-freeze-home thead th:nth-child(2):not([colspan]) {
+    z-index: 20 !important; /* Paling depan */
+    background: var(--theme-bg-yellow-light) !important;
+    color: var(--text-dark) !important;
+    box-shadow: 2px 0 5px -2px rgba(0,0,0,0.15); 
+}
+
+/* 5. Fix Dropdown Action agar tidak tertutup kolom sebelahnya atau baris di bawahnya */
+.table-freeze-home tbody td:nth-child(1):hover,
+.table-freeze-home tbody td:nth-child(1):focus-within {
+    z-index: 9999 !important; /* Menaikkan z-index td saat di-hover/diklik agar pop-up maju ke depan */
+}
+
+.table-freeze-home tbody td:nth-child(1) .dropdown-menu {
+    z-index: 10000 !important;
+}
+
+/* =========================================================
+   6. PENYESUAIAN DARK MODE
+   ========================================================= */
+body.dark-mode .table-freeze-home tbody td:nth-child(1):not([colspan]),
+body.dark-mode .table-freeze-home tbody td:nth-child(2):not([colspan]) {
+    background-color: #343a40;
+}
+body.dark-mode .table-freeze-home.table-striped tbody tr:nth-of-type(odd) td:nth-child(1):not([colspan]),
+body.dark-mode .table-freeze-home.table-striped tbody tr:nth-of-type(odd) td:nth-child(2):not([colspan]) {
+    background-color: #3a4047;
+}
+body.dark-mode .table-freeze-home.table-hover tbody tr:hover td:nth-child(1):not([colspan]),
+body.dark-mode .table-freeze-home.table-hover tbody tr:hover td:nth-child(2):not([colspan]) {
+    background-color: #454d55;
+}
+body.dark-mode .table-freeze-home thead th:nth-child(1):not([colspan]),
+body.dark-mode .table-freeze-home thead th:nth-child(2):not([colspan]) {
+    background: rgba(254, 250, 224, 0.95) !important;
+}

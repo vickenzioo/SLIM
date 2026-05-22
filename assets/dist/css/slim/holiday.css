@@ -1,0 +1,239 @@
+/* =====================================================
+   1. Toolbar & Navigation Buttons (Sejajar & Identik)
+   ===================================================== */
+
+/* Base style untuk semua tombol header agar tinggi sama dengan btn-sm */
+.fc .fc-button {
+    height: 31px !important; 
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.875rem !important; 
+    border-radius: 4px !important; 
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    padding: 0.25rem 0.5rem !important; /* Padding standar btn-sm */
+}
+
+/* Tombol Navigasi (Prev/Next) */
+.fc .fc-prev-button,
+.fc .fc-next-button {
+    background-color: #ffffff !important;
+    color: var(--text-dark) !important;
+    width: 31px !important; /* Disamakan dengan tinggi agar kotak sempurna */
+}
+
+/* Tombol Custom (Add & Export) */
+.btn.btn-holiday-add {
+    background-color: #2f50b7 !important; 
+    color: white !important; 
+    border: none !important; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+.btn.btn-holiday-export {
+    background: #10B981 !important; 
+    color: white !important; 
+    border: none !important; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+/* Hover Effects */
+.fc .fc-prev-button:hover,
+.fc .fc-next-button:hover {
+    background-color: rgba(251, 197, 49, 0.2) !important;
+    color: var(--theme-yellow-primary) !important;
+    border-color: var(--theme-yellow-primary) !important;
+}
+
+.btn.btn-holiday-add:hover, 
+.btn.btn-holiday-export:hover {
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15); 
+}
+
+/* Toolbar Alignment */
+.fc .fc-toolbar.fc-header-toolbar {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.fc-toolbar-chunk:first-child {
+    margin-left: 0 !important;
+}
+
+/* =====================================================
+   2. Warna Teks Kalender (Light Mode)
+   ===================================================== */
+.fc .fc-toolbar-title,
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+    color: #333333 !important;
+    text-decoration: none !important;
+}
+
+.fc .fc-day-today {
+    background-color: rgba(251, 197, 49, 0.05) !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    background-color: var(--theme-yellow-primary) !important;
+    color: #fff !important;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+}
+
+/* =====================================================
+   3. Flatpickr & Input Fix
+   ===================================================== */
+.flatpickr-input.form-control[type="hidden"] {
+    display: none !important;
+}
+
+.input-group .flatpickr-mobile,
+.input-group .form-control:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.modal_holiday_range + .form-control {
+    border-left: none !important;
+}
+
+/* =====================================================
+   4. Dark Mode Global
+   ===================================================== */
+body.dark-mode .fc .fc-toolbar-title,
+body.dark-mode .fc .fc-col-header-cell-cushion,
+body.dark-mode .fc .fc-daygrid-day-number {
+    color: #ffffff !important;
+}
+
+body.dark-mode .fc td,
+body.dark-mode .fc th {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .fc .fc-prev-button,
+body.dark-mode .fc .fc-next-button {
+    background-color: #3f474e !important;
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+#calendar {
+    padding: 15px;
+}
+
+/* =====================================================
+   5. Loading Overlay
+   ===================================================== */
+#loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =====================================================
+   6. Custom Event Styling
+   ===================================================== */
+.fc-event-user {
+    background-color: #2d8cff !important;
+    border: 1px solid #1f6fd6 !important;
+    color: #ffffff !important;
+    border-radius: 4px !important;
+    padding: 2px 4px !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.fc-event-api {
+    background-color: #d63031 !important;
+    border: 1px solid #ae2021 !important;
+    color: #ffffff !important;
+    border-radius: 4px !important;
+    padding: 2px 4px !important;
+    font-size: 0.85rem;
+}
+
+.fc-event:hover {
+    filter: brightness(90%);
+    cursor: pointer;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* =====================================================
+   7. Modal UI
+   ===================================================== */
+#modal_holiday_date + .form-control {
+    border-left: none !important;
+}
+
+#reason_holiday_container {
+    border-top: 1px dashed #ddd;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+body.dark-mode #reason_holiday_container {
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* =====================================================
+   8. Hover Popover (Tooltip)
+   ===================================================== */
+#holidayHoverPopover {
+    position: fixed;
+    z-index: 2000;
+    display: none;
+    max-width: 280px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+    padding: 12px 14px;
+    font-family: 'Poppins', sans-serif;
+    color: #1f2937;
+}
+
+#holidayHoverPopover #hp_title {
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+#holidayHoverPopover #hp_date {
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+#holidayHoverPopover #hp_desc {
+    font-size: 13px;
+    color: #374151;
+}
+
+/* Dark mode popover */
+body.dark-mode #holidayHoverPopover {
+    background: #1f2937;
+    border-color: rgba(255,255,255,0.08);
+    color: #ffffff;
+}
+
+body.dark-mode #holidayHoverPopover #hp_date {
+    color: rgba(255,255,255,0.75);
+}
+
+body.dark-mode #holidayHoverPopover #hp_desc {
+    color: rgba(255,255,255,0.9);
+}
